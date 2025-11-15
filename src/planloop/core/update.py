@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from .state import SessionState, Task, TaskStatus, TaskType
+from .state import SessionState, Signal, Task, TaskStatus, TaskType
 from .update_payload import AddTaskInput, TaskStatusPatch, UpdatePayload, UpdateTaskInput
 
 

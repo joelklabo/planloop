@@ -15,7 +15,8 @@ import typer
 from .core.lock import acquire_lock, get_lock_status
 from .core.session import save_session_state
 from .core.session_pointer import get_current_session
-from .core.state import SessionState, validate_state
+from .core.signals import close_signal, open_signal
+from .core.state import SessionState, Signal, SignalLevel, SignalType, validate_state
 from .core.update import UpdateError, apply_update
 from .core.update_payload import UpdatePayload
 from .home import SESSIONS_DIR, initialize_home
@@ -91,9 +92,39 @@ def update(
 
 
 @app.command()
-def alert() -> None:
-    """Manage planloop signals (stub)."""
-    raise NotImplementedCLIError(_stub_message("alert"))
+def alert(
+    session: Optional[str] = typer.Option(None, help="Session ID"),
+    id: str = typer.Option(..., "--id", help="Signal ID"),
+    level: SignalLevel = typer.Option(SignalLevel.BLOCKER, "--level", help="Signal level"),
+    type_: SignalType = typer.Option(SignalType.CI, "--type", help="Signal type"),
+    kind: str = typer.Option(..., "--kind", help="Signal kind"),
+    title: str = typer.Option(..., "--title", help="Signal title"),
+    message: str = typer.Option(..., "--message", help="Signal message"),
+    link: Optional[str] = typer.Option(None, "--link", help="Link"),
+    close: bool = typer.Option(False, "--close", help="Close signal"),
+) -> None:
+    """Manage signals within a session."""
+    try:
+        state, session_dir = _load_session(session)
+        with acquire_lock(session_dir, operation="alert"):
+            if close:
+                close_signal(state, id)
+            else:
+                signal = Signal(
+                    id=id,
+                    type=type_,
+                    kind=kind,
+                    level=level,
+                    title=title,
+                    message=message,
+                    link=link,
+                )
+                open_signal(state, signal=signal)
+            validate_state(state)
+            save_session_state(session_dir, state)
+        typer.echo(json.dumps({"status": "ok"}, indent=2))
+    except (PlanloopError, ValueError) as exc:
+        raise typer.Exit(code=1) from exc
 
 
 @app.command()
