@@ -342,7 +342,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   includes version metadata in front matter.
 - **Dependencies:** Task J1.
 
-#### Task J3 – `planloop guide` + docs injection *(Status: TODO)*
+#### Task J3 – `planloop guide` + docs injection *(Status: IN_PROGRESS)*
 - **Scope:** Build `planloop guide --target agents-md` that renders instructions
   for AGENTS.md. Detect missing `<!-- PLANLOOP-INSTALLED -->` markers and surface
   `missing-docs-warning.md`, optionally auto-appending guidance.

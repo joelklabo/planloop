@@ -13,6 +13,7 @@ from typing import Optional
 import typer
 
 from .core import describe, registry
+from . import guide as guide_utils
 from .core.lock import acquire_lock, get_lock_status
 from .core.session import save_session_state
 from .core.session_pointer import get_current_session
@@ -200,6 +201,26 @@ def reuse(
         "goal": goal,
     }
     typer.echo(json.dumps(payload, indent=2))
+
+
+@app.command()
+def guide(
+    prompt_set: str = typer.Option("core-v1", help="Prompt set"),
+    output: Optional[Path] = typer.Option(None, "--output", "-o", help="Write to file"),
+    apply: bool = typer.Option(False, "--apply", help="Insert into AGENTS.md"),
+    target: Optional[Path] = typer.Option(None, "--target", help="Target file"),
+) -> None:
+    content = guide_utils.render_guide(prompt_set)
+    if apply:
+        path = target or Path("AGENTS.md")
+        guide_utils.insert_guide(path, content)
+        typer.echo(f"Guide inserted into {path}")
+    else:
+        if output:
+            output.write_text(content, encoding="utf-8")
+            typer.echo(f"Guide written to {output}")
+        else:
+            typer.echo(content)
 
 
 @app.command()
