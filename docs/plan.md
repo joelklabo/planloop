@@ -230,7 +230,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   never leave dangling locks on crash.
 - **Dependencies:** Task D1.
 
-#### Task F2 – Lock info in status *(Status: TODO)*
+#### Task F2 – Lock info in status *(Status: DONE – commit c2b1871 "Surface lock status helper (Task F2)")*
 - **Scope:** Extend `status` output with `now.reason = waiting_on_lock` plus
   `lock_info` + human-readable instructions when the lock is held.
 - **Deliverables:** Formatting code for CLI + JSON output, doc updates.
