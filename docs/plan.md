@@ -332,7 +332,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   reads.
 - **Dependencies:** Task B3.
 
-#### Task J2 – Author core prompt content *(Status: IN_PROGRESS)*
+#### Task J2 – Author core prompt content *(Status: DONE – commit 285c1d4 "Author core prompts (Task J2)")*
 - **Scope:** Fill `goal`, `handshake`, `summary`, `reuse_template` files with the
   agent contract described in the spec (status-first workflow, JSON payloads,
   blocker priority, etc.).
