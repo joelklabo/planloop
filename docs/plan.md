@@ -262,11 +262,12 @@ starts in `Status: TODO` and depends on the tasks above it.
   version; invalid payloads return machine-readable errors.
 - **Dependencies:** Task G1, Task F1.
 
-#### Task G3 – `planloop alert` signals API *(Status: TODO)*
+#### Task G3 – `planloop alert` signals API *(Status: DONE – commit fb815e6 "Add alert command (Task G3)")*
 - **Scope:** Provide CLI for opening/closing signals (CI, lint, etc.), update
   state + tasks, and ensure blockers immediately affect `now.reason`.
 - **Deliverables:** CLI command, helper for deduping signals, doc updates about
-  plugin usage.
+  plugin usage. For now, support basic `open` and `close` operations with JSON
+  output.
 - **Acceptance Criteria:** Opening a blocker signal changes `now.reason` to
   `ci_blocker`; closing it reverts to task workflow.
 - **Dependencies:** Task G2.
