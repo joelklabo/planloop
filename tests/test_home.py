@@ -31,3 +31,32 @@ def test_get_home_default(monkeypatch, tmp_path):
 
     assert result == expected
     assert result.exists()
+
+
+def test_initialize_home_creates_structure(tmp_path, monkeypatch):
+    fake_home = tmp_path / "plhome"
+    monkeypatch.setenv(home.PLANLOOP_HOME_ENV, str(fake_home))
+
+    result = home.initialize_home()
+
+    assert result == fake_home
+    assert (result / home.SESSIONS_DIR).is_dir()
+    assert (result / home.PROMPTS_DIR / home.DEFAULT_PROMPT_SET).is_dir()
+    assert (result / home.MESSAGES_DIR).is_dir()
+    config_path = result / home.CONFIG_FILE_NAME
+    assert config_path.is_file()
+    assert "prompt_set: core-v1" in config_path.read_text()
+    assert (result / home.CURRENT_SESSION_POINTER).is_file()
+
+
+def test_initialize_home_is_idempotent(tmp_path, monkeypatch):
+    fake_home = tmp_path / "plhome"
+    monkeypatch.setenv(home.PLANLOOP_HOME_ENV, str(fake_home))
+
+    home.initialize_home()
+    config_path = fake_home / home.CONFIG_FILE_NAME
+    config_path.write_text("custom: true", encoding="utf-8")
+
+    home.initialize_home()
+
+    assert config_path.read_text() == "custom: true"
