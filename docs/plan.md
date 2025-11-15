@@ -207,12 +207,13 @@ starts in `Status: TODO` and depends on the tasks above it.
   agents; tests cover regressions.
 - **Dependencies:** Task E1.
 
-#### Task E3 – Deadlock detection *(Status: TODO)*
+#### Task E3 – Deadlock detection *(Status: DONE – commit a8a7008 "Add deadlock detection (Task E3)")*
 - **Scope:** Track `last_state_hash` + `no_progress_counter` in state or
   sidecar. When repeated `status` calls occur without updates, open a
   `system/deadlock_suspected` signal and set `now.reason = deadlocked`.
 - **Deliverables:** Counter logic, signal injection helper, tests simulating
-  deadlock threshold.
+  deadlock threshold. Store counters in a lightweight tracker persisted next to
+  `SessionState` until we add better metadata support.
 - **Acceptance Criteria:** After N idle cycles, status output changes reason and
   surfaces guidance text.
 - **Dependencies:** Task E2.
