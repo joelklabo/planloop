@@ -14,6 +14,7 @@ import typer
 
 from .core import describe, registry
 from . import guide as guide_utils
+from .web.server import app as web_app
 from .tui import TEXTUAL_AVAILABLE, PlanloopViewApp, SessionViewModel
 from .core.lock import acquire_lock, get_lock_status
 from .core.session import save_session_state
@@ -235,6 +236,23 @@ def guide(
             typer.echo(f"Guide written to {output}")
         else:
             typer.echo(content)
+
+
+@app.command()
+def web(session: Optional[str] = typer.Option(None, help="Session ID")) -> None:
+    try:
+        import uvicorn
+    except ImportError as exc:  # pragma: no cover
+        typer.echo("uvicorn not installed. Run `pip install uvicorn` to use planloop web.")
+        raise typer.Exit(code=1) from exc
+    try:
+        from .web import server as web_server
+        if not getattr(web_server, "FASTAPI_AVAILABLE", False):
+            raise ImportError
+    except ImportError:
+        typer.echo("fastapi is not installed. Run `pip install fastapi fastapi[standard]`.")
+        raise typer.Exit(code=1)
+    uvicorn.run(web_app, host="127.0.0.1", port=8765)
 
 
 @app.command()
