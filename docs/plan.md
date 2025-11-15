@@ -253,7 +253,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   future agents. Lock info is surfaced when present.
 - **Dependencies:** Task E2.
 
-#### Task G2 – Structured `update` command *(Status: TODO)*
+#### Task G2 – Structured `update` command *(Status: DONE – commit cf1fc97 "Implement update command (Task G2)")*
 - **Scope:** Define update payload schema, validate `last_seen_version`, merge
   changes (task updates, adds, context notes, next steps, artifacts, final
   summary), and persist `state.json` + `PLAN.md` under lock.
