@@ -189,7 +189,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 ### Milestone 4 – Core Loop & State Validation
 > Goal: compute `now.reason`, enforce invariants, and detect deadlocks.
 
-#### Task E1 – Implement `compute_now` *(Status: TODO)*
+#### Task E1 – Implement `compute_now` *(Status: DONE – commit 7eb160d "Implement compute_now (Task E1)")*
 - **Scope:** Translate the algorithm from the spec into `core/state.py`, covering
   lock waits, blocker signals, in-progress tasks, ready todos, completion, and
   idle states.
