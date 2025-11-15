@@ -173,6 +173,15 @@ def search(query: str = typer.Argument(..., help="Search query")) -> None:
 
 
 @app.command()
+def templates(tag: Optional[str] = typer.Option(None, "--tag", help="Filter by tag")) -> None:
+    entries = [entry for entry in registry.load_registry() if entry.done]
+    if tag:
+        entries = [entry for entry in entries if tag in entry.tags]
+    payload = {"templates": [entry.to_dict() for entry in entries]}
+    typer.echo(json.dumps(payload, indent=2))
+
+
+@app.command()
 def selftest() -> None:
     """Run planloop's self-test harness (stub)."""
     raise NotImplementedCLIError(_stub_message("selftest"))

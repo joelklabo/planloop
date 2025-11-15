@@ -127,6 +127,7 @@ class SessionState(BaseModel):
     branch: Optional[str] = None
     prompts: PromptMetadata
     environment: Environment
+    tags: List[str] = Field(default_factory=list)
     tasks: List[Task] = Field(default_factory=list)
     signals: List[Signal] = Field(default_factory=list)
     next_steps: List[str] = Field(default_factory=list)

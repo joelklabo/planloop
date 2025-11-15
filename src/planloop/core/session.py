@@ -77,7 +77,7 @@ def _update_registry(state: SessionState) -> None:
         session=state.session,
         name=state.name,
         title=state.title,
-        tags=[],
+        tags=state.tags,
         project_root=state.project_root,
         created_at=state.created_at.isoformat(),
         last_updated_at=state.last_updated_at.isoformat(),
