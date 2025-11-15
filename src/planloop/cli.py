@@ -182,6 +182,27 @@ def templates(tag: Optional[str] = typer.Option(None, "--tag", help="Filter by t
 
 
 @app.command()
+def reuse(
+    template_session: str = typer.Argument(..., help="Completed session to reuse"),
+    goal: Optional[str] = typer.Option(None, "--goal", help="New goal description"),
+) -> None:
+    try:
+        state, _ = _load_session(template_session)
+    except PlanloopError as exc:
+        raise typer.Exit(code=1) from exc
+    if not state.done:
+        raise typer.Exit(code=1)
+    payload = {
+        "template_session": state.session,
+        "template_title": state.title,
+        "template_summary": state.final_summary,
+        "template_tasks": [task.model_dump() for task in state.tasks],
+        "goal": goal,
+    }
+    typer.echo(json.dumps(payload, indent=2))
+
+
+@app.command()
 def selftest() -> None:
     """Run planloop's self-test harness (stub)."""
     raise NotImplementedCLIError(_stub_message("selftest"))
