@@ -272,11 +272,11 @@ starts in `Status: TODO` and depends on the tasks above it.
   `ci_blocker`; closing it reverts to task workflow.
 - **Dependencies:** Task G2.
 
-#### Task G4 – `planloop describe` command *(Status: TODO)*
+#### Task G4 – `planloop describe` command *(Status: DONE – commit b06a8f0 "Implement describe command (Task G4)")*
 - **Scope:** Surface schemas from Task C2 plus enumerations and sample payloads
   so advanced agents can introspect.
 - **Deliverables:** CLI command writing JSON to stdout, test comparing expected
-  schema snapshot.
+  schema snapshot. Reuse `core.describe` helpers so the CLI is a thin wrapper.
 - **Acceptance Criteria:** Command returns valid JSON referencing every schema
   field described in the spec.
 - **Dependencies:** Task C2.
