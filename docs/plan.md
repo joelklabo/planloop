@@ -221,7 +221,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 ### Milestone 5 – Serialized Access & Lock Surfacing
 > Goal: ensure writes are serialized and lock information is visible.
 
-#### Task F1 – Lock acquisition helpers *(Status: TODO)*
+#### Task F1 – Lock acquisition helpers *(Status: DONE – commit e18762c "Add session lock helpers (Task F1)")*
 - **Scope:** Implement cross-platform `.lock` handling with owner metadata and
   timeout safeguards for every write path.
 - **Deliverables:** `lock.py` module with `acquire_lock`, `release_lock`, and
