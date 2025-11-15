@@ -87,7 +87,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   exits with non-zero and prints "Not implemented".
 - **Dependencies:** Task A2.
 
-#### Task A4 – Developer onboarding docs *(Status: TODO)*
+#### Task A4 – Developer onboarding docs *(Status: DONE – commit 4244c17 "Improve onboarding docs (Task A4)")*
 - **Scope:** Expand README with install instructions, supported Python versions,
   and how to run the CLI in editable mode.
 - **Deliverables:** README section covering `pip install -e .[dev]`, lint/test
