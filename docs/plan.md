@@ -66,7 +66,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   planloop` fails gracefully because CLI is absent.
 - **Dependencies:** none.
 
-#### Task A2 – Add Python packaging baseline *(Status: TODO)*
+#### Task A2 – Add Python packaging baseline *(Status: IN_PROGRESS)*
 - **Scope:** Create `pyproject.toml` with Python 3.11+, runtime deps (`typer`,
   `textual`, `pydantic`, `pyyaml`, `jsonschema`, `rich`) and dev extras
   (`pytest`, `hypothesis`). Configure `planloop = planloop.cli:app` console
