@@ -108,7 +108,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   and never raises for missing parents.
 - **Dependencies:** Task A3.
 
-#### Task B2 – Home initializer *(Status: TODO)*
+#### Task B2 – Home initializer *(Status: DONE – commit 1c479cd "Initialize PLANLOOP_HOME layout (Task B2)")*
 - **Scope:** Implement `initialize_home()` that populates `config.yml`,
   `sessions/`, `prompts/`, `messages/`, and `current_session` placeholder.
 - **Deliverables:** Default `config.yml` (history flag, prompt set), directory
