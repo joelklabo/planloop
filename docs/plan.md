@@ -198,7 +198,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   plan scenarios.
 - **Dependencies:** Task C1.
 
-#### Task E2 – State validation & invariants *(Status: TODO)*
+#### Task E2 – State validation & invariants *(Status: DONE – commit 2f9f599 "Add state validation (Task E2)")*
 - **Scope:** Add validation routines ensuring unique task IDs, dependency
   integrity, matching `now` vs computed `now`, and optional cycle detection.
 - **Deliverables:** `validate_state(state)` helper invoked by `status` and
