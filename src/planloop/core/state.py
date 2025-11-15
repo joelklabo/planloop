@@ -134,3 +134,38 @@ class SessionState(BaseModel):
     now: Now
     done: bool = False
     final_summary: Optional[str] = None
+
+    def compute_now(self) -> Now:
+        """Compute the next action based on current state."""
+        if self.signals:
+            blockers = [s for s in self.signals if s.open and s.level == SignalLevel.BLOCKER]
+            if blockers:
+                return Now(reason=NowReason.CI_BLOCKER, signal_id=blockers[0].id)
+
+        in_progress = [task for task in self.tasks if task.status == TaskStatus.IN_PROGRESS]
+        if in_progress:
+            return Now(reason=NowReason.TASK, task_id=in_progress[0].id)
+
+        ready_tasks = [
+            task
+            for task in self.tasks
+            if task.status == TaskStatus.TODO and all(
+                self._task_done(dep_id) for dep_id in task.depends_on
+            )
+        ]
+        if ready_tasks:
+            return Now(reason=NowReason.TASK, task_id=ready_tasks[0].id)
+
+        if self.tasks and all(
+            task.status in {TaskStatus.DONE, TaskStatus.OUT_OF_SCOPE, TaskStatus.SKIPPED}
+            for task in self.tasks
+        ):
+            return Now(reason=NowReason.COMPLETED)
+
+        return Now(reason=NowReason.IDLE)
+
+    def _task_done(self, task_id: int) -> bool:
+        for task in self.tasks:
+            if task.id == task_id:
+                return task.status == TaskStatus.DONE
+        return False
