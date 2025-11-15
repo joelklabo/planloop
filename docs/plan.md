@@ -158,7 +158,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 > Goal: create, track, and switch between session workspaces under
 > PLANLOOP_HOME.
 
-#### Task D1 – Session ID + creation workflow *(Status: TODO)*
+#### Task D1 – Session ID + creation workflow *(Status: DONE – commit 4307ef6 "Add session creation helpers (Task D1)")*
 - **Scope:** Build helpers that generate IDs (`<name>-<slug>-<timestamp>`),
   create `sessions/<id>/`, write initial `state.json`, render `PLAN.md`, and
   allocate `artifacts/`.
