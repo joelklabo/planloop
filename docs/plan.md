@@ -56,7 +56,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 > Goal: create a minimal but functional Python project that agents can install
 > locally.
 
-#### Task A1 – Bootstrap repo scaffolding *(Status: DONE – commit `Bootstrap repo scaffolding (Task A1)`)*
+#### Task A1 – Bootstrap repo scaffolding *(Status: DONE – commit d07f0e8 "Bootstrap repo scaffolding (Task A1)")*
 
 - **Scope:** Create `.gitignore`, LICENSE (MIT), README stub, `src/planloop/`,
   and `tests/` directories plus `src/planloop/__init__.py`.
