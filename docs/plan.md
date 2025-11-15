@@ -303,7 +303,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   stable order.
 - **Dependencies:** Task D3.
 
-#### Task H2 – Template listing *(Status: TODO)*
+#### Task H2 – Template listing *(Status: IN_PROGRESS)*
 - **Scope:** Provide `planloop templates` that filters sessions with
   `done == true` and optional `good_template` tag.
 - **Deliverables:** CLI table or JSON, docs explaining how to flag templates.
