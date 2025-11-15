@@ -242,12 +242,15 @@ starts in `Status: TODO` and depends on the tasks above it.
 > Goal: deliver the core commands (`status`, `update`, `alert`, `describe`) with
 > strict schemas.
 
-#### Task G1 – `planloop status` implementation *(Status: TODO)*
+#### Task G1 – `planloop status` implementation *(Status: DONE – commit 36db4a7 "Implement status command (Task G1)")*
 - **Scope:** Wire CLI to load the session, run validation, recompute `now`, and
   print either pretty tables or JSON. Include `agent_instructions` guidance.
-- **Deliverables:** `status` command, JSON/TTY output adapters, tests for both.
+  Depends on session pointer, registry, lock info, and deadlock tracker. For
+  now we will output JSON only with a clear structure.
+- **Deliverables:** `status` command, JSON output tests, and helper to load the
+  requested session (current pointer fallback).
 - **Acceptance Criteria:** Fake sessions return deterministic JSON consumed by
-  future agents.
+  future agents. Lock info is surfaced when present.
 - **Dependencies:** Task E2.
 
 #### Task G2 – Structured `update` command *(Status: TODO)*
