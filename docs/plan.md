@@ -168,12 +168,13 @@ starts in `Status: TODO` and depends on the tasks above it.
   populated files referencing prompt set + environment snapshot.
 - **Dependencies:** Task C3.
 
-#### Task D2 – Current-session pointer *(Status: TODO)*
+#### Task D2 – Current-session pointer *(Status: DONE – commit e95d754 "Add current session pointer helpers (Task D2)")*
 - **Scope:** Maintain `PLANLOOP_HOME/current_session` and commands to `set`,
   `show`, and `clear` it. Auto-populate when a new session is created.
 - **Deliverables:** Helper functions + CLI options for `--session` fallback.
 - **Acceptance Criteria:** `planloop status` without flags targets the pointer;
-  pointer updates survive restarts.
+  pointer updates survive restarts. Track the simple pointer helpers now and add
+  CLI wiring in Task G1 when `status` is implemented.
 - **Dependencies:** Task D1.
 
 #### Task D3 – Session index registry *(Status: TODO)*
