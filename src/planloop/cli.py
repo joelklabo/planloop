@@ -129,7 +129,7 @@ def alert(
 
 
 @app.command(name="describe")
-def describe_command(json_output: bool = typer.Option(True, "--json")) -> None:
+def describe(json_output: bool = typer.Option(True, "--json")) -> None:
     """Emit planloop schema information."""
     payload = describe.describe_payload()
     if json_output:
