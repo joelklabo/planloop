@@ -128,7 +128,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 ### Milestone 2 – Session Data Model & PLAN.md Rendering
 > Goal: define the canonical state representation and markdown renderer.
 
-#### Task C1 – SessionState models *(Status: TODO)*
+#### Task C1 – SessionState models *(Status: DONE – commit 9cf42ac "Add SessionState models (Task C1)")*
 - **Scope:** Implement `core/state.py` with Pydantic models for `SessionState`,
   `Task`, `Signal`, `Artifact`, `Now`, etc., matching the schema in the spec.
 - **Deliverables:** Data classes, enums for `task.status`, `task.type`,
