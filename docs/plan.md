@@ -177,7 +177,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   CLI wiring in Task G1 when `status` is implemented.
 - **Dependencies:** Task D1.
 
-#### Task D3 – Session index registry *(Status: TODO)*
+#### Task D3 – Session index registry *(Status: DONE – commit 54bf184 "Add session registry helpers (Task D3)")*
 - **Scope:** Implement `index.json` tracking metadata (name, tags, paths,
   timestamps, done flag). Update the file from session create/update flows.
 - **Deliverables:** Registry module, read-modify-write utilities handling
