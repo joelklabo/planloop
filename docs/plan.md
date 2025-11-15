@@ -311,7 +311,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   and summaries.
 - **Dependencies:** Task H1.
 
-#### Task H3 – Template reuse workflow *(Status: IN_PROGRESS)*
+#### Task H3 – Template reuse workflow *(Status: DONE – commit 93ed6a8 "Add reuse command (Task H3)")*
 - **Scope:** Implement `planloop reuse <session>` that injects the referenced
   session's summary/tasks into prompt context (`reuse_template.prompt.md`) and
   guides the user through naming a new goal.
