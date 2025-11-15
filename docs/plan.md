@@ -281,7 +281,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   field described in the spec.
 - **Dependencies:** Task C2.
 
-#### Task G5 – Session management CLI wrappers *(Status: IN_PROGRESS)*
+#### Task G5 – Session management CLI wrappers *(Status: DONE – commit a811e4d "Add sessions CLI commands (Task G5)")*
 - **Scope:** Add user-facing commands like `planloop sessions list`, `planloop
   sessions info`, `planloop sessions delete` (non-destructive), wired into
   registry.
