@@ -117,7 +117,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   creates the expected tree with sane defaults.
 - **Dependencies:** Task B1.
 
-#### Task B3 – Seed default prompts & messages *(Status: TODO)*
+#### Task B3 – Seed default prompts & messages *(Status: DONE – commit 015705c "Seed prompts and messages (Task B3)")*
 - **Scope:** Add `prompts/core-v1/*.prompt.md` and `messages/*.md` files with YAML
   front matter placeholders per the spec.
 - **Deliverables:** `goal`, `handshake`, `summary`, `reuse_template` prompts plus
