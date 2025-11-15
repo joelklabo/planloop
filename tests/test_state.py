@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from datetime import datetime
 
+import pytest
+
 from planloop.core.state import (
     Artifact,
     ArtifactType,
@@ -11,12 +13,14 @@ from planloop.core.state import (
     NowReason,
     PromptMetadata,
     SessionState,
+    StateValidationError,
     Signal,
     SignalLevel,
     SignalType,
     Task,
     TaskStatus,
     TaskType,
+    validate_state,
 )
 
 
@@ -138,3 +142,45 @@ def test_compute_now_idle_when_no_ready_tasks():
     result = state.compute_now()
 
     assert result.reason == NowReason.IDLE
+
+
+def test_validate_state_duplicate_ids():
+    state = minimal_state()
+    state.tasks = [
+        Task(id=1, title="One", type=TaskType.CHORE),
+        Task(id=1, title="Dup", type=TaskType.CHORE),
+    ]
+    state.now = state.compute_now()
+
+    with pytest.raises(StateValidationError):
+        validate_state(state)
+
+
+def test_validate_state_missing_dependency():
+    state = minimal_state()
+    state.tasks = [Task(id=1, title="One", type=TaskType.FEATURE, depends_on=[99])]
+    state.now = state.compute_now()
+
+    with pytest.raises(StateValidationError):
+        validate_state(state)
+
+
+def test_validate_state_detects_cycle():
+    state = minimal_state()
+    state.tasks = [
+        Task(id=1, title="A", type=TaskType.FEATURE, depends_on=[2]),
+        Task(id=2, title="B", type=TaskType.FEATURE, depends_on=[1]),
+    ]
+    state.now = state.compute_now()
+
+    with pytest.raises(StateValidationError):
+        validate_state(state)
+
+
+def test_validate_state_now_mismatch():
+    state = minimal_state()
+    state.tasks = [Task(id=1, title="Work", type=TaskType.CHORE, status=TaskStatus.IN_PROGRESS)]
+    state.now = Now(reason=NowReason.IDLE)
+
+    with pytest.raises(StateValidationError):
+        validate_state(state)

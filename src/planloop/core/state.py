@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional
+from typing import Dict, List, Optional, Set
 
 from pydantic import BaseModel, Field, PositiveInt
 
@@ -169,3 +169,71 @@ class SessionState(BaseModel):
             if task.id == task_id:
                 return task.status == TaskStatus.DONE
         return False
+
+
+class StateValidationError(ValueError):
+    """Raised when a SessionState fails validation."""
+
+
+def _check_unique_task_ids(tasks: List[Task]) -> List[str]:
+    seen: Set[int] = set()
+    errors: List[str] = []
+    for task in tasks:
+        if task.id in seen:
+            errors.append(f"Duplicate task id {task.id}")
+        seen.add(task.id)
+    return errors
+
+
+def _check_dependencies(tasks: List[Task]) -> List[str]:
+    valid_ids = {task.id for task in tasks}
+    errors: List[str] = []
+    for task in tasks:
+        for dep in task.depends_on:
+            if dep not in valid_ids:
+                errors.append(f"Task {task.id} depends on unknown task {dep}")
+            if dep == task.id:
+                errors.append(f"Task {task.id} cannot depend on itself")
+    return errors
+
+
+def _detect_cycles(tasks: List[Task]) -> List[str]:
+    graph: Dict[int, List[int]] = {task.id: task.depends_on for task in tasks}
+    visiting: Set[int] = set()
+    visited: Set[int] = set()
+    errors: List[str] = []
+
+    def dfs(node: int) -> bool:
+        if node in visiting:
+            return True
+        if node in visited:
+            return False
+        visiting.add(node)
+        for dep in graph.get(node, []):
+            if dep in graph and dfs(dep):
+                return True
+        visiting.remove(node)
+        visited.add(node)
+        return False
+
+    for node in graph:
+        if dfs(node):
+            errors.append("Circular dependency detected")
+            break
+
+    return errors
+
+
+def validate_state(state: SessionState) -> None:
+    """Validate state invariants, raising StateValidationError when invalid."""
+    errors: List[str] = []
+    errors.extend(_check_unique_task_ids(state.tasks))
+    errors.extend(_check_dependencies(state.tasks))
+    errors.extend(_detect_cycles(state.tasks))
+
+    expected_now = state.compute_now()
+    if state.now.model_dump() != expected_now.model_dump():
+        errors.append("State 'now' field is out of sync with compute_now()")
+
+    if errors:
+        raise StateValidationError("; ".join(errors))
