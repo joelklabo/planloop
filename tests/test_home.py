@@ -1,7 +1,7 @@
-"""Tests for PLANLOOP_HOME resolution."""
+"""Tests for PLANLOOP_HOME resolution and initialization."""
 from __future__ import annotations
 
-from pathlib import Path
+from importlib import resources
 
 import planloop.home as home
 
@@ -49,6 +49,34 @@ def test_initialize_home_creates_structure(tmp_path, monkeypatch):
     assert (result / home.CURRENT_SESSION_POINTER).is_file()
 
 
+def test_initialize_home_seeds_template_content(tmp_path, monkeypatch):
+    fake_home = tmp_path / "plhome"
+    monkeypatch.setenv(home.PLANLOOP_HOME_ENV, str(fake_home))
+
+    home.initialize_home()
+
+    goal_template = (
+        resources.files("planloop.templates")
+        / "prompts"
+        / "core-v1"
+        / "goal.prompt.md"
+    ).read_text(encoding="utf-8")
+    missing_docs_template = (
+        resources.files("planloop.templates")
+        / "messages"
+        / "missing-docs-warning.md"
+    ).read_text(encoding="utf-8")
+
+    assert (
+        (fake_home / home.PROMPTS_DIR / home.DEFAULT_PROMPT_SET / "goal.prompt.md").read_text(encoding="utf-8")
+        == goal_template
+    )
+    assert (
+        (fake_home / home.MESSAGES_DIR / "missing-docs-warning.md").read_text(encoding="utf-8")
+        == missing_docs_template
+    )
+
+
 def test_initialize_home_is_idempotent(tmp_path, monkeypatch):
     fake_home = tmp_path / "plhome"
     monkeypatch.setenv(home.PLANLOOP_HOME_ENV, str(fake_home))
@@ -59,4 +87,4 @@ def test_initialize_home_is_idempotent(tmp_path, monkeypatch):
 
     home.initialize_home()
 
-    assert config_path.read_text() == "custom: true"
+    assert config_path.read_text(encoding="utf-8") == "custom: true"

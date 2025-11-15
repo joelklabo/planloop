@@ -30,3 +30,9 @@ planloop = "planloop.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"planloop.templates" = ["**/*.md"]
