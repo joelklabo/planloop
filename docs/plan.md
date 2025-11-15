@@ -324,7 +324,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 ### Milestone 8 – Prompts, Messages & Agent Contract
 > Goal: externalize agent instructions and integrate with project docs.
 
-#### Task J1 – Prompt/message loader *(Status: TODO)*
+#### Task J1 – Prompt/message loader *(Status: DONE – commit 214687d "Add prompt loader (Task J1)")*
 - **Scope:** Implement `core/prompts.py` to read files with YAML front matter,
   validate required fields, and expose content keyed by set/kind.
 - **Deliverables:** Loader functions, caching, error handling for missing sets.
