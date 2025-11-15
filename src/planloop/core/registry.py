@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import List
 
-from ..home import SESSIONS_DIR, initialize_home
+from ..home import initialize_home
 
 REGISTRY_FILE = "index.json"
 
@@ -71,3 +71,26 @@ def find_session(session_id: str) -> SessionSummary | None:
         if entry.session == session_id:
             return entry
     return None
+
+
+def search_sessions(query: str) -> List[SessionSummary]:
+    tokens = [tok.lower() for tok in query.split() if tok.strip()]
+    entries = load_registry()
+    if not tokens:
+        return entries
+
+    def haystack(entry: SessionSummary) -> str:
+        return " ".join([
+            entry.session,
+            entry.name,
+            entry.title,
+            " ".join(entry.tags),
+            entry.project_root,
+        ]).lower()
+
+    results: List[SessionSummary] = []
+    for entry in entries:
+        text = haystack(entry)
+        if all(tok in text for tok in tokens):
+            results.append(entry)
+    return results

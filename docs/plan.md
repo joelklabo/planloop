@@ -294,7 +294,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 ### Milestone 7 – Search & Template Reuse
 > Goal: help operators discover prior sessions and reuse good patterns.
 
-#### Task H1 – Search implementation *(Status: TODO)*
+#### Task H1 – Search implementation *(Status: IN_PROGRESS)*
 - **Scope:** Add `planloop search <query>` that tokenizes the query and matches
   across name/title/tags/project_root fields in `index.json`.
 - **Deliverables:** Search module, CLI command, tests for ranking + case

@@ -166,6 +166,13 @@ def sessions_info(session: Optional[str] = typer.Argument(None)) -> None:
 
 
 @app.command()
+def search(query: str = typer.Argument(..., help="Search query")) -> None:
+    results = registry.search_sessions(query)
+    payload = {"sessions": [entry.to_dict() for entry in results]}
+    typer.echo(json.dumps(payload, indent=2))
+
+
+@app.command()
 def selftest() -> None:
     """Run planloop's self-test harness (stub)."""
     raise NotImplementedCLIError(_stub_message("selftest"))
