@@ -362,7 +362,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   and reacts to window resize without crashing.
 - **Dependencies:** Task G1.
 
-#### Task K2 – Web view *(Status: IN_PROGRESS)*
+#### Task K2 – Web view *(Status: DONE – commit 0ab2a34 "Add web and TUI commands (Tasks K1/K2)")*
 - **Scope:** Provide `planloop web` using Textual's web server or a minimal
   FastAPI app to display the same data in a browser.
 - **Deliverables:** Web entry point, session picker page, session detail page.
