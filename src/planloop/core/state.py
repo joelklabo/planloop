@@ -116,6 +116,7 @@ class PromptMetadata(BaseModel):
 
 class SessionState(BaseModel):
     schema_version: int = 1
+    version: int = 1
     session: str
     name: str
     title: str

@@ -58,11 +58,16 @@ def create_session(name: str, title: str, project_root: Path) -> SessionState:
     state_path = session_dir / "state.json"
     plan_path = session_dir / "PLAN.md"
 
-    state_json = state.model_dump_json(indent=2)
-    state_path.write_text(state_json, encoding="utf-8")
-    plan_path.write_text(render_plan(state), encoding="utf-8")
+    save_session_state(session_dir, state)
 
     (home / CURRENT_SESSION_POINTER).write_text(session_id, encoding="utf-8")
     DeadlockTracker().persist(session_dir / "deadlock.json")
 
     return state
+
+
+def save_session_state(session_dir: Path, state: SessionState) -> None:
+    state_path = session_dir / "state.json"
+    plan_path = session_dir / "PLAN.md"
+    state_path.write_text(state.model_dump_json(indent=2), encoding="utf-8")
+    plan_path.write_text(render_plan(state), encoding="utf-8")

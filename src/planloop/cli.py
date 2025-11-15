@@ -12,9 +12,12 @@ from typing import Optional
 
 import typer
 
-from .core.lock import get_lock_status
+from .core.lock import acquire_lock, get_lock_status
+from .core.session import save_session_state
 from .core.session_pointer import get_current_session
 from .core.state import SessionState, validate_state
+from .core.update import UpdateError, apply_update
+from .core.update_payload import UpdatePayload
 from .home import SESSIONS_DIR, initialize_home
 
 app = typer.Typer(help="planloop CLI")
@@ -60,9 +63,31 @@ def status(session: Optional[str] = typer.Option(None, help="Session ID"), json_
 
 
 @app.command()
-def update(_: Optional[str] = typer.Option(None, "--payload", help="JSON payload path")) -> None:
-    """Apply a structured update to the session (stub)."""
-    raise NotImplementedCLIError(_stub_message("update"))
+def update(
+    session: Optional[str] = typer.Option(None, help="Session ID"),
+    file: Optional[Path] = typer.Option(None, "--file", "-f", help="Path to payload JSON"),
+) -> None:
+    """Apply a structured update to the session."""
+    data = file.read_text(encoding="utf-8") if file else typer.get_text_stream("stdin").read()
+    if not data.strip():
+        raise typer.Exit(code=1)
+    try:
+        payload = UpdatePayload.model_validate_json(data)
+    except Exception as exc:  # ValidationError
+        raise typer.Exit(code=1) from exc
+    target_session = session or payload.session
+    try:
+        state, session_dir = _load_session(target_session)
+    except PlanloopError as exc:
+        raise typer.Exit(code=1) from exc
+    try:
+        with acquire_lock(session_dir, operation="update"):
+            state = apply_update(state, payload)
+            validate_state(state)
+            save_session_state(session_dir, state)
+    except UpdateError as exc:
+        raise typer.Exit(code=1) from exc
+    typer.echo(json.dumps({"status": "ok", "version": state.version}, indent=2))
 
 
 @app.command()
