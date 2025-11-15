@@ -64,3 +64,10 @@ def upsert_session(summary: SessionSummary) -> None:
     filtered = [entry for entry in entries if entry.session != summary.session]
     filtered.append(summary)
     save_registry(sorted(filtered, key=lambda e: e.last_updated_at, reverse=True))
+
+
+def find_session(session_id: str) -> SessionSummary | None:
+    for entry in load_registry():
+        if entry.session == session_id:
+            return entry
+    return None

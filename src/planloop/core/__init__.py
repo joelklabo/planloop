@@ -1,4 +1,4 @@
 """Core modules for planloop."""
-from . import describe, render
+from . import describe, registry, render
 
-__all__ = ["describe", "render"]
+__all__ = ["describe", "render", "registry"]

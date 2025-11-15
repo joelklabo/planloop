@@ -12,7 +12,7 @@ from typing import Optional
 
 import typer
 
-from .core import describe
+from .core import describe, registry
 from .core.lock import acquire_lock, get_lock_status
 from .core.session import save_session_state
 from .core.session_pointer import get_current_session
@@ -23,6 +23,8 @@ from .core.update_payload import UpdatePayload
 from .home import SESSIONS_DIR, initialize_home
 
 app = typer.Typer(help="planloop CLI")
+sessions_app = typer.Typer(help="Manage sessions")
+app.add_typer(sessions_app, name="sessions")
 
 
 class PlanloopError(RuntimeError):
@@ -129,13 +131,38 @@ def alert(
 
 
 @app.command(name="describe")
-def describe(json_output: bool = typer.Option(True, "--json")) -> None:
+def describe_command(json_output: bool = typer.Option(True, "--json")) -> None:
     """Emit planloop schema information."""
     payload = describe.describe_payload()
     if json_output:
         typer.echo(json.dumps(payload, indent=2))
     else:
         typer.echo("planloop describe currently supports JSON output only.")
+
+
+@sessions_app.command("list")
+def sessions_list(json_output: bool = typer.Option(True, "--json")) -> None:
+    entries = registry.load_registry()
+    data = [entry.to_dict() for entry in entries]
+    if json_output:
+        typer.echo(json.dumps({"sessions": data}, indent=2))
+    else:
+        for entry in data:
+            typer.echo(f"{entry['session']}: {entry['title']}")
+
+
+@sessions_app.command("info")
+def sessions_info(session: Optional[str] = typer.Argument(None)) -> None:
+    home = initialize_home()
+    target = session or get_current_session()
+    if not target:
+        raise PlanloopError("No session specified and no current session set")
+    summary = registry.find_session(target)
+    if not summary:
+        raise PlanloopError(f"Session {target} not found in registry")
+    info = summary.to_dict()
+    info["path"] = str(home / SESSIONS_DIR / target)
+    typer.echo(json.dumps(info, indent=2))
 
 
 @app.command()

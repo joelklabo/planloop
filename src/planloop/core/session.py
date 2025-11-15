@@ -6,6 +6,7 @@ from datetime import datetime
 from pathlib import Path
 
 from .deadlock import DeadlockTracker
+from .registry import SessionSummary, upsert_session
 from .render import render_plan
 from .state import Environment, Now, NowReason, PromptMetadata, SessionState
 from ..home import (
@@ -55,9 +56,6 @@ def create_session(name: str, title: str, project_root: Path) -> SessionState:
     session_dir.mkdir(parents=True, exist_ok=True)
 
     state = _initial_state(session_id, name, title, project_root)
-    state_path = session_dir / "state.json"
-    plan_path = session_dir / "PLAN.md"
-
     save_session_state(session_dir, state)
 
     (home / CURRENT_SESSION_POINTER).write_text(session_id, encoding="utf-8")
@@ -71,3 +69,18 @@ def save_session_state(session_dir: Path, state: SessionState) -> None:
     plan_path = session_dir / "PLAN.md"
     state_path.write_text(state.model_dump_json(indent=2), encoding="utf-8")
     plan_path.write_text(render_plan(state), encoding="utf-8")
+    _update_registry(state)
+
+
+def _update_registry(state: SessionState) -> None:
+    summary = SessionSummary(
+        session=state.session,
+        name=state.name,
+        title=state.title,
+        tags=[],
+        project_root=state.project_root,
+        created_at=state.created_at.isoformat(),
+        last_updated_at=state.last_updated_at.isoformat(),
+        done=state.done,
+    )
+    upsert_session(summary)

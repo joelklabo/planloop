@@ -281,11 +281,12 @@ starts in `Status: TODO` and depends on the tasks above it.
   field described in the spec.
 - **Dependencies:** Task C2.
 
-#### Task G5 – Session management CLI wrappers *(Status: TODO)*
+#### Task G5 – Session management CLI wrappers *(Status: IN_PROGRESS)*
 - **Scope:** Add user-facing commands like `planloop sessions list`, `planloop
   sessions info`, `planloop sessions delete` (non-destructive), wired into
   registry.
-- **Deliverables:** CLI subcommands + doc updates.
+- **Deliverables:** CLI subcommands + doc updates. Start with JSON-only `list`
+  and `info` commands that rely on registry metadata.
 - **Acceptance Criteria:** Listing shows metadata from `index.json`; info command
   points to session paths.
 - **Dependencies:** Task D3.
