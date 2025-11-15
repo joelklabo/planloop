@@ -99,7 +99,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 ### Milestone 1 – PLANLOOP_HOME & Configuration
 > Goal: centralize state under `PLANLOOP_HOME` with repeatable initialization.
 
-#### Task B1 – Implement PLANLOOP_HOME resolution *(Status: TODO)*
+#### Task B1 – Implement PLANLOOP_HOME resolution *(Status: DONE – commit 8de34c3 "Implement PLANLOOP_HOME resolution (Task B1)")*
 - **Scope:** Add `planloop/home.py` with `get_home()` that honors the
   `PLANLOOP_HOME` env var and defaults to `~/.planloop`.
 - **Deliverables:** Function returning a `Path`, unit tests covering env override
