@@ -77,7 +77,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   --help` prints Typer default help.
 - **Dependencies:** Task A1.
 
-#### Task A3 – CLI bootstrap *(Status: TODO)*
+#### Task A3 – CLI bootstrap *(Status: DONE – commit f6e0e47 "Stub CLI commands (Task A3)")*
 - **Scope:** Implement `src/planloop/cli.py` exposing a Typer app with placeholder
   commands (`status`, `update`, `alert`, `describe`, `selftest`) that currently
   raise `NotImplementedError`.
