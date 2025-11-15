@@ -145,7 +145,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   helpers without raising.
 - **Dependencies:** Task C1.
 
-#### Task C3 – PLAN.md renderer & parser *(Status: TODO)*
+#### Task C3 – PLAN.md renderer & parser *(Status: DONE – commit ae8dba9 "Add PLAN.md renderer (Task C3)")*
 - **Scope:** Implement `core/render.py` that converts `SessionState` into markdown
   with YAML front matter + sections (`Tasks`, `Context`, etc.) and can recover
   front matter when needed.
