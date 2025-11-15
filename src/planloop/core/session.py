@@ -5,6 +5,7 @@ import secrets
 from datetime import datetime
 from pathlib import Path
 
+from .deadlock import DeadlockTracker
 from .render import render_plan
 from .state import Environment, Now, NowReason, PromptMetadata, SessionState
 from ..home import (
@@ -62,5 +63,6 @@ def create_session(name: str, title: str, project_root: Path) -> SessionState:
     plan_path.write_text(render_plan(state), encoding="utf-8")
 
     (home / CURRENT_SESSION_POINTER).write_text(session_id, encoding="utf-8")
+    DeadlockTracker().persist(session_dir / "deadlock.json")
 
     return state
