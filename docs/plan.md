@@ -137,7 +137,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   serializes/deserializes without mutation.
 - **Dependencies:** Task B3.
 
-#### Task C2 – Schema export & describe helpers *(Status: TODO)*
+#### Task C2 – Schema export & describe helpers *(Status: DONE – commit c7f3e66 "Add schema describe helpers (Task C2)")*
 - **Scope:** Add `core/describe.py` that exports JSON Schemas for state and update
   payloads plus enumerations for `now.reason`, error codes, etc.
 - **Deliverables:** Functions returning dicts, JSON fixtures for tests.
