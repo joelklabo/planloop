@@ -14,6 +14,7 @@ import typer
 
 from .core import describe, registry
 from . import guide as guide_utils
+from .tui import TEXTUAL_AVAILABLE, PlanloopViewApp, SessionViewModel
 from .core.lock import acquire_lock, get_lock_status
 from .core.session import save_session_state
 from .core.session_pointer import get_current_session
@@ -201,6 +202,19 @@ def reuse(
         "goal": goal,
     }
     typer.echo(json.dumps(payload, indent=2))
+
+
+@app.command()
+def view(session: Optional[str] = typer.Option(None, help="Session ID")) -> None:
+    if not TEXTUAL_AVAILABLE:
+        typer.echo("textual is not installed. Run `pip install textual` to use planloop view.")
+        raise typer.Exit(code=1)
+    try:
+        state, _ = _load_session(session)
+    except PlanloopError as exc:
+        raise typer.Exit(code=1) from exc
+    model = SessionViewModel.from_state(state)
+    PlanloopViewApp(model).run()
 
 
 @app.command()

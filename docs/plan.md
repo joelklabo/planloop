@@ -354,7 +354,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 ### Milestone 9 – TUI & Web UI
 > Goal: provide read-only dashboards for sessions.
 
-#### Task K1 – Textual TUI dashboard *(Status: TODO)*
+#### Task K1 – Textual TUI dashboard *(Status: IN_PROGRESS)*
 - **Scope:** Implement `planloop view` that launches a Textual app showing task
   table, signals, lock info, context notes, and work log.
 - **Deliverables:** `tui/app.py`, layout components, keyboard shortcuts.
