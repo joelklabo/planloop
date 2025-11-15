@@ -7,30 +7,56 @@ implementation lands.
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import Optional
 
 import typer
 
+from .core.lock import get_lock_status
+from .core.session_pointer import get_current_session
+from .core.state import SessionState, validate_state
+from .home import SESSIONS_DIR, initialize_home
+
 app = typer.Typer(help="planloop CLI")
 
 
-class NotImplementedCLIError(RuntimeError):
-    """Explicit error for unimplemented commands."""
+class PlanloopError(RuntimeError):
+    """Base error for CLI failures."""
 
 
-def _stub_message(command: str) -> str:
-    return (
-        f"planloop {command} is not implemented yet. "
-        "Follow docs/plan.md milestones to add functionality."
-    )
+def _load_session(session_id: Optional[str]) -> tuple[SessionState, Path]:
+    home = initialize_home()
+    if not session_id:
+        session_id = get_current_session()
+        if not session_id:
+            raise PlanloopError("No session specified and no current session set")
+    session_dir = home / SESSIONS_DIR / session_id
+    if not session_dir.exists():
+        raise PlanloopError(f"Session {session_id} not found")
+    state_path = session_dir / "state.json"
+    if not state_path.exists():
+        raise PlanloopError("state.json missing for session")
+    state = SessionState.model_validate_json(state_path.read_text(encoding="utf-8"))
+    return state, session_dir
 
 
 @app.command()
-def status(session: Optional[str] = typer.Option(None, help="Session ID"), json_output: bool = typer.Option(False, "--json", help="Show JSON")) -> None:
-    """Show the current planloop session status (stub)."""
-    if json_output:
-        typer.echo(json.dumps({"error": _stub_message("status")}, indent=2))
-    raise NotImplementedCLIError(_stub_message("status"))
+def status(session: Optional[str] = typer.Option(None, help="Session ID"), json_output: bool = typer.Option(True, "--json/--no-json", help="JSON output")) -> None:
+    """Show the current planloop session status."""
+    try:
+        state, session_dir = _load_session(session)
+        validate_state(state)
+        lock_status = get_lock_status(session_dir)
+        payload = {
+            "session": state.session,
+            "now": state.now.model_dump(),
+            "tasks": [task.model_dump() for task in state.tasks],
+            "signals": [signal.model_dump() for signal in state.signals],
+            "lock_info": lock_status.info.to_dict() if lock_status.info else None,
+        }
+        typer.echo(json.dumps(payload, indent=2))
+    except PlanloopError as exc:
+        raise typer.Exit(code=1) from exc
 
 
 @app.command()
