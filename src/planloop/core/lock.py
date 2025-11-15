@@ -35,6 +35,12 @@ class LockInfo:
             return None
 
 
+@dataclass
+class LockStatus:
+    locked: bool
+    info: Optional[LockInfo]
+
+
 @contextmanager
 def acquire_lock(session_dir: Path, operation: str, timeout: int = DEFAULT_TIMEOUT) -> Iterator[None]:
     lock_path = session_dir / LOCK_FILE
@@ -65,3 +71,11 @@ def acquire_lock(session_dir: Path, operation: str, timeout: int = DEFAULT_TIMEO
             lock_path.unlink()
         if info_path.exists():
             info_path.unlink()
+
+
+def get_lock_status(session_dir: Path) -> LockStatus:
+    lock_path = session_dir / LOCK_FILE
+    info_path = session_dir / LOCK_INFO_FILE
+    locked = lock_path.exists()
+    info = LockInfo.from_file(info_path) if locked else None
+    return LockStatus(locked=locked, info=info)

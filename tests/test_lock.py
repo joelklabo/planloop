@@ -6,7 +6,7 @@ import time
 
 import pytest
 
-from planloop.core.lock import LOCK_FILE, acquire_lock
+from planloop.core.lock import LOCK_FILE, acquire_lock, get_lock_status
 
 
 def test_acquire_lock_creates_lock(tmp_path):
@@ -45,3 +45,16 @@ def test_acquire_lock_blocks_until_release(tmp_path):
 
     t.join()
     assert order == ["holder", "waiter"]
+
+
+def test_get_lock_status(tmp_path):
+    session_dir = tmp_path
+    status = get_lock_status(session_dir)
+    assert status.locked is False
+    assert status.info is None
+
+    with acquire_lock(session_dir, operation="write"):
+        status = get_lock_status(session_dir)
+        assert status.locked is True
+        assert status.info is not None
+        assert status.info.operation == "write"
