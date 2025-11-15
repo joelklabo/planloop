@@ -12,6 +12,7 @@ from typing import Optional
 
 import typer
 
+from .core import describe
 from .core.lock import acquire_lock, get_lock_status
 from .core.session import save_session_state
 from .core.session_pointer import get_current_session
@@ -127,12 +128,14 @@ def alert(
         raise typer.Exit(code=1) from exc
 
 
-@app.command()
-def describe(json_output: bool = typer.Option(True, "--json")) -> None:
-    """Emit planloop schema information (stub)."""
+@app.command(name="describe")
+def describe_command(json_output: bool = typer.Option(True, "--json")) -> None:
+    """Emit planloop schema information."""
+    payload = describe.describe_payload()
     if json_output:
-        typer.echo(json.dumps({"error": _stub_message("describe")}, indent=2))
-    raise NotImplementedCLIError(_stub_message("describe"))
+        typer.echo(json.dumps(payload, indent=2))
+    else:
+        typer.echo("planloop describe currently supports JSON output only.")
 
 
 @app.command()
