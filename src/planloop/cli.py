@@ -85,6 +85,45 @@ def _load_session(session_id: Optional[str]) -> tuple[SessionState, Path]:
     return state, session_dir
 
 
+def _generate_agent_instructions(state: SessionState, lock_status, queue_status) -> str:
+    """Generate actionable guidance for agents based on current state."""
+    from .core.state import NowReason
+    
+    if state.now.reason == NowReason.CI_BLOCKER:
+        signal = next((s for s in state.signals if s.id == state.now.signal_id), None)
+        if signal:
+            return f"Address blocker signal: {signal.title}. Use 'planloop alert' to close the signal once resolved."
+        return "Address the CI blocker signal and use 'planloop alert --close' when resolved."
+    
+    elif state.now.reason == NowReason.TASK:
+        task = next((t for t in state.tasks if t.id == state.now.task_id), None)
+        if task:
+            return f"Work on task {task.id}: {task.title}. Update with 'planloop update' to mark progress or completion."
+        return "Work on the current task and update status using 'planloop update'."
+    
+    elif state.now.reason == NowReason.COMPLETED:
+        return "All tasks complete! Add final_summary to the session or mark it done."
+    
+    elif state.now.reason == NowReason.IDLE:
+        return "No tasks defined. Use 'planloop update' to add tasks and define the plan."
+    
+    elif state.now.reason == NowReason.WAITING_ON_LOCK:
+        if lock_status.info:
+            return f"Session locked by {lock_status.info.owner}. Wait for lock release or check 'planloop debug' for details."
+        return "Session is locked. Wait for lock release or use 'planloop debug' to inspect."
+    
+    elif state.now.reason == NowReason.DEADLOCKED:
+        return "Deadlock detected. Review 'planloop debug' output and resolve blockers or adjust dependencies."
+    
+    elif state.now.reason == NowReason.ESCALATED:
+        signal = next((s for s in state.signals if s.id == state.now.signal_id), None)
+        if signal:
+            return f"Escalated issue: {signal.title}. Review the signal and take appropriate action."
+        return "An issue has been escalated. Review signals and take action."
+    
+    return "Check 'planloop status' for current state and next steps."
+
+
 @app.command()
 def status(session: Optional[str] = typer.Option(None, help="Session ID"), json_output: bool = typer.Option(True, "--json/--no-json", help="JSON output")) -> None:
     """Show the current planloop session status."""
@@ -96,6 +135,7 @@ def status(session: Optional[str] = typer.Option(None, help="Session ID"), json_
         payload = {
             "session": state.session,
             "now": state.now.model_dump(),
+            "agent_instructions": _generate_agent_instructions(state, lock_status, queue_status),
             "tasks": [task.model_dump(mode="json") for task in state.tasks],
             "signals": [signal.model_dump(mode="json") for signal in state.signals],
             "lock_info": lock_status.info.to_dict() if lock_status.info else None,
