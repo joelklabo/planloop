@@ -552,7 +552,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   enforcement.
 - **Dependencies:** Task P1.
 
-#### Task P3 – Multi-agent queue research *(Status: DONE – commit TBD "Multi-agent queue research (Task P3)")*
+#### Task P3 – Multi-agent queue research *(Status: DONE – commit f20ae71 "Complete queue fairness implementation (Task P3)")*
 - **Scope:** Document approaches for fair locking / queueing so multiple agents
   can share sessions without thrashing (`deadlock` + `waiting_on_lock` loops).
 - **Deliverables:** Design doc or updated plan section summarizing options,
