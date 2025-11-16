@@ -38,7 +38,7 @@ Most commands accept `--json` for agent consumption.
 | `planloop search / templates / reuse` | Discover or reuse prior sessions. |
 | `planloop view` | Launch the Textual TUI (requires `textual`). |
 | `planloop web` | Serve a minimal FastAPI dashboard (requires `fastapi` + `uvicorn`). |
-| `planloop guide --target agents-md --apply` | Inject the agent contract into `AGENTS.md`. |
+| `planloop guide --target agents-md --apply` | Inject the agent contract into `docs/agents.md`. |
 | `planloop update --dry-run/--no-plan-edit/--strict` | Safe modes for previewing or constraining updates. |
 | `planloop snapshot` / `planloop restore <sha>` | Manage session history snapshots (see below). |
 
@@ -165,5 +165,5 @@ your preferred agent tooling.
    tests on main).
 3. Keep changes scoped to a single task/commit. If a task proves too large,
    split it in the plan before coding.
-4. Update `AGENTS.md` via `planloop guide` whenever you change the workflow so
+4. Update `docs/agents.md` via `planloop guide` whenever you change the workflow so
    future agents inherit the latest contract.

@@ -17,7 +17,8 @@ def test_guide_prints_content(tmp_path):
 
 
 def test_guide_apply_inserts_marker(tmp_path):
-    target = tmp_path / "AGENTS.md"
+    target = tmp_path / "docs" / "agents.md"
+    target.parent.mkdir(parents=True, exist_ok=True)
     result = runner.invoke(cli.app, ["guide", "--apply", "--target", str(target)])
     assert result.exit_code == 0
     content = target.read_text()

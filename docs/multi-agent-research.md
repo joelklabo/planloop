@@ -71,7 +71,7 @@ human babysitting and provide meaningful status output.
    - Integrate with existing `DeadlockTracker`, emit new `system/queue_stall`
      signals, and add tests for stale queue entries.
 3. **P3.3 – Docs & prompt updates**
-   - Teach AGENTS.md/README/prompt handshake how to interpret queue data and
+  - Teach `docs/agents.md`/README/prompt handshake how to interpret queue data and
      encourage agents to yield when they are not first in line.
 
 ## Open Questions

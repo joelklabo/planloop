@@ -344,9 +344,9 @@ starts in `Status: TODO` and depends on the tasks above it.
 
 #### Task J3 – `planloop guide` + docs injection *(Status: DONE – commit d3b3a86 "Add planloop guide command (Task J3)")*
 - **Scope:** Build `planloop guide --target agents-md` that renders instructions
-  for AGENTS.md. Detect missing `<!-- PLANLOOP-INSTALLED -->` markers and surface
+  for `docs/agents.md`. Detect missing `<!-- PLANLOOP-INSTALLED -->` markers and surface
   `missing-docs-warning.md`, optionally auto-appending guidance.
-- **Deliverables:** CLI command, helper that finds AGENTS.md / Copilot configs.
+- **Deliverables:** CLI command, helper that finds `docs/agents.md` / Copilot configs.
 - **Acceptance Criteria:** Running `planloop guide` prints markdown referencing
   prompts + handshake contract; repeated runs avoid duplicate insertion.
 - **Dependencies:** Task J2.
@@ -399,7 +399,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 - **Notes:** `src/planloop/config.py` + `src/planloop/history.py` wire
   `commit_state` everywhere, initialize `.gitignore`, configure git identity,
   and stage the generated ignore file alongside `state.json`/`PLAN.md`. README
-  & AGENTS explain how to enable history; snapshot tests ensure the feature is
+  & `docs/agents.md` explain how to enable history; snapshot tests ensure the feature is
   exercised under `pytest` (skipping when git is missing).
 
 #### Task L2 – Snapshot command *(Status: DONE – commit TBD "Add snapshot CLI + tests (Task L2)")*
@@ -411,7 +411,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 - **Dependencies:** Task L1.
 - **Notes:** `cli.snapshot` calls the history helper, emits the commit hash, and
   the CLI test (`tests/test_cli_snapshot.py`) verifies `.gitignore` creation plus
-  successful snapshot creation when git exists. README/AGENTS document usage.
+  successful snapshot creation when git exists. README/docs/agents document usage.
 
 #### Task L3 – Restore command *(Status: DONE – commit TBD "Add restore validation (Task L3)")*
 - **Scope:** Add `planloop restore <snapshot>` that resets the session repo to a
@@ -422,7 +422,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   state; artifacts dir remains untouched.
 - **Dependencies:** Task L2.
 - **Notes:** `planloop restore` reloads the restored state, updates the registry,
-  revalidates invariants, and reuses the rendered plan. README/AGENTS describe
+  revalidates invariants, and reuses the rendered plan. README/docs/agents describe
   when to use it and stress rerunning tests afterward.
 
 ### Milestone 11 – Testing & Self-Test Harness
@@ -519,7 +519,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 - **Acceptance Criteria:** Violating the mode returns explicit errors and leaves
   state untouched.
 - **Status Notes:** CLI now blocks structural edits under `--no-plan-edit` and
-  rejects unknown top-level fields under `--strict`. README/AGENTS describe the
+  rejects unknown top-level fields under `--strict`. README/docs/agents describe the
   workflow, and tests assert both modes.
 - **Dependencies:** Task O1.
 
@@ -536,7 +536,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   diff output.
 - **Status Notes:** Added `core/diff.py` plus `tests/test_diff.py`; dry-run now
   prints `{"dry_run": {...}}` with added/updated tasks and context changes, and
-  CLI tests assert the new structure. README/AGENTS mention the safer workflow.
+  CLI tests assert the new structure. README/docs/agents mention the safer workflow.
 - **Dependencies:** Task O1.
 
 #### Task P2 – Configurable safe-mode defaults *(Status: DONE – commit TBD "Safe mode defaults (Task P2)")*
@@ -560,14 +560,14 @@ starts in `Status: TODO` and depends on the tasks above it.
 - **Acceptance Criteria:** Clear proposal ready for implementation, including
   potential config flags and telemetry needs.
 - **Dependencies:** Task F1 (locks), Task E3 (deadlock).
-- **Status Notes:** See `docs/v1.6-multi-agent-research.md` for the current
+ - **Status Notes:** See `docs/multi-agent-research.md` for the current
   proposal covering queue metadata, status surfacing, and follow-up tasks.
 
-#### Task P4 – Automated agent lab research *(Status: IN_PROGRESS)*
-- **Scope:** Design and document an automated iterative lab for Copilot/OpenAI/Claude, including prompt testing scenarios, metrics for distraction, and a survey of public best practices (web references) for validating CLI-based agents.
-- **Deliverables:** Updated lab overview, notes on real-world references, and concrete steps for improving the lab iteratively based on those references.
-- **Acceptance Criteria:** The research notes cite multiple strategies or references, explain how we’ll measure “following the planloop contract,” and point to future automation runs (e.g., lab summary, prompt iteration loops).
-- **Status Notes:** The lab scaffolding exists; this task now focuses on capturing online references and comparing alternative strategies before automating prompt iterations with those agents.
+#### Task P4 – Automated agent lab research *(Status: DONE – commit TBD "Document agent lab iteration (Task P4)")*
+- **Scope:** Document the automated iteration lab for Copilot/OpenAI/Claude and describe how we’ll measure compliance, iterate prompts, and capture references.
+- **Deliverables:** `docs/agent_lab_plan.md` detailing goals, matrix coverage, metrics, iteration loop, and research steps (including web references once available) plus lab results/reporting guidance.
+- **Acceptance Criteria:** The plan now references the CLI tools’ help outputs, explains how to inject the first prompt via each agent, and outlines the compliance metrics we’ll capture for prompt iteration.
+- **Status Notes:** The prompt lab plan is written; next steps are to install each CLI, capture their help info (done), and begin wiring the iteration/measurement loop described in that document.
 - **Dependencies:** Task P3.
 
 ---
@@ -581,5 +581,5 @@ starts in `Status: TODO` and depends on the tasks above it.
 
 ## Documentation status
 - `docs/plan.md` – fully updated backlog, including Milestone 14 and the new P4 research note. No outstanding TODOs.
-- `README.md` / `AGENTS.md` – describe the CLI safe modes, logging/debug improvements, and prompt lab workflow; no incomplete sections.
-- `docs/v1.6-multi-agent-research.md` – houses the queue design and automated lab research (Tasks P3 & P4) and is ready for implementation reference.
+- `README.md` / `docs/agents.md` – describe the CLI safe modes, logging/debug improvements, and prompt lab workflow; no incomplete sections.
+- `docs/multi-agent-research.md` – houses the queue design and automated lab research (Tasks P3 & P4) and is ready for implementation reference.

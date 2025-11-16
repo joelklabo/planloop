@@ -312,12 +312,13 @@ def view(session: Optional[str] = typer.Option(None, help="Session ID")) -> None
 def guide(
     prompt_set: str = typer.Option("core-v1", help="Prompt set"),
     output: Optional[Path] = typer.Option(None, "--output", "-o", help="Write to file"),
-    apply: bool = typer.Option(False, "--apply", help="Insert into AGENTS.md"),
+    apply: bool = typer.Option(False, "--apply", help="Insert into docs/agents.md"),
     target: Optional[Path] = typer.Option(None, "--target", help="Target file"),
 ) -> None:
     content = guide_utils.render_guide(prompt_set)
     if apply:
-        path = target or Path("AGENTS.md")
+        path = target or Path("docs/agents.md")
+        path.parent.mkdir(parents=True, exist_ok=True)
         guide_utils.insert_guide(path, content)
         typer.echo(f"Guide inserted into {path}")
     else:

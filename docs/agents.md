@@ -1,15 +1,15 @@
 # planloop – Agent Guide
 
 `planloop` is halfway through its v1.5 roadmap. The CLI, registry, prompts, TUI,
-web view, self-test harness, and history helpers exist; logging and safe modes
-still need implementation. Use this guide plus `docs/plan.md` to stay aligned
-with the workflow humans expect.
+web view, self-test harness, and history helpers exist; logging, safe modes, and
+the automated prompt lab still need implementation. Use this guide plus
+`docs/plan.md` to stay aligned with the workflow humans expect.
 
 ## Source of truth
 - `docs/plan.md` – the canonical backlog. Update task statuses there before and
   after every commit, including the commit SHA when you mark items `DONE`.
-- `AGENTS.md` (this file) – the distilled rules you should internalize before
-  coding. Re-run `planloop guide --target AGENTS.md --apply` when the prompts or
+- `docs/agents.md` (this file) – the distilled rules you should internalize before
+  coding. Re-run `planloop guide --target agents-md --apply` when the prompts or
   workflow change.
 
 ## Workflow contract
@@ -51,6 +51,9 @@ with the workflow humans expect.
 - `planloop selftest --json` → run the fake-agent harness. It creates a
   temporary PLANLOOP_HOME, executes clean/CI/dependency scenarios, and reports
   whether the loop still behaves end-to-end.
+- `python labs/run_lab.py --scenario cli-basics --agents copilot,openai,claude` →
+  execute the automated prompt lab for all agents once their adapter commands are
+  wired via `PLANLOOP_LAB_*_CMD`.
 
 ## History + snapshots quickstart
 1. Run `planloop status` once to create `PLANLOOP_HOME` (defaults to
