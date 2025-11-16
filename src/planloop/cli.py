@@ -428,7 +428,7 @@ def reuse(
         "template_session": state.session,
         "template_title": state.title,
         "template_summary": state.final_summary,
-        "template_tasks": [task.model_dump() for task in state.tasks],
+        "template_tasks": [task.model_dump(mode="json") for task in state.tasks],
         "goal": goal,
     }
     typer.echo(json.dumps(payload, indent=2))
