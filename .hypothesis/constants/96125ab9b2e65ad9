@@ -1,0 +1,4 @@
+# file: /Users/honk/code/planloop/src/planloop/core/update.py
+# hypothesis_version: 6.141.1
+
+['UpdateError', 'Version mismatch', 'apply_update']

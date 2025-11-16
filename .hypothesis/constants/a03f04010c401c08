@@ -1,0 +1,4 @@
+# file: /Users/honk/code/planloop/src/planloop/core/session.py
+# hypothesis_version: 6.141.1
+
+['%Y%m%dT%H%M%SZ', '-', 'PLAN.md', 'Update session', 'core-v1', 'deadlock.json', 'session', 'state.json', 'unknown', 'utf-8']

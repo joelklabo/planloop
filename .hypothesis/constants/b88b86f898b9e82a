@@ -1,0 +1,4 @@
+# file: /Users/honk/code/planloop/labs/scenarios/cli_basics.py
+# hypothesis_version: 6.141.1
+
+['Add hello command', 'CLI Basics', 'Write unit tests', 'cli-basics', 'lab scenario seed']

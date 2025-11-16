@@ -1,0 +1,4 @@
+# file: /Users/honk/code/planloop/src/planloop/core/render.py
+# hypothesis_version: 6.141.1
+
+['\n---\n', '## Agent Work Log', '## Artifacts', '## Context', '## Final Summary', '## Next Steps', '## Tasks', '(in memory)', ', ', '-', '- _No signals_', '- _None_', '---\n', '1.5', 'CLOSED', 'OPEN', '_No tasks defined._', '_Not provided yet_', 'branch', 'created_at', 'environment', 'last_updated_at', 'name', 'parse_front_matter', 'planloop_version', 'project_root', 'prompt_set', 'purpose', 'render_plan', 'schema_version', 'session', 'tags', 'title']

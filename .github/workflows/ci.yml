@@ -53,3 +53,7 @@ jobs:
     - name: Check imports can be resolved
       run: |
         python -c "import planloop; print(planloop.__file__)"
+    
+    - name: Run mypy type checking
+      run: |
+        mypy src/planloop --ignore-missing-imports

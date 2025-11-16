@@ -1,0 +1,4 @@
+# file: /Users/honk/code/planloop/src/planloop/core/lock.py
+# hypothesis_version: 6.141.1
+
+[0.1, '.json', '.lock', '.lock_info', '.lock_queue', 'Lock already held', 'LockInfo | None', 'PLANLOOP_AGENT_NAME', 'Queue stall detected', 'QueueEntry', 'agent', 'held_by', 'id', 'operation', 'pending', 'position', 'queue_head', 'queue_stall', 'requested_at', 'since', 'threshold', 'unknown', 'utf-8']

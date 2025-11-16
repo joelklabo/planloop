@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "version": 1,
+  "session": "ci-20251116T041455Z-c7d4",
+  "name": "CI",
+  "title": "Demo",
+  "purpose": "",
+  "created_at": "2025-11-16T04:14:55.826478",
+  "last_updated_at": "2025-11-16T04:22:51.306742",
+  "project_root": "/repo",
+  "branch": null,
+  "prompts": {
+    "set": "core-v1",
+    "goal_version": null,
+    "handshake_version": null,
+    "summary_version": null
+  },
+  "environment": {
+    "os": "unknown",
+    "python": null,
+    "xcode": null,
+    "node": null
+  },
+  "tags": [],
+  "tasks": [],
+  "signals": [
+    {
+      "id": "ci-blocker-1",
+      "type": "ci",
+      "kind": "build",
+      "level": "blocker",
+      "open": false,
+      "title": "CI failing",
+      "message": "Tests red",
+      "link": null,
+      "extra": {},
+      "attempts": 0
+    }
+  ],
+  "next_steps": [],
+  "context_notes": [],
+  "artifacts": [],
+  "now": {
+    "reason": "idle",
+    "task_id": null,
+    "signal_id": null
+  },
+  "done": false,
+  "final_summary": null
+}

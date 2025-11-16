@@ -1,0 +1,15 @@
+{
+  "sessions": [
+    {
+      "session": "research-20251116T042901Z-28b7",
+      "name": "Research",
+      "title": "Queue fairness",
+      "tags": [],
+      "project_root": "/Users/honk/code/planloop",
+      "created_at": "2025-11-16T04:29:01.521979",
+      "last_updated_at": "2025-11-16T08:56:07.442058",
+      "done": false
+    }
+  ],
+  "updated_at": "2025-11-16T08:56:07.444229"
+}

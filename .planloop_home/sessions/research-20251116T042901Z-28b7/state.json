@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "version": 4,
+  "session": "research-20251116T042901Z-28b7",
+  "name": "Research",
+  "title": "Queue fairness",
+  "purpose": "",
+  "created_at": "2025-11-16T04:29:01.521979",
+  "last_updated_at": "2025-11-16T08:56:07.442058",
+  "project_root": "/Users/honk/code/planloop",
+  "branch": null,
+  "prompts": {
+    "set": "core-v1",
+    "goal_version": null,
+    "handshake_version": null,
+    "summary_version": null
+  },
+  "environment": {
+    "os": "unknown",
+    "python": null,
+    "xcode": null,
+    "node": null
+  },
+  "tags": [],
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Investigate the queue fairness regression",
+      "type": "investigate",
+      "status": "IN_PROGRESS",
+      "depends_on": [],
+      "commit_sha": null,
+      "last_updated_at": "2025-11-16T08:56:07.441971"
+    },
+    {
+      "id": 2,
+      "title": "Document the queue-handling plan",
+      "type": "doc",
+      "status": "TODO",
+      "depends_on": [
+        1
+      ],
+      "commit_sha": null,
+      "last_updated_at": null
+    }
+  ],
+  "signals": [
+    {
+      "id": "ci-1",
+      "type": "ci",
+      "kind": "build",
+      "level": "blocker",
+      "open": false,
+      "title": "CI failed",
+      "message": "Local tests now passing; closing blocker.",
+      "link": null,
+      "extra": {},
+      "attempts": 1
+    },
+    {
+      "id": "ci-blocker-lab",
+      "type": "ci",
+      "kind": "build",
+      "level": "blocker",
+      "open": false,
+      "title": "CI failing",
+      "message": "Local suite rerun succeeded; blocker cleared.",
+      "link": null,
+      "extra": {},
+      "attempts": 1
+    }
+  ],
+  "next_steps": [
+    "Finish investigating the queue behavior",
+    "Share the write-up before touching the lock logic"
+  ],
+  "context_notes": [
+    "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+  ],
+  "artifacts": [],
+  "now": {
+    "reason": "task",
+    "task_id": 1,
+    "signal_id": null
+  },
+  "done": false,
+  "final_summary": null
+}
