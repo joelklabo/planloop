@@ -1,0 +1,9 @@
+- Opened the temporary `research-20251116T042901Z-28b7` session under `PLANLOOP_HOME=.planloop_home`, injected the `ci-blocker-lab` signal so there was a blocker to close, verified `planloop status` reported `ci_blocker`, and then closed it with `planloop alert --close` before touching the plan as requested.
+- Reran `planloop status` after the blocker closure, recorded the idle reason in the update payload, and used `planloop update --session … --file /tmp/update.json` to add two tasks plus context/next steps; the final `status.json` now captures the refreshed session state with `now.reason=task` and the new TODOs (`status.json:3-29` shows the reason and the two task entries).
+- The refreshed status also shows both `ci-1` and `ci-blocker-lab` signals closed, confirming no blockers remain (`status.json:30-54`).
+
+- Testing: Not run (not requested).
+
+**Next Steps**
+1. Start work on Task 1 (“Investigate the queue fairness regression”) so the plan’s in-progress work reflects real code changes.
+2. Once the investigation yields a direction, follow up on Task 2 (“Document the queue-handling plan”) before tackling any lock-queue fixes.

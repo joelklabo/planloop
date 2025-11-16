@@ -1,0 +1,51 @@
+{
+  "scenario": "cli-basics",
+  "session": "cli-basics-20251116T041528Z-076e",
+  "agents": [
+    {
+      "name": "claude",
+      "enabled": true,
+      "returncode": 1,
+      "message": "exit code 1",
+      "stdout": "labs/results/cli-basics-20251116T041528Z/claude/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T041528Z/claude/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "score": 0.0,
+        "reasons": [
+          "trace log missing"
+        ]
+      }
+    },
+    {
+      "name": "copilot",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T041528Z/copilot/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T041528Z/copilot/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "score": 0.0,
+        "reasons": [
+          "trace log missing"
+        ]
+      }
+    },
+    {
+      "name": "openai",
+      "enabled": true,
+      "returncode": 2,
+      "message": "exit code 2",
+      "stdout": "labs/results/cli-basics-20251116T041528Z/openai/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T041528Z/openai/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "score": 0.0,
+        "reasons": [
+          "trace log missing"
+        ]
+      }
+    }
+  ]
+}

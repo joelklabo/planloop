@@ -1,0 +1,41 @@
+✓ Read pyproject.toml (43 lines)
+
+✓ Read README.md (183 lines)
+
+✓ Git status and run tests
+   $ git --no-pager status && pytest -q
+   ↪ 36 lines...
+
+✓ Read src/planloop/cli.py (416 lines)
+
+✓ Read docs/plan.md (593 lines)
+
+✓ grep: "CI blocker" in **/*.md
+   ↪ 5 files matched
+
+✓ grep: "alert --session" in src/planloop/**/*.py
+   ↪ No matches found
+
+✓ grep: "def alert" in src/planloop/**/*.py
+   ↪ 1 file matched
+
+✓ Read src/planloop/core/session.py (114 lines)
+
+✓ Install deps and inspect sessions
+   $ python -m pip install --quiet -e .[dev] && python -c "import planloop, json; from
+   planloop.home import initialize_home, SESSIONS_DIR; home=initialize_home();
+   print('HOME',home); import os, pathlib; sessions=(home/SESSIONS_DIR);
+   print('SESSIONS_DIR', sessions); print('SESSIONS_EXIST', sessions.exists());
+   print('SESSION_LIST', [p.name for p in sessions.iterdir() if p.is_dir()] if ...
+   ↪ 5 lines...
+
+✓ Close CI blocker and show status
+   $ python3 -m pip install --quiet -e .[dev] && python3 - <<'PY'
+   import json, sys
+   from pathlib import Path
+   from planloop.home import initialize_home, SESSIONS_DIR
+   from planloop.core.session import load_session_state_from_disk, save_session_state...
+   ↪ 38 lines...
+
+Blocked: Python 3.11+ not available (current is 3.9.6), so planloop can’t install and no session / CI blocker exists. Install Python 3.11 (e.g. via pyenv: pyenv install 3.11.9 && pyenv local 3.11.9), then run: python3 -m pip install -e .[dev] && planloop status --session <session> (identify blocker) && planloop alert --session <session> --id <signal_id> --close. Provide the session ID + blocker signal ID and I’ll close it and rerun status.
+

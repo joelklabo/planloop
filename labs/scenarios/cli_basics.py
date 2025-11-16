@@ -27,6 +27,7 @@ class CLIBasicsScenario:
             Task(id=1, title="Add hello command", type=TaskType.FEATURE),
             Task(id=2, title="Write unit tests", type=TaskType.TEST, status=TaskStatus.TODO, depends_on=[1]),
         ]
+        state.now = state.compute_now()
         save_session_state(home / SESSIONS_DIR / state.session, state, message="lab scenario seed")
         session_dir = home / SESSIONS_DIR / state.session
         return ScenarioResult(session_id=state.session, session_dir=session_dir)

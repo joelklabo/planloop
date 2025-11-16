@@ -1,0 +1,2434 @@
+OpenAI Codex v0.58.0 (research preview)
+--------
+workdir: /Users/honk/code/planloop
+model: gpt-5.1-codex-mini
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: medium
+reasoning summaries: auto
+session id: 019a8b0a-e098-7812-ac8a-e3a0f670392a
+--------
+user
+Close the CI blocker, rerun status, and update tasks.
+
+thinking
+**Assessing repository complexity**
+exec
+bash -lc pwd in /Users/honk/code/planloop succeeded in 41ms:
+/Users/honk/code/planloop
+
+thinking
+**Checking git status**
+exec
+bash -lc 'git status -sb' in /Users/honk/code/planloop succeeded in 62ms:
+## main...origin/main [ahead 3]
+ M README.md
+ M docs/agent_lab_plan.md
+ M docs/multi-agent-research.md
+ M docs/plan.md
+ M labs/run_lab.py
+ M labs/scenarios/cli_basics.py
+ M src/planloop/cli.py
+ M src/planloop/core/deadlock.py
+ M src/planloop/core/lock.py
+ M src/planloop/core/update.py
+ M src/planloop/templates/prompts/core-v1/handshake.prompt.md
+ M tests/test_cli_status.py
+ M tests/test_deadlock.py
+ M tests/test_lock.py
+?? .hypothesis/
+?? .planloop_demo/
+?? .planloop_home/
+?? docs/prompt_lab_results.md
+?? docs/prompt_lab_run_report.md
+
+thinking
+**Investigating CI blocker and status tasks**
+exec
+bash -lc 'cat status.json' in /Users/honk/code/planloop succeeded in 42ms:
+{
+  "session": "research-20251116T042901Z-28b7",
+  "now": {
+    "reason": "task",
+    "task_id": 1,
+    "signal_id": null
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Investigate the queue fairness regression",
+      "type": "investigate",
+      "status": "TODO",
+      "depends_on": [],
+      "commit_sha": null,
+      "last_updated_at": null
+    },
+    {
+      "id": 2,
+      "title": "Document the queue-handling plan",
+
+thinking
+**Preparing to rerun tests**
+exec
+bash -lc pytest in /Users/honk/code/planloop exited 127 in 42ms:
+bash: pytest: command not found
+
+thinking
+**Running tests with pytest**
+exec
+bash -lc 'python3 -m pytest' in /Users/honk/code/planloop succeeded in 3.11s:
+============================= test session starts ==============================
+platform darwin -- Python 3.9.6, pytest-8.4.2, pluggy-1.6.0
+rootdir: /Users/honk/code/planloop
+configfile: pyproject.toml
+plugins: hypothesis-6.141.1, anyio-4.10.0
+collected 84 items
+
+tests/test_cli_alert.py ..                                               [  2%]
+tests/test_cli_debug.py .                                                [  3%]
+tests/test_cli_describe.py .                                             [  4%]
+tests/test_cli_guide.py ..                                               [  7%]
+tests/test_cli_loop.py .                                                 [  8%]
+tests/test_cli_reuse.py ..                                               [ 10%]
+tests/test_cli_search.py ..                                              [ 13%]
+tests/test_cli_selftest.py .                                             [ 14%]
+tests/test_cli_sessions.py ..                                            [ 16%]
+tests/test_cli_snapshot.py .                                             [ 17%]
+tests/test_cli_status.py .....                                           [ 23%]
+tests/test_cli_templates.py ..                                           [ 26%]
+tests/test_cli_update.py .......                                         [ 34%]
+
+thinking
+**Reviewing task status updates**
+exec
+bash -lc 'rg -n "Investigate the queue" -n status.json -n docs' in /Users/honk/code/planloop succeeded in 67ms:
+status.json:11:      "title": "Investigate the queue fairness regression",
+
+thinking
+**Searching for status.json usage**
+exec
+bash -lc "rg -n \"status\\.json\" -n" in /Users/honk/code/planloop succeeded in 57ms:
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:56:status.json
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:62:bash -lc 'cat status.json' in /Users/honk/code/planloop succeeded in 50ms:
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:416:bash -lc "stat -c '%n %s' status.json" in /Users/honk/code/planloop exited 1 in 67ms:
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:423:bash -lc "stat -f '%N %z' status.json" in /Users/honk/code/planloop succeeded in 50ms:
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:424:status.json 0
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:427:**Checking for status.json and plans**
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:429:bash -lc 'rg --files | grep status.json' in /Users/honk/code/planloop succeeded in 57ms:
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:430:status.json
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:663:bash -lc "stat -c '%n %s' status.json" in /Users/honk/code/planloop exited 1 in 67ms:
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:759:**Assessing pip installation and status.json handling**
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:761:I’m considering that pip isn’t installed and network restrictions prevent fetching packages, so I might try using Python’s ensurepip to install pip offline. I’m also thinking about how to handle the likely needed dependencies given no internet access and whether tests can run without them. At the same time, I’m trying to understand how to close the CI blocker and update tasks, possibly by generating or updating a `status.json` file based on plan state or command output, so I want to check relevant docs for instructions on this file.
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:797:✓ Read status.json (5 lines)
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:803:✓ grep: "status.json"
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:812:✓ Read status.json (5 lines)
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:814:✓ Read status.json (5 lines)
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:974:**Investigating status.json and CI blocker closure**
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:976:bash -lc 'rg -n "status.json"' in /Users/honk/code/planloop succeeded in 53ms:
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:978:labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:56:status.json
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:979:labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:62:bash -lc 'cat status.json' in /Users/honk/code/planloop succeeded in 50ms:
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:980:labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:416:bash -lc "stat -c '%n %s' status.json" in /Users/honk/code/planloop exited 1 in 67ms:
+
+thinking
+**Reviewing plan instructions**
+exec
+bash -lc "sed -n '1,200p' docs/plan.md" in /Users/honk/code/planloop succeeded in 43ms:
+---
+title: planloop – v1.5 Implementation Task Breakdown
+version: 1.5
+status: draft
+owner: joel
+created_at: 2025-11-15
+updated_at: 2025-11-15
+purpose: |
+  Convert the v1.5 specification into discrete, commit-scale tasks that keep
+  planloop's implementation on rails for both humans and AI agents.
+tags:
+  - agent-tools
+  - local-dev
+  - ios
+  - ci
+---
+
+# Implementation Overview
+
+`planloop` keeps AI coding agents inside a strict, CI-aware loop that is encoded
+
+thinking
+**Searching documentation for status update instructions**
+exec
+bash -lc 'rg -n "queue fairness" -n' in /Users/honk/code/planloop succeeded in 48ms:
+status.json:11:      "title": "Investigate the queue fairness regression",
+docs/plan.md:584:2. Capture the queue fairness research in a dedicated v1.6 backlog so the next
+docs/plan.md:593:- `docs/multi-agent-research.md` – records the queue fairness design (TTL pruning, queue-stall telemetry, CLI status guidance, and self-test behavior) so v1.6 implementation work can follow the research notes.
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:1354:    {\"title\": \"Investigate the queue fairness regression\", \"type\": \"investigate\"},
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:1394:      "title": "Investigate the queue fairness regression",
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:1444:    11	      "title": "Investigate the queue fairness regression",
+labs/results/cli-basics-20251116T044241Z/openai/stderr.txt:1467:1. Start work on Task 1 (“Investigate the queue fairness regression”) so the plan’s in-progress work reflects real code changes.
+labs/results/cli-basics-20251116T044241Z/openai/stdout.txt:8:1. Start work on Task 1 (“Investigate the queue fairness regression”) so the plan’s in-progress work reflects real code changes.
+labs/results/cli-basics-20251116T050101Z/openai/stderr.txt:60:      "title": "Investigate the queue fairness regression",
+labs/results/cli-basics-20251116T050101Z/openai/stderr.txt:106:status.json:11:      "title": "Investigate the queue fairness regression",
+labs/results/cli-basics-20251116T050101Z/openai/stderr.txt:161:bash -lc 'rg -n "queue fairness" -n' in /Users/honk/code/planloop
+labs/results/cli-basics-20251116T041620Z/openai/stderr.txt:706:  queue fairness proposal. See `src/planloop/core/lock.py` and `docs/multi-agent-research.md` for
+labs/results/cli-basics-20251116T041620Z/openai/stderr.txt:801:labs/results/cli-basics-20251116T041528Z/copilot/stdout.txt:50:CI blocker closed, status refreshed, plan updated (Task P3 status notes include resumed research). Next step: draft queue fairness proposal. Let me know if you want a commit or further updates.
+labs/results/cli-basics-20251116T041620Z/openai/stderr.txt:806:bash -lc 'rg -n "Next step: draft queue fairness proposal" -n' in /Users/honk/code/planloop succeeded in 54ms:
+labs/results/cli-basics-20251116T041620Z/openai/stderr.txt:807:labs/results/cli-basics-20251116T041620Z/openai/stderr.txt:801:labs/results/cli-basics-20251116T041528Z/copilot/stdout.txt:50:CI blocker closed, status refreshed, plan updated (Task P3 status notes include resumed research). Next step: draft queue fairness proposal. Let me know if you want a commit or further updates.
+labs/results/cli-basics-20251116T041620Z/openai/stderr.txt:808:labs/results/cli-basics-20251116T041620Z/openai/stderr.txt:806:bash -lc 'rg -n "Next step: draft queue fairness proposal" -n' in /Users/honk/code/planloop
+labs/results/cli-basics-20251116T041620Z/openai/stderr.txt:809:labs/results/cli-basics-20251116T041528Z/copilot/stdout.txt:50:CI blocker closed, status refreshed, plan updated (Task P3 status notes include resumed research). Next step: draft queue fairness proposal. Let me know if you want a commit or further updates.
+labs/results/cli-basics-20251116T041620Z/openai/stderr.txt:814:I’m organizing how to update `docs/plan.md` to include the closed CI blocker, refreshed status, and next steps about drafting the queue fairness proposal, weaving in mentions of passing tests via `python3 -m pytest -q`. I’m also considering if and how to run the `planloop status` command to mimic CLI status updates, all while ensuring clarity and flow in the documentation.
+labs/results/cli-basics-20251116T043355Z/copilot/stdout.txt:64:CI blocker closed; status shows idle. Resume next step per plan. Proceed with queue fairness research follow-up.
+labs/results/cli-basics-20251116T041528Z/copilot/stdout.txt:36:   │ 566  +    queue fairness proposal. See `src/planloop/core/lock.py` and                       │
+
+thinking
+**Preparing to update task statuses**
+exec
+bash -lc "sed -n '1,200p' src/planloop/core/state.py" in /Users/honk/code/planloop succeeded in 48ms:
+"""Session state models for planloop."""
+from __future__ import annotations
+
+from datetime import datetime
+from enum import Enum
+from typing import Dict, List, Optional, Set
+
+from pydantic import BaseModel, Field, PositiveInt
+
+
+class TaskType(str, Enum):
+    TEST = "test"
+    FIX = "fix"
+    REFACTOR = "refactor"
+    FEATURE = "feature"
+    DOC = "doc"
+    CHORE = "chore"
+    DESIGN = "design"
+    INVESTIGATE = "investigate"
+
+
+thinking
+**Searching for status file guidance**
+exec
+bash -lc "sed -n '520,640p' docs/plan.md" in /Users/honk/code/planloop succeeded in 45ms:
+  state untouched.
+- **Status Notes:** CLI now blocks structural edits under `--no-plan-edit` and
+  rejects unknown top-level fields under `--strict`. README/docs/agents describe the
+  workflow, and tests assert both modes.
+- **Dependencies:** Task O1.
+
+### Milestone 14 – v1.6 Planning & Enhancements
+> Goal: capture follow-up work discovered during milestone 13 and scope the v1.6 roadmap.
+
+#### Task P1 – Rich dry-run diff view *(Status: DONE – commit TBD "Add dry-run diff summary (Task P1)")*
+- **Scope:** Upgrade `planloop update --dry-run` to emit a human-friendly diff
+  (tasks/context/next steps) instead of the full JSON blob.
+- **Deliverables:** Diff renderer, CLI option to switch between summary/full
+  output, doc updates.
+- **Acceptance Criteria:** Operators can quickly see what would change without
+  scrolling through entire states; snapshot-based regression tests cover the
+  diff output.
+- **Status Notes:** Added `core/diff.py` plus `tests/test_diff.py`; dry-run now
+  prints `{"dry_run": {...}}` with added/updated tasks and context changes, and
+  CLI tests assert the new structure. README/docs/agents mention the safer workflow.
+
+thinking
+**Reviewing plan updates for task status**
+exec
+bash -lc 'rg -n "Task 1" docs/plan.md' in /Users/honk/code/planloop exited 1 in 59ms:
+
+
+thinking
+**Checking for task references in docs**
+exec
+bash -lc "sed -n '1,200p' docs/multi-agent-research.md" in /Users/honk/code/planloop succeeded in 42ms:
+# planloop v1.6 – Multi-Agent Locking Research
+
+## Motivation
+Milestone 13 uncovered the need for stronger coordination when multiple agents
+share a PLAN.md/state.json pair. The current `.lock` implementation is a simple
+binary mutex; agents that find the lock held spin until it is released, which:
+
+- Gives no fairness guarantees (one agent could starve others by repeatedly
+  reacquiring the lock).
+- Offers no queue visibility so humans cannot tell who is waiting.
+- Lacks telemetry (e.g., wait durations, deadlock patterns) needed to tune the
+  workflow.
+
+v1.6 should introduce a “lock queue” concept so agents can coordinate without
+human babysitting and provide meaningful status output.
+
+## Goals
+1. **Fairness:** Ensure agents that request the lock are served in FIFO order
+   and that humans can observe the queue.
+2. **Transparency:** Surface the wait queue and estimator in `planloop status`
+
+thinking
+**Reviewing status file details**
+exec
+bash -lc "python3 - <<'PY'
+import json
+with open('status.json') as f:
+    import pprint
+    pprint.pprint(json.load(f))
+PY" in /Users/honk/code/planloop succeeded in 90ms:
+{'lock_info': None,
+ 'lock_queue': {'pending': [], 'position': None},
+ 'now': {'reason': 'task', 'signal_id': None, 'task_id': 1},
+ 'safe_mode_defaults': {'dry_run': False,
+                        'no_plan_edit': False,
+                        'strict': False},
+ 'session': 'research-20251116T042901Z-28b7',
+ 'signals': [{'attempts': 0,
+              'extra': {},
+              'id': 'ci-1',
+              'kind': 'build',
+              'level': 'blocker',
+              'link': None,
+              'message': 'Tests failing',
+              'open': False,
+              'title': 'CI failed',
+              'type': 'ci'},
+             {'attempts': 0,
+              'extra': {},
+              'id': 'ci-blocker-lab',
+
+thinking
+**Reviewing task updates and CLI commands**
+exec
+bash -lc "sed -n '1,200p' src/planloop/cli.py" in /Users/honk/code/planloop succeeded in 53ms:
+"""Typer CLI skeleton for planloop.
+
+Task A3 requires stubbing primary commands (`status`, `update`, `alert`,
+`describe`, `selftest`) so agents can discover the interface even before the
+implementation lands.
+"""
+from __future__ import annotations
+
+import json
+import logging
+import os
+from pathlib import Path
+from typing import Optional
+
+import typer
+
+from .core import describe, registry, selftest as selftest_module
+from . import guide as guide_utils
+from .cli_utils import format_log_tail
+from .history import create_snapshot, restore_snapshot
+
+thinking
+**Analyzing planloop status and status.json structure**
+
+I'm figuring out how to close the CI blocker by running tests and then the `planloop status` command to produce or update `status.json`. I want to understand how the status file reflects task progress and timestamp updates, so I'm searching lab results and logs for `status.json` examples to get its expected structure and how to update it properly.
+exec
+bash -lc "rg -n \"status\\.json\" labs/results/cli-basics-20251116T050101Z/openai/stdout.txt" in /Users/honk/code/planloop exited 1 in 77ms:
+
+
+thinking
+**Investigating status.json usage**
+
+I'm trying to figure out how `status.json` is used and updated in the repo, especially in relation to the autop-run and plan state. Since no code references it, I'm considering that it might be updated manually or generated by autop-run processes. I want to look into the labs results directories to find actual `status.json` files for clues on structure and contents to properly update it.
+exec
+bash -lc 'ls labs/results' in /Users/honk/code/planloop succeeded in 59ms:
+cli-basics-20251116T022802Z
+cli-basics-20251116T022907Z
+cli-basics-20251116T022908Z
+cli-basics-20251116T023020Z
+cli-basics-20251116T023022Z
+cli-basics-20251116T023024Z
+cli-basics-20251116T023127Z
+cli-basics-20251116T023129Z
+cli-basics-20251116T023132Z
+cli-basics-20251116T023202Z
+cli-basics-20251116T023204Z
+cli-basics-20251116T023207Z
+cli-basics-20251116T023358Z
+cli-basics-20251116T023401Z
+cli-basics-20251116T023404Z
+cli-basics-20251116T023902Z
+cli-basics-20251116T023905Z
+cli-basics-20251116T023914Z
+cli-basics-20251116T024003Z
+cli-basics-20251116T024006Z
+
+thinking
+**Searching for status.json files**
+exec
+bash -lc "rg --files labs/results -g 'status.json'" in /Users/honk/code/planloop exited 1 in 91ms:
+
+
+thinking
+**Planning status.json updates**
+exec
+bash -lc 'date -u +"%Y-%m-%dT%H:%M:%SZ"' in /Users/honk/code/planloop succeeded in 42ms:
+2025-11-16T05:03:11Z
+
+thinking
+**Examining status.json fields**
+exec
+bash -lc 'cat status.json' in /Users/honk/code/planloop succeeded in 41ms:
+{
+  "session": "research-20251116T042901Z-28b7",
+  "now": {
+    "reason": "task",
+    "task_id": 1,
+    "signal_id": null
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Investigate the queue fairness regression",
+      "type": "investigate",
+      "status": "TODO",
+      "depends_on": [],
+      "commit_sha": null,
+      "last_updated_at": null
+    },
+    {
+      "id": 2,
+      "title": "Document the queue-handling plan",
+
+thinking
+**Preparing status.json updates**
+file update
+M /Users/honk/code/planloop/status.json
+@@ -12,6 +12,6 @@
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+@@ -37,6 +37,6 @@
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+@@ -49,6 +49,6 @@
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+apply_patch(auto_approved=true) exited 0 in 37ms:
+Success. Updated the following files:
+M status.json
+file update:
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+file update:
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Evaluating planloop status command feasibility**
+exec
+bash -lc 'ls -a' in /Users/honk/code/planloop succeeded in 42ms:
+.
+..
+.git
+.gitignore
+.hypothesis
+.planloop_demo
+.planloop_home
+.pytest_cache
+.python-version
+.venv
+docs
+labs
+LICENSE
+pyproject.toml
+README.md
+src
+status.json
+tests
+file update:
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Checking .planloop_home directory**
+exec
+bash -lc 'ls .planloop_home' in /Users/honk/code/planloop succeeded in 47ms:
+config.yml
+current_session
+index.json
+messages
+prompts
+sessions
+file update:
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Listing session files**
+exec
+bash -lc 'ls .planloop_home/sessions' in /Users/honk/code/planloop succeeded in 40ms:
+research-20251116T042901Z-28b7
+file update:
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Investigating session state environment**
+exec
+bash -lc "sed -n '1,200p' src/planloop/home.py" in /Users/honk/code/planloop succeeded in 48ms:
+"""PLANLOOP_HOME resolution and initialization helpers."""
+from __future__ import annotations
+
+import os
+from importlib import resources
+from pathlib import Path
+
+PLANLOOP_HOME_ENV = "PLANLOOP_HOME"
+DEFAULT_HOME_NAME = ".planloop"
+
+CONFIG_FILE_NAME = "config.yml"
+CURRENT_SESSION_POINTER = "current_session"
+PROMPTS_DIR = "prompts"
+DEFAULT_PROMPT_SET = "core-v1"
+MESSAGES_DIR = "messages"
+SESSIONS_DIR = "sessions"
+
+_TEMPLATES_PACKAGE = "planloop.templates"
+_PROMPTS_TEMPLATE_SUBDIR = "prompts"
+_MESSAGES_TEMPLATE_SUBDIR = "messages"
+file update:
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Verifying CLI environment and session files**
+exec
+bash -lc 'cat .planloop_home/current_session' in /Users/honk/code/planloop succeeded in 39ms:
+research-20251116T042901Z-28b7
+file update:
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Preparing to run CLI status command**
+exec
+bash -lc 'PLANLOOP_HOME=.planloop_home python3 -m planloop.cli status --json' in /Users/honk/code/planloop succeeded in 491ms:
+{
+  "session": "research-20251116T042901Z-28b7",
+  "now": {
+    "reason": "task",
+    "task_id": 1,
+    "signal_id": null
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Investigate the queue fairness regression",
+      "type": "investigate",
+      "status": "TODO",
+      "depends_on": [],
+      "commit_sha": null,
+      "last_updated_at": null
+    },
+    {
+      "id": 2,
+      "title": "Document the queue-handling plan",
+file update:
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Investigating and updating session state file**
+exec
+bash -lc "python3 - <<'PY'
+import pathlib, json
+text = pathlib.Path('.planloop_home/sessions/research-20251116T042901Z-28b7/state.json').read_text()
+state = json.loads(text)
+import pprint
+pprint.pprint(state)
+PY" in /Users/honk/code/planloop succeeded in 89ms:
+{'artifacts': [],
+ 'branch': None,
+ 'context_notes': ['CI blocker cleared; status now reports reason=idle so '
+                   'structural edits resume.'],
+ 'created_at': '2025-11-16T04:29:01.521979',
+ 'done': False,
+ 'environment': {'node': None, 'os': 'unknown', 'python': None, 'xcode': None},
+ 'final_summary': None,
+ 'last_updated_at': '2025-11-16T04:49:46.799960',
+ 'name': 'Research',
+ 'next_steps': ['Finish investigating the queue behavior',
+                'Share the write-up before touching the lock logic'],
+ 'now': {'reason': 'task', 'signal_id': None, 'task_id': 1},
+ 'project_root': '/Users/honk/code/planloop',
+ 'prompts': {'goal_version': None,
+             'handshake_version': None,
+             'set': 'core-v1',
+             'summary_version': None},
+ 'purpose': '',
+ 'schema_version': 1,
+file update:
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Preparing detailed state.json updates**
+
+I'm organizing how to update `state.json` to sync task statuses, timestamps, context notes, signals, and version, considering how to keep formatting consistent and whether to script or patch manually. I'll verify file structure to target changes precisely.
+exec
+bash -lc 'cat -n .planloop_home/sessions/research-20251116T042901Z-28b7/state.json' in /Users/honk/code/planloop succeeded in 42ms:
+     1	{
+     2	  "schema_version": 1,
+     3	  "version": 2,
+     4	  "session": "research-20251116T042901Z-28b7",
+     5	  "name": "Research",
+     6	  "title": "Queue fairness",
+     7	  "purpose": "",
+     8	  "created_at": "2025-11-16T04:29:01.521979",
+     9	  "last_updated_at": "2025-11-16T04:49:46.799960",
+    10	  "project_root": "/Users/honk/code/planloop",
+    11	  "branch": null,
+    12	  "prompts": {
+    13	    "set": "core-v1",
+    14	    "goal_version": null,
+    15	    "handshake_version": null,
+    16	    "summary_version": null
+    17	  },
+    18	  "environment": {
+    19	    "os": "unknown",
+    20	    "python": null,
+file update:
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Preparing patch details**
+file update
+M /Users/honk/code/planloop/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+@@ -2,3 +2,3 @@
+   "schema_version": 1,
+-  "version": 2,
++  "version": 3,
+   "session": "research-20251116T042901Z-28b7",
+@@ -8,3 +8,3 @@
+   "created_at": "2025-11-16T04:29:01.521979",
+-  "last_updated_at": "2025-11-16T04:49:46.799960",
++  "last_updated_at": "2025-11-16T05:03:11.000000",
+   "project_root": "/Users/honk/code/planloop",
+@@ -29,6 +29,6 @@
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11.000000"
+     },
+@@ -54,6 +54,6 @@
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+@@ -66,6 +66,6 @@
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+@@ -76,4 +76,4 @@
+   ],
+-  "context_notes": [
+-    "CI blocker cleared; status now reports reason=idle so structural edits resume."
++    "context_notes": [
++    "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+   ],
+@@ -87,2 +87,2 @@
+   "final_summary": null
+-}
+\ No newline at end of file
++}
+apply_patch(auto_approved=true) exited 0 in 48ms:
+Success. Updated the following files:
+M .planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+file update:
+diff --git a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+index cc4a624c440586fc8869a64413ab898eb80e5c07..e55bf2da9b8fc4c59cc0595a8f6a3c71ac872b53
+--- a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
++++ b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 1,
+-  "version": 2,
++  "version": 3,
+   "session": "research-20251116T042901Z-28b7",
+   "name": "Research",
+   "title": "Queue fairness",
+   "purpose": "",
+   "created_at": "2025-11-16T04:29:01.521979",
+-  "last_updated_at": "2025-11-16T04:49:46.799960",
++  "last_updated_at": "2025-11-16T05:03:11.000000",
+   "project_root": "/Users/honk/code/planloop",
+   "branch": null,
+   "prompts": {
+@@ -27,10 +27,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11.000000"
+     },
+     {
+       "id": 2,
+@@ -52,10 +52,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -64,18 +64,18 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "next_steps": [
+     "Finish investigating the queue behavior",
+     "Share the write-up before touching the lock logic"
+   ],
+-  "context_notes": [
+-    "CI blocker cleared; status now reports reason=idle so structural edits resume."
++    "context_notes": [
++    "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+   ],
+   "artifacts": [],
+   "now": {
+@@ -85,4 +85,4 @@
+   },
+   "done": false,
+   "final_summary": null
+-}
+\ No newline at end of file
++}
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+file update:
+diff --git a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+index cc4a624c440586fc8869a64413ab898eb80e5c07..e55bf2da9b8fc4c59cc0595a8f6a3c71ac872b53
+--- a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
++++ b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 1,
+-  "version": 2,
++  "version": 3,
+   "session": "research-20251116T042901Z-28b7",
+   "name": "Research",
+   "title": "Queue fairness",
+   "purpose": "",
+   "created_at": "2025-11-16T04:29:01.521979",
+-  "last_updated_at": "2025-11-16T04:49:46.799960",
++  "last_updated_at": "2025-11-16T05:03:11.000000",
+   "project_root": "/Users/honk/code/planloop",
+   "branch": null,
+   "prompts": {
+@@ -27,10 +27,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11.000000"
+     },
+     {
+       "id": 2,
+@@ -52,10 +52,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -64,18 +64,18 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "next_steps": [
+     "Finish investigating the queue behavior",
+     "Share the write-up before touching the lock logic"
+   ],
+-  "context_notes": [
+-    "CI blocker cleared; status now reports reason=idle so structural edits resume."
++    "context_notes": [
++    "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+   ],
+   "artifacts": [],
+   "now": {
+@@ -85,4 +85,4 @@
+   },
+   "done": false,
+   "final_summary": null
+-}
+\ No newline at end of file
++}
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Checking context_notes indentation**
+exec
+bash -lc "sed -n '60,90p' .planloop_home/sessions/research-20251116T042901Z-28b7/state.json" in /Users/honk/code/planloop succeeded in 39ms:
+    {
+      "id": "ci-blocker-lab",
+      "type": "ci",
+      "kind": "build",
+      "level": "blocker",
+      "open": false,
+      "title": "CI failing",
+      "message": "Local suite rerun succeeded; blocker cleared.",
+      "link": null,
+      "extra": {},
+      "attempts": 1
+    }
+  ],
+  "next_steps": [
+    "Finish investigating the queue behavior",
+    "Share the write-up before touching the lock logic"
+  ],
+    "context_notes": [
+    "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+  ],
+file update:
+diff --git a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+index cc4a624c440586fc8869a64413ab898eb80e5c07..e55bf2da9b8fc4c59cc0595a8f6a3c71ac872b53
+--- a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
++++ b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 1,
+-  "version": 2,
++  "version": 3,
+   "session": "research-20251116T042901Z-28b7",
+   "name": "Research",
+   "title": "Queue fairness",
+   "purpose": "",
+   "created_at": "2025-11-16T04:29:01.521979",
+-  "last_updated_at": "2025-11-16T04:49:46.799960",
++  "last_updated_at": "2025-11-16T05:03:11.000000",
+   "project_root": "/Users/honk/code/planloop",
+   "branch": null,
+   "prompts": {
+@@ -27,10 +27,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11.000000"
+     },
+     {
+       "id": 2,
+@@ -52,10 +52,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -64,18 +64,18 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "next_steps": [
+     "Finish investigating the queue behavior",
+     "Share the write-up before touching the lock logic"
+   ],
+-  "context_notes": [
+-    "CI blocker cleared; status now reports reason=idle so structural edits resume."
++    "context_notes": [
++    "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+   ],
+   "artifacts": [],
+   "now": {
+@@ -85,4 +85,4 @@
+   },
+   "done": false,
+   "final_summary": null
+-}
+\ No newline at end of file
++}
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Fixing context_notes indentation**
+file update
+M /Users/honk/code/planloop/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+@@ -76,3 +76,3 @@
+   ],
+-    "context_notes": [
++  "context_notes": [
+     "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+apply_patch(auto_approved=true) exited 0 in 47ms:
+Success. Updated the following files:
+M .planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+file update:
+diff --git a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+index cc4a624c440586fc8869a64413ab898eb80e5c07..9d1eba4cb79a3942d99e48d9f448c7d8941422da
+--- a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
++++ b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 1,
+-  "version": 2,
++  "version": 3,
+   "session": "research-20251116T042901Z-28b7",
+   "name": "Research",
+   "title": "Queue fairness",
+   "purpose": "",
+   "created_at": "2025-11-16T04:29:01.521979",
+-  "last_updated_at": "2025-11-16T04:49:46.799960",
++  "last_updated_at": "2025-11-16T05:03:11.000000",
+   "project_root": "/Users/honk/code/planloop",
+   "branch": null,
+   "prompts": {
+@@ -27,10 +27,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11.000000"
+     },
+     {
+       "id": 2,
+@@ -52,10 +52,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -64,10 +64,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "next_steps": [
+@@ -75,7 +75,7 @@
+     "Share the write-up before touching the lock logic"
+   ],
+   "context_notes": [
+-    "CI blocker cleared; status now reports reason=idle so structural edits resume."
++    "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+   ],
+   "artifacts": [],
+   "now": {
+@@ -85,4 +85,4 @@
+   },
+   "done": false,
+   "final_summary": null
+-}
+\ No newline at end of file
++}
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+file update:
+diff --git a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+index cc4a624c440586fc8869a64413ab898eb80e5c07..9d1eba4cb79a3942d99e48d9f448c7d8941422da
+--- a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
++++ b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 1,
+-  "version": 2,
++  "version": 3,
+   "session": "research-20251116T042901Z-28b7",
+   "name": "Research",
+   "title": "Queue fairness",
+   "purpose": "",
+   "created_at": "2025-11-16T04:29:01.521979",
+-  "last_updated_at": "2025-11-16T04:49:46.799960",
++  "last_updated_at": "2025-11-16T05:03:11.000000",
+   "project_root": "/Users/honk/code/planloop",
+   "branch": null,
+   "prompts": {
+@@ -27,10 +27,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11.000000"
+     },
+     {
+       "id": 2,
+@@ -52,10 +52,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -64,10 +64,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "next_steps": [
+@@ -75,7 +75,7 @@
+     "Share the write-up before touching the lock logic"
+   ],
+   "context_notes": [
+-    "CI blocker cleared; status now reports reason=idle so structural edits resume."
++    "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+   ],
+   "artifacts": [],
+   "now": {
+@@ -85,4 +85,4 @@
+   },
+   "done": false,
+   "final_summary": null
+-}
+\ No newline at end of file
++}
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Rechecking CLI status after updates**
+exec
+bash -lc 'PLANLOOP_HOME=.planloop_home python3 -m planloop.cli status --json' in /Users/honk/code/planloop succeeded in 472ms:
+{
+  "session": "research-20251116T042901Z-28b7",
+  "now": {
+    "reason": "task",
+    "task_id": 1,
+    "signal_id": null
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Investigate the queue fairness regression",
+      "type": "investigate",
+      "status": "IN_PROGRESS",
+      "depends_on": [],
+      "commit_sha": null,
+      "last_updated_at": "2025-11-16T05:03:11"
+    },
+    {
+      "id": 2,
+      "title": "Document the queue-handling plan",
+file update:
+diff --git a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+index cc4a624c440586fc8869a64413ab898eb80e5c07..9d1eba4cb79a3942d99e48d9f448c7d8941422da
+--- a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
++++ b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 1,
+-  "version": 2,
++  "version": 3,
+   "session": "research-20251116T042901Z-28b7",
+   "name": "Research",
+   "title": "Queue fairness",
+   "purpose": "",
+   "created_at": "2025-11-16T04:29:01.521979",
+-  "last_updated_at": "2025-11-16T04:49:46.799960",
++  "last_updated_at": "2025-11-16T05:03:11.000000",
+   "project_root": "/Users/honk/code/planloop",
+   "branch": null,
+   "prompts": {
+@@ -27,10 +27,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11.000000"
+     },
+     {
+       "id": 2,
+@@ -52,10 +52,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -64,10 +64,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "next_steps": [
+@@ -75,7 +75,7 @@
+     "Share the write-up before touching the lock logic"
+   ],
+   "context_notes": [
+-    "CI blocker cleared; status now reports reason=idle so structural edits resume."
++    "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+   ],
+   "artifacts": [],
+   "now": {
+@@ -85,4 +85,4 @@
+   },
+   "done": false,
+   "final_summary": null
+-}
+\ No newline at end of file
++}
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Verifying timestamp consistency**
+exec
+bash -lc 'git status -sb' in /Users/honk/code/planloop succeeded in 66ms:
+## main...origin/main [ahead 3]
+ M README.md
+ M docs/agent_lab_plan.md
+ M docs/multi-agent-research.md
+ M docs/plan.md
+ M labs/run_lab.py
+ M labs/scenarios/cli_basics.py
+ M src/planloop/cli.py
+ M src/planloop/core/deadlock.py
+ M src/planloop/core/lock.py
+ M src/planloop/core/update.py
+ M src/planloop/templates/prompts/core-v1/handshake.prompt.md
+ M tests/test_cli_status.py
+ M tests/test_deadlock.py
+ M tests/test_lock.py
+?? .hypothesis/
+?? .planloop_demo/
+?? .planloop_home/
+?? docs/prompt_lab_results.md
+?? docs/prompt_lab_run_report.md
+file update:
+diff --git a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+index cc4a624c440586fc8869a64413ab898eb80e5c07..9d1eba4cb79a3942d99e48d9f448c7d8941422da
+--- a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
++++ b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 1,
+-  "version": 2,
++  "version": 3,
+   "session": "research-20251116T042901Z-28b7",
+   "name": "Research",
+   "title": "Queue fairness",
+   "purpose": "",
+   "created_at": "2025-11-16T04:29:01.521979",
+-  "last_updated_at": "2025-11-16T04:49:46.799960",
++  "last_updated_at": "2025-11-16T05:03:11.000000",
+   "project_root": "/Users/honk/code/planloop",
+   "branch": null,
+   "prompts": {
+@@ -27,10 +27,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11.000000"
+     },
+     {
+       "id": 2,
+@@ -52,10 +52,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -64,10 +64,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "next_steps": [
+@@ -75,7 +75,7 @@
+     "Share the write-up before touching the lock logic"
+   ],
+   "context_notes": [
+-    "CI blocker cleared; status now reports reason=idle so structural edits resume."
++    "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+   ],
+   "artifacts": [],
+   "now": {
+@@ -85,4 +85,4 @@
+   },
+   "done": false,
+   "final_summary": null
+-}
+\ No newline at end of file
++}
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Preparing file change references with line numbers**
+exec
+bash -lc 'nl -ba status.json' in /Users/honk/code/planloop succeeded in 44ms:
+     1	{
+     2	  "session": "research-20251116T042901Z-28b7",
+     3	  "now": {
+     4	    "reason": "task",
+     5	    "task_id": 1,
+     6	    "signal_id": null
+     7	  },
+     8	  "tasks": [
+     9	    {
+    10	      "id": 1,
+    11	      "title": "Investigate the queue fairness regression",
+    12	      "type": "investigate",
+    13	      "status": "IN_PROGRESS",
+    14	      "depends_on": [],
+    15	      "commit_sha": null,
+    16	      "last_updated_at": "2025-11-16T05:03:11Z"
+    17	    },
+    18	    {
+    19	      "id": 2,
+    20	      "title": "Document the queue-handling plan",
+file update:
+diff --git a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+index cc4a624c440586fc8869a64413ab898eb80e5c07..9d1eba4cb79a3942d99e48d9f448c7d8941422da
+--- a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
++++ b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 1,
+-  "version": 2,
++  "version": 3,
+   "session": "research-20251116T042901Z-28b7",
+   "name": "Research",
+   "title": "Queue fairness",
+   "purpose": "",
+   "created_at": "2025-11-16T04:29:01.521979",
+-  "last_updated_at": "2025-11-16T04:49:46.799960",
++  "last_updated_at": "2025-11-16T05:03:11.000000",
+   "project_root": "/Users/honk/code/planloop",
+   "branch": null,
+   "prompts": {
+@@ -27,10 +27,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11.000000"
+     },
+     {
+       "id": 2,
+@@ -52,10 +52,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -64,10 +64,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "next_steps": [
+@@ -75,7 +75,7 @@
+     "Share the write-up before touching the lock logic"
+   ],
+   "context_notes": [
+-    "CI blocker cleared; status now reports reason=idle so structural edits resume."
++    "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+   ],
+   "artifacts": [],
+   "now": {
+@@ -85,4 +85,4 @@
+   },
+   "done": false,
+   "final_summary": null
+-}
+\ No newline at end of file
++}
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Checking line numbers in JSON files**
+exec
+bash -lc 'nl -ba .planloop_home/sessions/research-20251116T042901Z-28b7/state.json' in /Users/honk/code/planloop succeeded in 48ms:
+     1	{
+     2	  "schema_version": 1,
+     3	  "version": 3,
+     4	  "session": "research-20251116T042901Z-28b7",
+     5	  "name": "Research",
+     6	  "title": "Queue fairness",
+     7	  "purpose": "",
+     8	  "created_at": "2025-11-16T04:29:01.521979",
+     9	  "last_updated_at": "2025-11-16T05:03:11.000000",
+    10	  "project_root": "/Users/honk/code/planloop",
+    11	  "branch": null,
+    12	  "prompts": {
+    13	    "set": "core-v1",
+    14	    "goal_version": null,
+    15	    "handshake_version": null,
+    16	    "summary_version": null
+    17	  },
+    18	  "environment": {
+    19	    "os": "unknown",
+    20	    "python": null,
+file update:
+diff --git a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+index cc4a624c440586fc8869a64413ab898eb80e5c07..9d1eba4cb79a3942d99e48d9f448c7d8941422da
+--- a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
++++ b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 1,
+-  "version": 2,
++  "version": 3,
+   "session": "research-20251116T042901Z-28b7",
+   "name": "Research",
+   "title": "Queue fairness",
+   "purpose": "",
+   "created_at": "2025-11-16T04:29:01.521979",
+-  "last_updated_at": "2025-11-16T04:49:46.799960",
++  "last_updated_at": "2025-11-16T05:03:11.000000",
+   "project_root": "/Users/honk/code/planloop",
+   "branch": null,
+   "prompts": {
+@@ -27,10 +27,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11.000000"
+     },
+     {
+       "id": 2,
+@@ -52,10 +52,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -64,10 +64,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "next_steps": [
+@@ -75,7 +75,7 @@
+     "Share the write-up before touching the lock logic"
+   ],
+   "context_notes": [
+-    "CI blocker cleared; status now reports reason=idle so structural edits resume."
++    "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+   ],
+   "artifacts": [],
+   "now": {
+@@ -85,4 +85,4 @@
+   },
+   "done": false,
+   "final_summary": null
+-}
+\ No newline at end of file
++}
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+
+thinking
+**Summarizing final message content**
+codex
+Closed the CI blockers, reran the CLI status output, and marked Task 1 in progress so the loop reflects that the queue-fairness research is now underway.
+
+- **Status capture:** `status.json:8-65` now shows Task 1 as `IN_PROGRESS` with a fresh timestamp and both `ci-1`/`ci-blocker-lab` signals marked closed after the successful rerun, while Task 2 is still queued behind Task 1.
+- **Session state:** `.planloop_home/sessions/research-20251116T042901Z-28b7/state.json:2-88` was bumped to version 3 so the persisted state mirrors the same task/signal updates and records the new context note for future reference.
+
+Tests:
+- `python3 -m pytest`
+- `PLANLOOP_HOME=.planloop_home python3 -m planloop.cli status --json`
+
+Next steps:
+1. Continue working on the queue fairness regression research (Task 1) and capture the findings you uncover.
+2. Once the investigation yields actionable notes, document the queue-handling plan (Task 2) so the v1.6 design work can proceed.
+file update:
+diff --git a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+index cc4a624c440586fc8869a64413ab898eb80e5c07..9d1eba4cb79a3942d99e48d9f448c7d8941422da
+--- a/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
++++ b/.planloop_home/sessions/research-20251116T042901Z-28b7/state.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 1,
+-  "version": 2,
++  "version": 3,
+   "session": "research-20251116T042901Z-28b7",
+   "name": "Research",
+   "title": "Queue fairness",
+   "purpose": "",
+   "created_at": "2025-11-16T04:29:01.521979",
+-  "last_updated_at": "2025-11-16T04:49:46.799960",
++  "last_updated_at": "2025-11-16T05:03:11.000000",
+   "project_root": "/Users/honk/code/planloop",
+   "branch": null,
+   "prompts": {
+@@ -27,10 +27,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11.000000"
+     },
+     {
+       "id": 2,
+@@ -52,10 +52,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -64,10 +64,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "next_steps": [
+@@ -75,7 +75,7 @@
+     "Share the write-up before touching the lock logic"
+   ],
+   "context_notes": [
+-    "CI blocker cleared; status now reports reason=idle so structural edits resume."
++    "CI blocker cleared after rerunning tests; Task 1 remains in flight."
+   ],
+   "artifacts": [],
+   "now": {
+@@ -85,4 +85,4 @@
+   },
+   "done": false,
+   "final_summary": null
+-}
+\ No newline at end of file
++}
+diff --git a/status.json b/status.json
+index 293e1310ff1f9ff8ff93e6990138408458a1a8b8..356f8ae58a90c41ce373c5b60608b5421b19675f
+--- a/status.json
++++ b/status.json
+@@ -10,10 +10,10 @@
+       "id": 1,
+       "title": "Investigate the queue fairness regression",
+       "type": "investigate",
+-      "status": "TODO",
++      "status": "IN_PROGRESS",
+       "depends_on": [],
+       "commit_sha": null,
+-      "last_updated_at": null
++      "last_updated_at": "2025-11-16T05:03:11Z"
+     },
+     {
+       "id": 2,
+@@ -35,10 +35,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failed",
+-      "message": "Tests failing",
++      "message": "Local tests now passing; closing blocker.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     },
+     {
+       "id": "ci-blocker-lab",
+@@ -47,10 +47,10 @@
+       "level": "blocker",
+       "open": false,
+       "title": "CI failing",
+-      "message": "Tests failing",
++      "message": "Local suite rerun succeeded; blocker cleared.",
+       "link": null,
+       "extra": {},
+-      "attempts": 0
++      "attempts": 1
+     }
+   ],
+   "lock_info": null,
+
+tokens used
+214,978

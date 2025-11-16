@@ -1,0 +1,5 @@
+Usage: python -m planloop.cli alert [OPTIONS]
+Try 'python -m planloop.cli alert --help' for help.
+╭─ Error ──────────────────────────────────────────────────────────────────────╮
+│ Missing option '--kind'.                                                     │
+╰──────────────────────────────────────────────────────────────────────────────╯

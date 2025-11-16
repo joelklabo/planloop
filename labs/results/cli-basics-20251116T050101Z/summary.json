@@ -1,0 +1,51 @@
+{
+  "scenario": "cli-basics",
+  "session": "cli-basics-20251116T050101Z-31ae",
+  "agents": [
+    {
+      "name": "claude",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T050101Z/claude/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T050101Z/claude/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "score": 0.0,
+        "reasons": [
+          "trace log missing"
+        ]
+      }
+    },
+    {
+      "name": "openai",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T050101Z/openai/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T050101Z/openai/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "score": 0.0,
+        "reasons": [
+          "trace log missing"
+        ]
+      }
+    },
+    {
+      "name": "copilot",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T050101Z/copilot/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T050101Z/copilot/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "score": 0.0,
+        "reasons": [
+          "trace log missing"
+        ]
+      }
+    }
+  ]
+}

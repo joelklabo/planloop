@@ -1,0 +1,51 @@
+{
+  "scenario": "cli-basics",
+  "session": "cli-basics-20251116T023404Z-f19d",
+  "agents": [
+    {
+      "name": "claude",
+      "enabled": true,
+      "returncode": 2,
+      "message": "exit code 2",
+      "stdout": "labs/results/cli-basics-20251116T023404Z/claude/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T023404Z/claude/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "reasons": [
+          "missing status-after",
+          "signal left open"
+        ]
+      }
+    },
+    {
+      "name": "copilot",
+      "enabled": true,
+      "returncode": 1,
+      "message": "exit code 1",
+      "stdout": "labs/results/cli-basics-20251116T023404Z/copilot/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T023404Z/copilot/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "reasons": [
+          "missing update",
+          "missing status-after"
+        ]
+      }
+    },
+    {
+      "name": "openai",
+      "enabled": true,
+      "returncode": 1,
+      "message": "exit code 1",
+      "stdout": "labs/results/cli-basics-20251116T023404Z/openai/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T023404Z/openai/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "reasons": [
+          "missing update",
+          "missing status-after"
+        ]
+      }
+    }
+  ]
+}

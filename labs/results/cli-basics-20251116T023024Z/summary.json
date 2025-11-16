@@ -1,0 +1,48 @@
+{
+  "scenario": "cli-basics",
+  "session": "cli-basics-20251116T023024Z-824b",
+  "agents": [
+    {
+      "name": "openai",
+      "enabled": true,
+      "returncode": 127,
+      "message": "exit code 127",
+      "stdout": "labs/results/cli-basics-20251116T023024Z/openai/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T023024Z/openai/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "reasons": [
+          "trace log missing"
+        ]
+      }
+    },
+    {
+      "name": "copilot",
+      "enabled": true,
+      "returncode": 127,
+      "message": "exit code 127",
+      "stdout": "labs/results/cli-basics-20251116T023024Z/copilot/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T023024Z/copilot/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "reasons": [
+          "trace log missing"
+        ]
+      }
+    },
+    {
+      "name": "claude",
+      "enabled": true,
+      "returncode": 127,
+      "message": "exit code 127",
+      "stdout": "labs/results/cli-basics-20251116T023024Z/claude/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T023024Z/claude/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "reasons": [
+          "trace log missing"
+        ]
+      }
+    }
+  ]
+}

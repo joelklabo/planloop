@@ -1,0 +1,7 @@
+error: unexpected argument '--allow-tool' found
+
+  tip: to pass '--allow-tool' as a value, use '-- --allow-tool'
+
+Usage: codex exec --profile <CONFIG_PROFILE> --sandbox <SANDBOX_MODE> [PROMPT]
+
+For more information, try '--help'.

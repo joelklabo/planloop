@@ -1,0 +1,7 @@
+- Closed the `ci-blocker-lab` blocker with `planloop alert --close`, reran `planloop status`, and wrote that fresh snapshot into `status.json` so the session now reports `now.reason=task` with Task 1 marked `IN_PROGRESS` and both CI signals quiet.
+- Applied `planloop update` (via `/tmp/update.json`) to patch Task 1, keeping the context note “CI blocker cleared after rerunning tests; Task 1 remains in flight,” which bumped `.planloop_home/sessions/research-20251116T042901Z-28b7/state.json` to version 4 and refreshed the task metadata.
+- Testing: not run (not requested).
+
+Next steps:
+1. Start investigating the queue fairness regression (Task 1) so the in-flight work produces concrete code changes and insights.
+2. Document the queue-handling plan (Task 2) once the investigation yields direction, keeping the multi-agent coordination notes up to date before editing lock logic.

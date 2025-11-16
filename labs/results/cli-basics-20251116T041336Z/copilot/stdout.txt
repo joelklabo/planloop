@@ -1,0 +1,45 @@
+✓ Read pyproject.toml (43 lines)
+
+✓ glob: "tests/**/*.py"
+   ↪ 28 files found
+
+✓ Git status and run pytest
+   $ git --no-pager status && python -m pytest -q
+   ↪ 37 lines...
+
+✓ Git status and run pytest with python3
+   $ git --no-pager status && python3 -m pytest -q
+   ↪ 38 lines...
+
+✓ Read docs/plan.md (593 lines)
+
+✓ Show diffs and run planloop status
+   $ git --no-pager diff src/planloop/core/lock.py src/planloop/core/deadlock.py
+   src/planloop/core/update.py src/planloop/cli.py | head -n 200 && echo '--- STATUS ---' &&
+   PYTHONPATH=src python3 -m planloop.cli status
+   ↪ 243 lines...
+
+✓ Read src/planloop/core/signals.py (34 lines)
+
+✓ Read tests/test_cli_alert.py (95 lines)
+
+✓ Read src/planloop/cli.py (416 lines)
+
+✓ Create session, open/close CI signal, show status outputs
+   $ export PLANLOOP_HOME="$(pwd)/.planloop_home" && rm -rf "$PLANLOOP_HOME" && mkdir -p
+   "$PLANLOOP_HOME" && python3 -m planloop.cli --help | head -n 40 && echo '--- create
+   session ---' && python3 -m planloop.cli reuse --session NEW || true && python3 -m
+   planloop.cli sessions list || true && python3 -m planloop.cli status || true && echo '---
+   attempting create ---' && python3 -m planloop.cli session create --name ci-demo --title ...
+   ↪ 62 lines...
+
+✓ Create demo session, show status with CI blocker, close it, show resumed status
+   $ export PLANLOOP_HOME="$(pwd)/.planloop_demo" && rm -rf "$PLANLOOP_HOME" && python3 -
+   <<'PY'
+   import os
+   from pathlib import Path
+   from planloop.home import initialize_home, SESSIONS_DIR...
+   ↪ 91 lines...
+
+CI blocker closed; status shows idle; resume tasks.
+

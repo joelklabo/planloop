@@ -1,0 +1,9 @@
+**Plan Status**
+- `docs/plan.md:555-569` now marks Task P3 as DONE and documents the queue metadata/TTL/queue-stall telemetry work plus the self-test proof that closing a blocker, rerunning `status`, and resuming task updates works end-to-end.
+- `docs/plan.md:580-593` refreshes the Next Steps and documentation status so the queue fairness research feeds into the v1.6 backlog while flagging the updated multi-agent notes as the implementation reference.
+
+**Research Notes**
+- `docs/multi-agent-research.md:88-93` expands the implementation notes to call out queue logging/pruning, the `queue_stall` signal from `DeadlockTracker`, and the CI-blocker selftest that reenforces the “close blocker → rerun status → update tasks” loop.
+
+**Testing**
+- `python3 -m pytest` (passes) – reran the suite after the docs update to keep the CI blocker cleared and confirm status/test results remain green.

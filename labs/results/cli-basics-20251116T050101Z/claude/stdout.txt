@@ -1,0 +1,1 @@
+I need permission to edit the plan file. Can you grant write access to `/Users/honk/code/planloop/docs/plan.md` so I can add the CI blocker resolution note?

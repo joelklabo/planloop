@@ -1,0 +1,11 @@
+**CI Flow**
+- Closed the `ci-blocker` signal for `cli-basics-20251116T042329Z-b958` via `python3 -m planloop.cli alert … --close`, which reset `now.reason` to `task` and left the signal recorded as closed in the session.
+- Reran `python3 -m planloop.cli status --session cli-basics-20251116T042329Z-b958` (after the close and again after the update) so the output now shows `now.reason=task`, the queue empty, safe-mode defaults all `false`, and the closed blocker listed with `"open": false`.
+- Applied `planloop update --file /tmp/cli-update.json` to mark Task 1 (`Add hello command`) as `IN_PROGRESS`, add context notes about clearing the blocker and rerunning status, and append a concrete next step describing continued work on that task; the update bumped the state version to 2.
+
+**Testing**
+- `python3 -m pytest` (84 tests, all passing).
+
+Next steps
+1. Keep progressing on “Add hello command,” updating the session via `planloop update` as work completes and re-running `planloop status` to surface the new `now.reason` for auditors.
+2. Once both tasks are done, close the session (e.g., through a final `planloop update`/summary) and optionally rerun `planloop selftest` if you need another verification pass.

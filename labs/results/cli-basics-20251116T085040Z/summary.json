@@ -1,0 +1,49 @@
+{
+  "scenario": "cli-basics",
+  "session": "cli-basics-20251116T085040Z-6fc8",
+  "agents": [
+    {
+      "name": "claude",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T085040Z/claude/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T085040Z/claude/stderr.txt",
+      "compliance": {
+        "pass": true,
+        "score": 80.0,
+        "reasons": [
+          "update occurred while signal open"
+        ]
+      }
+    },
+    {
+      "name": "copilot",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T085040Z/copilot/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T085040Z/copilot/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "score": 0.0,
+        "reasons": [
+          "trace log missing"
+        ]
+      }
+    },
+    {
+      "name": "openai",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T085040Z/openai/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T085040Z/openai/stderr.txt",
+      "compliance": {
+        "pass": true,
+        "score": 70.0,
+        "reasons": []
+      }
+    }
+  ]
+}

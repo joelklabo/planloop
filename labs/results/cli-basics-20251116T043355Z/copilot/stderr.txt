@@ -1,0 +1,7 @@
+
+Total usage est:       1 Premium request
+Total duration (API):  1m 2.792s
+Total duration (wall): 1m 12.576s
+Total code changes:    0 lines added, 0 lines removed
+Usage by model:
+    gpt-5                186.8k input, 7.3k output, 0 cache read, 0 cache write (Est. 1 Premium request)

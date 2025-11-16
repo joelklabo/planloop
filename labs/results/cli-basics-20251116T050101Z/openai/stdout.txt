@@ -1,0 +1,12 @@
+Closed the CI blockers, reran the CLI status output, and marked Task 1 in progress so the loop reflects that the queue-fairness research is now underway.
+
+- **Status capture:** `status.json:8-65` now shows Task 1 as `IN_PROGRESS` with a fresh timestamp and both `ci-1`/`ci-blocker-lab` signals marked closed after the successful rerun, while Task 2 is still queued behind Task 1.
+- **Session state:** `.planloop_home/sessions/research-20251116T042901Z-28b7/state.json:2-88` was bumped to version 3 so the persisted state mirrors the same task/signal updates and records the new context note for future reference.
+
+Tests:
+- `python3 -m pytest`
+- `PLANLOOP_HOME=.planloop_home python3 -m planloop.cli status --json`
+
+Next steps:
+1. Continue working on the queue fairness regression research (Task 1) and capture the findings you uncover.
+2. Once the investigation yields actionable notes, document the queue-handling plan (Task 2) so the v1.6 design work can proceed.
