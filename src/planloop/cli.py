@@ -196,6 +196,7 @@ def update(
                 "artifacts",
                 "agent",
                 "final_summary",
+                "done",
             }
             unknown = set(raw_payload.keys()) - allowed
             if unknown:

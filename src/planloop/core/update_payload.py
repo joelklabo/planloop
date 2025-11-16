@@ -45,6 +45,7 @@ class UpdatePayload(BaseModel):
     artifacts: List[Artifact] = Field(default_factory=list)
     agent: Optional[AgentInfo] = None
     final_summary: Optional[str] = None
+    done: Optional[bool] = None
 
     @staticmethod
     def model_validate(data):

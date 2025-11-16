@@ -85,6 +85,8 @@ def apply_update(state: SessionState, payload: UpdatePayload) -> SessionState:
         state.artifacts.extend(payload.artifacts)
     if payload.final_summary is not None:
         state.final_summary = payload.final_summary
+    if payload.done is not None:
+        state.done = payload.done
 
     state.last_updated_at = datetime.utcnow()
     state.version += 1
