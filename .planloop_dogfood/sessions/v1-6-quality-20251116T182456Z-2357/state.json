@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "version": 5,
+  "version": 9,
   "session": "v1-6-quality-20251116T182456Z-2357",
   "name": "v1.6-quality",
   "title": "v1.6 Quality Improvements - Dogfooding Planloop",
   "purpose": "Improve planloop quality by dogfooding it to manage its own development. Add type checking, linting, coverage, and fix any UX issues discovered during real usage.",
   "created_at": "2025-11-16T18:24:56.797754",
-  "last_updated_at": "2025-11-16T18:34:06.817738",
+  "last_updated_at": "2025-11-16T18:42:26.353097",
   "project_root": "/Users/honk/code/planloop",
   "branch": null,
   "prompts": {
@@ -40,58 +40,54 @@
       "id": 2,
       "title": "Add pytest-cov for test coverage reporting",
       "type": "feature",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "depends_on": [],
       "commit_sha": null,
-      "last_updated_at": "2025-11-16T18:34:06.817014"
+      "last_updated_at": "2025-11-16T18:35:07.947592"
     },
     {
       "id": 3,
       "title": "Add ruff linter to CI",
       "type": "feature",
-      "status": "TODO",
+      "status": "DONE",
       "depends_on": [],
       "commit_sha": null,
-      "last_updated_at": null
+      "last_updated_at": "2025-11-16T18:38:57.612506"
     },
     {
       "id": 4,
       "title": "Dogfood planloop for 1 day - document all friction points",
       "type": "investigate",
-      "status": "TODO",
+      "status": "DONE",
       "depends_on": [],
       "commit_sha": null,
-      "last_updated_at": null
+      "last_updated_at": "2025-11-16T18:39:53.469809"
     },
     {
       "id": 5,
       "title": "Fix top 3 UX issues from dogfooding",
       "type": "feature",
-      "status": "TODO",
+      "status": "IN_PROGRESS",
       "depends_on": [
         4
       ],
       "commit_sha": null,
-      "last_updated_at": null
+      "last_updated_at": "2025-11-16T18:39:53.470483"
     }
   ],
   "signals": [],
   "next_steps": [
-    "Add pytest-cov to CI workflow",
-    "Generate coverage report in CI",
-    "Add coverage badge to README",
-    "Set minimum coverage threshold"
+    "Fix #1: Print validation errors in update command",
+    "Fix #2: Add helpful error message for schema issues",
+    "Fix #3: Accept both string and int for version field"
   ],
   "context_notes": [
-    "UX Issue #1: update command silently swallows validation errors (cli.py:130-131)",
-    "UX Issue #2: Schema not discoverable - needed to read code to understand add_tasks vs tasks",
-    "UX Issue #3: last_seen_version must be string not int",
-    "Mypy found 13 type errors to fix in follow-up work"
+    "Testing int version coercion"
   ],
   "artifacts": [],
   "now": {
     "reason": "task",
-    "task_id": 2,
+    "task_id": 5,
     "signal_id": null
   },
   "done": false,

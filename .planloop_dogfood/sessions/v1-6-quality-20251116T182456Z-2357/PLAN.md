@@ -11,7 +11,7 @@ project_root: /Users/honk/code/planloop
 branch: null
 prompt_set: core-v1
 created_at: '2025-11-16T18:24:56.797754'
-last_updated_at: '2025-11-16T18:34:06.817738'
+last_updated_at: '2025-11-16T18:42:26.353097'
 tags: []
 environment:
   os: unknown
@@ -26,22 +26,18 @@ environment:
 | ID | Title | Type | Status | Depends | Commit |
 | --- | --- | --- | --- | --- | --- |
 | 1 | Add mypy type checking to CI | feature | DONE | - | - |
-| 2 | Add pytest-cov for test coverage reporting | feature | IN_PROGRESS | - | - |
-| 3 | Add ruff linter to CI | feature | TODO | - | - |
-| 4 | Dogfood planloop for 1 day - document all friction points | investigate | TODO | - | - |
-| 5 | Fix top 3 UX issues from dogfooding | feature | TODO | 4 | - |
+| 2 | Add pytest-cov for test coverage reporting | feature | DONE | - | - |
+| 3 | Add ruff linter to CI | feature | DONE | - | - |
+| 4 | Dogfood planloop for 1 day - document all friction points | investigate | DONE | - | - |
+| 5 | Fix top 3 UX issues from dogfooding | feature | IN_PROGRESS | 4 | - |
 
 ## Context
-- UX Issue #1: update command silently swallows validation errors (cli.py:130-131)
-- UX Issue #2: Schema not discoverable - needed to read code to understand add_tasks vs tasks
-- UX Issue #3: last_seen_version must be string not int
-- Mypy found 13 type errors to fix in follow-up work
+- Testing int version coercion
 
 ## Next Steps
-- Add pytest-cov to CI workflow
-- Generate coverage report in CI
-- Add coverage badge to README
-- Set minimum coverage threshold
+- Fix #1: Print validation errors in update command
+- Fix #2: Add helpful error message for schema issues
+- Fix #3: Accept both string and int for version field
 
 ## Signals (Snapshot)
 - _No signals_

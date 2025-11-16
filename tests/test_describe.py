@@ -21,5 +21,5 @@ def test_update_schema_contains_expected_fields():
 
 def test_describe_payload_structure():
     payload = describe.describe_payload()
-    assert set(payload.keys()) == {"state_schema", "update_schema", "enums", "error_codes"}
+    assert set(payload.keys()) == {"state_schema", "update_schema", "enums", "error_codes", "usage_hints"}
     assert "now_reasons" in payload["enums"]

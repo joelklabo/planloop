@@ -44,6 +44,13 @@ def describe_payload() -> Dict[str, Any]:
         "update_schema": update_schema(),
         "enums": enum_reference(),
         "error_codes": [],
+        "usage_hints": {
+            "update_payload": {
+                "required_fields": ["session"],
+                "common_fields": ["last_seen_version", "add_tasks", "update_tasks", "context_notes", "next_steps"],
+                "note": "Use 'add_tasks' to create new tasks, 'update_tasks' to modify existing ones, 'tasks' for status-only patches"
+            }
+        }
     }
 
 

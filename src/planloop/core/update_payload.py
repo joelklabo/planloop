@@ -45,3 +45,11 @@ class UpdatePayload(BaseModel):
     artifacts: List[Artifact] = Field(default_factory=list)
     agent: Optional[AgentInfo] = None
     final_summary: Optional[str] = None
+
+    @staticmethod
+    def model_validate(data):
+        """Validate and coerce version field to string if needed."""
+        if isinstance(data, dict) and "last_seen_version" in data:
+            if isinstance(data["last_seen_version"], int):
+                data["last_seen_version"] = str(data["last_seen_version"])
+        return BaseModel.model_validate.__func__(UpdatePayload, data)

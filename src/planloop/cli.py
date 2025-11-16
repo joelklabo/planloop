@@ -124,10 +124,13 @@ def update(
     try:
         raw_payload = json.loads(data)
     except json.JSONDecodeError as exc:
+        typer.echo(f"Error: Invalid JSON: {exc}", err=True)
         raise typer.Exit(code=1) from exc
     try:
         payload = UpdatePayload.model_validate(raw_payload)
     except Exception as exc:  # ValidationError
+        typer.echo(f"Error: Invalid update payload: {exc}", err=True)
+        typer.echo("Hint: Use 'planloop describe' to see the expected schema", err=True)
         raise typer.Exit(code=1) from exc
     target_session = session or payload.session
     try:
