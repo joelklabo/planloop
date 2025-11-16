@@ -106,6 +106,7 @@ def status(session: Optional[str] = typer.Option(None, help="Session ID"), json_
         _log_trace_event("status", f"reason={state.now.reason.value}")
         typer.echo(json.dumps(payload, indent=2))
     except PlanloopError as exc:
+        typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
 
 
@@ -136,6 +137,7 @@ def update(
     try:
         state, session_dir = _load_session(target_session)
     except PlanloopError as exc:
+        typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
     defaults = safe_mode_defaults()
     dry_run_enabled = defaults["dry_run"] if dry_run is None else dry_run
@@ -286,6 +288,7 @@ def debug(
         log_session_event(session_dir, "Debug command inspected session")
         typer.echo(json.dumps(payload, indent=2))
     except PlanloopError as exc:
+        typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
 
 
@@ -313,8 +316,10 @@ def reuse(
     try:
         state, _ = _load_session(template_session)
     except PlanloopError as exc:
+        typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
     if not state.done:
+        typer.echo(f"Error: Session {template_session} is not marked as done", err=True)
         raise typer.Exit(code=1)
     payload = {
         "template_session": state.session,
@@ -334,6 +339,7 @@ def view(session: Optional[str] = typer.Option(None, help="Session ID")) -> None
     try:
         state, _ = _load_session(session)
     except PlanloopError as exc:
+        typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
     model = SessionViewModel.from_state(state)
     PlanloopViewApp(model).run()
