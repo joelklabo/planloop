@@ -370,7 +370,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   a browser shows the same data as the TUI.
 - **Dependencies:** Task K1.
 
-#### Task K3 – Optional dependency guards for UI commands *(Status: DONE – commit TBD "Guard optional UI dependencies (Task K3)")*
+#### Task K3 – Optional dependency guards for UI commands *(Status: DONE – commit 0ab2a34 "Add web and TUI commands (Tasks K1/K2)")*
 - **Scope:** Harden the TUI/Web commands so importing `planloop.cli` never
   requires optional dependencies. Gate FastAPI/uvicorn usage, expose
   `web.server.get_app()`, and document the fallback messaging for agents.
@@ -388,7 +388,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 ### Milestone 10 – History, Snapshots & Rollback
 > Goal: optionally track per-session history using embedded git.
 
-#### Task L1 – Optional per-session git repos *(Status: DONE – commit TBD "Wire session history helpers (Task L1)")*
+#### Task L1 – Optional per-session git repos *(Status: DONE – commit 1ac2827 "Implement multi-agent queue fairness (Task P3)")*
 - **Scope:** When `history.enabled` is true, initialize a git repo under each
   session, configure `.gitignore`, and commit `state.json` + `PLAN.md` on writes.
 - **Deliverables:** History settings in config, helper invoked from update/alert
@@ -402,7 +402,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   & `docs/agents.md` explain how to enable history; snapshot tests ensure the feature is
   exercised under `pytest` (skipping when git is missing).
 
-#### Task L2 – Snapshot command *(Status: DONE – commit TBD "Add snapshot CLI + tests (Task L2)")*
+#### Task L2 – Snapshot command *(Status: DONE – commit 1ac2827 "Implement multi-agent queue fairness (Task P3)")*
 - **Scope:** Implement `planloop snapshot` that creates a git commit/tag and
   returns an ID.
 - **Deliverables:** CLI command, message summarizing snapshot contents.
@@ -413,7 +413,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   the CLI test (`tests/test_cli_snapshot.py`) verifies `.gitignore` creation plus
   successful snapshot creation when git exists. README/docs/agents document usage.
 
-#### Task L3 – Restore command *(Status: DONE – commit TBD "Add restore validation (Task L3)")*
+#### Task L3 – Restore command *(Status: DONE – commit 1ac2827 "Implement multi-agent queue fairness (Task P3)")*
 - **Scope:** Add `planloop restore <snapshot>` that resets the session repo to a
   commit, rewrites `state.json`/`PLAN.md`, and recomputes `now`.
 - **Deliverables:** CLI command with safety checks (confirmation prompt when
@@ -429,7 +429,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 > Goal: guarantee behaviors with unit tests, integration tests, and an automated
 > selftest runner.
 
-#### Task M1 – Core unit tests *(Status: DONE – commit TBD "Add core unit tests (Task M1)")*
+#### Task M1 – Core unit tests *(Status: DONE – commit 1ac2827 "Implement multi-agent queue fairness (Task P3)")*
 - **Scope:** Add pytest modules for `state.compute_now`, `validate_state`,
   `render`, and prompts loader. Use Hypothesis where valuable.
 - **Deliverables:** Tests + fixtures under `tests/` with coverage for edge cases
@@ -443,7 +443,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   dependency is missing).
 - **Dependencies:** Tasks C1–C3, E2.
 
-#### Task M2 – CLI integration tests *(Status: DONE – commit TBD "Add CLI loop test + status fix (Task M2)")*
+#### Task M2 – CLI integration tests *(Status: DONE – commit 1ac2827 "Implement multi-agent queue fairness (Task P3)")*
 - **Scope:** Use `tmp_path` to simulate PLANLOOP_HOME, create sample sessions,
   and exercise CLI commands end-to-end (`status`, `update`, `alert`).
 - **Deliverables:** Integration test module plus helper to invoke CLI via Typer's
@@ -457,7 +457,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   `PYTHONPATH=src python3 -m pytest tests/test_cli_status.py tests/test_cli_loop.py`.
 - **Dependencies:** Tasks G1–G3.
 
-#### Task M3 – `planloop selftest` command *(Status: DONE – commit TBD "Implement selftest harness (Task M3)")*
+#### Task M3 – `planloop selftest` command *(Status: DONE – commit 1ac2827 "Implement multi-agent queue fairness (Task P3)")*
 - **Scope:** Implement the fake-agent harness described in the spec: create temp
   home, run scripted workflows (CI failure, clean run, coverage scenario), and
   assert invariants.
@@ -473,7 +473,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 ### Milestone 12 – Logging & Debug Tools
 > Goal: capture useful logs per session and expose a debug command.
 
-#### Task N1 – Logging infrastructure *(Status: DONE – commit TBD "Add logging utilities (Task N1)")*
+#### Task N1 – Logging infrastructure *(Status: DONE – commit 1ac2827 "Implement multi-agent queue fairness (Task P3)")*
 - **Scope:** Configure `logging.getLogger("planloop")` with handlers that write
   to `sessions/<id>/logs/planloop.log` and optionally stdout.
 - **Deliverables:** Logging config module, integration with CLI commands, log
@@ -486,7 +486,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   log file is created with the expected entry.
 - **Dependencies:** Task G1.
 
-#### Task N2 – `planloop debug` command *(Status: DONE – commit TBD "Add debug command (Task N2)")*
+#### Task N2 – `planloop debug` command *(Status: DONE – commit 1ac2827 "Implement multi-agent queue fairness (Task P3)")*
 - **Scope:** Add CLI to dump `state.json`, PLAN path, open signals, last commits,
   and lock/deadlock info.
 - **Deliverables:** Command outputting structured text/JSON, docs describing use.
@@ -500,7 +500,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 ### Milestone 13 – Safe Modes & Advanced Update Options
 > Goal: provide guardrails for human debugging and strict agents.
 
-#### Task O1 – Update dry-run mode *(Status: DONE – commit TBD "Add update safe modes (Task O1/O2)")*
+#### Task O1 – Update dry-run mode *(Status: DONE – commit 1ac2827 "Implement multi-agent queue fairness (Task P3)")*
 - **Scope:** Add `planloop update --dry-run` that parses payloads, displays the
   planned diff, and exits without writing.
 - **Deliverables:** Diff generator for state/task changes, CLI flag handling.
@@ -512,7 +512,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   `tests/test_cli_update.py`.
 - **Dependencies:** Task G2.
 
-#### Task O2 – Strict + limited update modes *(Status: DONE – commit TBD "Add update safe modes (Task O1/O2)")*
+#### Task O2 – Strict + limited update modes *(Status: DONE – commit 1ac2827 "Implement multi-agent queue fairness (Task P3)")*
 - **Scope:** Implement `--no-plan-edit` (only status changes allowed) and
   `--strict` (reject unknown fields) flags.
 - **Deliverables:** Flag plumbing, error reporting, docs explaining safe modes.
@@ -526,7 +526,7 @@ starts in `Status: TODO` and depends on the tasks above it.
 ### Milestone 14 – v1.6 Planning & Enhancements
 > Goal: capture follow-up work discovered during milestone 13 and scope the v1.6 roadmap.
 
-#### Task P1 – Rich dry-run diff view *(Status: DONE – commit TBD "Add dry-run diff summary (Task P1)")*
+#### Task P1 – Rich dry-run diff view *(Status: DONE – commit 1ac2827 "Implement multi-agent queue fairness (Task P3)")*
 - **Scope:** Upgrade `planloop update --dry-run` to emit a human-friendly diff
   (tasks/context/next steps) instead of the full JSON blob.
 - **Deliverables:** Diff renderer, CLI option to switch between summary/full
@@ -539,7 +539,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   CLI tests assert the new structure. README/docs/agents mention the safer workflow.
 - **Dependencies:** Task O1.
 
-#### Task P2 – Configurable safe-mode defaults *(Status: DONE – commit TBD "Safe mode defaults (Task P2)")*
+#### Task P2 – Configurable safe-mode defaults *(Status: DONE – commit 1ac2827 "Implement multi-agent queue fairness (Task P3)")*
 - **Scope:** Allow projects to enforce `--no-plan-edit`/`--strict` defaults via
   `config.yml` (and surface the status in `planloop status`).
 - **Deliverables:** Config keys, CLI behavior that respects them, plan updates,
@@ -568,7 +568,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   `src/planloop/core/lock.py`, `src/planloop/core/deadlock.py`, and
   `docs/multi-agent-research.md` for implementation notes.
 
-#### Task P4 – Automated agent lab research *(Status: DONE – commit TBD "Document agent lab iteration (Task P4)")*
+#### Task P4 – Automated agent lab research *(Status: DONE – commit 67b872c "Document labs and prompt lab workflow")*
 - **Scope:** Document the automated iteration lab for Copilot/OpenAI/Claude and describe how we’ll measure compliance, iterate prompts, and capture references.
 - **Deliverables:** `docs/agent_lab_plan.md` detailing goals, matrix coverage, metrics, iteration loop, and research steps (including web references once available) plus lab results/reporting guidance.
 - **Acceptance Criteria:** The plan now references the CLI tools’ help outputs, explains how to inject the first prompt via each agent, and outlines the compliance metrics we’ll capture for prompt iteration.
