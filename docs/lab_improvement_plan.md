@@ -336,16 +336,20 @@ immediately run status and continue the next task."
 
 ## Implementation Checklist
 
-### Week 1: Real Agent Setup ✓ IN PROGRESS
+### Week 1: Real Agent Setup ✓ COMPLETE
 - [x] Verify Claude CLI available (v2.0.42)
 - [x] Verify Copilot CLI available (v0.0.358)
-- [ ] Test each CLI with simple prompt
-- [ ] Create copilot_real.sh adapter
-- [ ] Create claude_real.sh adapter
-- [ ] Add model detection to adapters
-- [ ] Run baseline test with real agents
+- [x] Test each CLI with simple prompt
+- [x] Create copilot_real.sh adapter
+- [x] Create claude_real.sh adapter
+- [x] Add model detection to adapters
+- [x] Run baseline test with real agents
+- [x] Create run_iterations.sh for automated testing
+- [x] Add performance tracking to README with badges
 
-### Week 2: Enhanced Scenarios
+**Results**: Baseline established at ~26% pass rate, 22/100 avg score
+
+### Week 2: Enhanced Scenarios ⏸️ PAUSED
 - [ ] Implement multi-signal-cascade scenario
 - [ ] Implement dependency-chain scenario
 - [ ] Implement full-plan-completion scenario
@@ -353,39 +357,63 @@ immediately run status and continue the next task."
 - [ ] Update evaluation to check completion rate
 - [ ] Test all scenarios with real agents
 
-### Week 3: Advanced Metrics
+**Status**: Focused on prompt optimization first to improve baseline scores
+
+### Week 3: Advanced Metrics ⏳ IN PROGRESS
+- [x] Group results by agent+model
+- [x] Add model detection from trace logs
+- [x] Update aggregate_metrics.py with agent+model tracking
+- [x] Update generate_viz.py with model-specific badges
 - [ ] Add task completion tracking
 - [ ] Add signal handling quality metrics
 - [ ] Add workflow quality metrics
-- [ ] Group results by agent+model
 - [ ] Create detailed per-run reports
-- [ ] Update aggregate_metrics.py
 
-### Week 4: Optimization
-- [ ] Run full baseline (all scenarios, all agents, 5x each)
-- [ ] Analyze failure patterns
-- [ ] Create v0.3.0 prompt with improvements
-- [ ] A/B test v0.2.0 vs v0.3.0
-- [ ] Document results
-- [ ] Iterate if needed
+**Status**: Model tracking complete, quality metrics pending
+
+### Week 4: Optimization ⏳ IN PROGRESS
+- [x] Run baseline with real agents (53 runs completed)
+- [x] Analyze failure patterns (missing updates, status-after, signals)
+- [x] Create v0.3.0 prompt with step-by-step improvements
+- [x] Test improvements (Copilot: 26.5% → 30.8% pass rate)
+- [ ] Continue iterations to reach 50%+ pass rate
+- [ ] A/B test different prompt variations
+- [ ] Document successful patterns
+- [ ] Create harder scenarios when scores reach 60%+
+
+**Current Results** (as of 2025-11-16T21:29Z):
+- **Total Runs**: 53
+- **Copilot (gpt-5)**: 30.8% pass, 24.5/100 avg score (↑ from 26.5%, 21.7)
+- **Claude (sonnet)**: 26.5% pass, 23.5/100 avg score
+- **Best Run**: Copilot 70/100 (shows potential with right execution)
+
+**Key Insights**:
+- Step-by-step prompts work better than narrative
+- Agents need explicit stop conditions
+- JSON payload examples help
+- Inconsistency suggests need for more examples or simpler tasks
 
 ## Success Metrics
 
-**By End of Week 1**:
-- ✅ Testing 2+ real agent CLIs (not mocks)
-- ✅ Model information captured in metrics
-- ✅ Baseline real-agent compliance scores established
+**Week 1** ✅ COMPLETE:
+- ✅ Testing 2+ real agent CLIs (not mocks) - Copilot & Claude working
+- ✅ Model information captured in metrics - Agent+model tracking functional
+- ✅ Baseline real-agent compliance scores established - 53 runs, ~26-30% baseline
 
-**By End of Week 2**:
-- ✅ 3+ scenarios of varying difficulty operational
-- ✅ Task completion rate tracked
-- ✅ Full test matrix: 3 scenarios × 2+ agents × 3 runs = 18+ data points
+**Week 2** ⏸️ DEFERRED:
+- Scenarios deferred in favor of prompt optimization
+- Will implement when baseline scores reach 60%+
 
-**By End of Week 4**:
-- ✅ Measurable improvement on hard scenarios (baseline → optimized)
-- ✅ Documentation of prompt patterns that work best
-- ✅ Clear understanding of model-specific behaviors
-- ✅ Reproducible optimization process for future iterations
+**Week 3** ⏳ PARTIAL:
+- ✅ Model tracking by agent+model
+- ✅ Performance visualization with badges
+- ⏳ Advanced quality metrics pending
+
+**Week 4** ⏳ IN PROGRESS:
+- ✅ Baseline established and improving (26.5% → 30.8% for Copilot)
+- ✅ Prompt v0.3.0 showing measurable gains
+- ⏳ Targeting 50%+ pass rate before creating harder scenarios
+- ⏳ Documentation of successful patterns ongoing
 
 ## Open Questions & Decisions Needed
 
@@ -396,12 +424,31 @@ immediately run status and continue the next task."
 5. **Parallel Testing**: Run scenarios in parallel or sequential?
 6. **Model Selection**: Can we test multiple models per agent automatically?
 
-## Next Immediate Action
+## Next Immediate Actions
 
-Start with **Phase 1, Step 1.1**: Test real agent CLIs individually to understand their behavior and requirements.
+**Continue Prompt Optimization (Week 4)**:
+1. Run more iterations: `./labs/run_iterations.sh 10 cli-basics copilot,claude`
+2. Target 50%+ pass rate through prompt refinement
+3. Document patterns from successful 70/100 runs
+4. Consider agent-specific prompts (Claude needs different approach)
 
+**When Scores Reach 60%+**:
+1. Create multi-signal-cascade scenario (5 tasks, 3 signals)
+2. Test agents on harder workflows
+3. Increase difficulty progressively
+
+**Commands**:
 ```bash
-# Run this next:
+# Continue iterations
 cd /Users/honk/code/planloop
-./labs/test_real_agents.sh  # To be created
+./labs/run_iterations.sh 10 cli-basics copilot,claude
+
+# Check current metrics
+python labs/aggregate_metrics.py
+python labs/generate_viz.py
+cat docs/agent-performance.md
+
+# Review successful runs
+ls -lt labs/results/ | head -5
+cat labs/results/<latest>/copilot/copilot_stdout.txt
 ```
