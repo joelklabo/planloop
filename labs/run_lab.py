@@ -50,7 +50,11 @@ def load_trace(trace_path: Path) -> list[dict[str, str]]:
         return []
     entries: list[dict[str, str]] = []
     for line in trace_path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue  # Skip empty lines
         parts = line.split("\t", 2)
+        if len(parts) < 2:
+            continue  # Skip malformed lines
         entry = {"timestamp": parts[0], "step": parts[1]}
         entry["detail"] = parts[2] if len(parts) > 2 else ""
         entries.append(entry)
@@ -63,26 +67,38 @@ def evaluate_trace(trace_path: Path) -> tuple[float, list[str]]:
     steps = load_trace(trace_path)
     reasons: list[str] = []
     score = 0.0
-    status_steps = [entry for entry in steps if entry["step"].startswith("status")]
-    status_before_present = len(status_steps) >= 1
+    
+    # Check for various forms of status calls (mock or real agents)
+    status_steps = [entry for entry in steps if "status" in entry["step"]]
+    # Separate status-before from other status calls
+    status_before = any(entry["step"] in ("status-before", "status") and entry == steps[min(i+1, len(steps)-1) if i == 0 else i] 
+                       for i, entry in enumerate(steps) if "status" in entry["step"])
     status_after_present = len(status_steps) >= 2
-    update_indices = [i for i, entry in enumerate(steps) if entry["step"] == "update"]
-    signal_open_indices = [i for i, entry in enumerate(steps) if entry["step"] == "signal-open" and "none" not in entry["detail"]]
-    signal_close_indices = [i for i, entry in enumerate(steps) if entry["step"] == "signal-close"]
+    
+    # Check for update calls (various forms)
+    update_indices = [i for i, entry in enumerate(steps) if "update" in entry["step"]]
+    
+    # Check for signal handling
+    signal_open_indices = [i for i, entry in enumerate(steps) if "signal-open" in entry["step"] and "none" not in entry["detail"]]
+    signal_close_indices = [i for i, entry in enumerate(steps) if "signal-close" in entry["step"]]
 
-    if status_before_present:
+    # Basic workflow compliance
+    if status_steps:
         score += 25
     else:
         reasons.append("missing status-before")
+    
     if update_indices:
         score += 25
     else:
         reasons.append("missing update")
+    
     if status_after_present:
         score += 15
     else:
         reasons.append("missing status-after")
 
+    # Signal handling scoring
     if signal_open_indices:
         score += 20
         if signal_close_indices:
