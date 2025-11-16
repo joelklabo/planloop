@@ -3,10 +3,12 @@ from __future__ import annotations
 
 import os
 import tempfile
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Iterable, List, Sequence
+from typing import Callable
 
+from ..home import PLANLOOP_HOME_ENV, SESSIONS_DIR, initialize_home
 from .session import create_session, load_session_state_from_disk, save_session_state
 from .signals import close_signal, open_signal
 from .state import (
@@ -21,7 +23,6 @@ from .state import (
 )
 from .update import apply_update
 from .update_payload import AddTaskInput, TaskStatusPatch, UpdatePayload
-from ..home import PLANLOOP_HOME_ENV, SESSIONS_DIR, initialize_home
 
 
 @dataclass
@@ -48,11 +49,11 @@ class SelfTestFailure(RuntimeError):
         self.results = list(results)
 
 
-def run_selftest() -> List[ScenarioResult]:
+def run_selftest() -> list[ScenarioResult]:
     """Execute all scenarios inside a temporary PLANLOOP_HOME."""
 
     original_home = os.environ.get(PLANLOOP_HOME_ENV)
-    results: List[ScenarioResult] = []
+    results: list[ScenarioResult] = []
     with tempfile.TemporaryDirectory(prefix="planloop-selftest-") as tmp_home:
         os.environ[PLANLOOP_HOME_ENV] = tmp_home
         home_path = initialize_home()
@@ -78,8 +79,8 @@ def _apply_update(
     *,
     add_tasks: Iterable[AddTaskInput] | None = None,
     status_changes: Iterable[tuple[int, TaskStatus]] | None = None,
-    context_notes: List[str] | None = None,
-    next_steps: List[str] | None = None,
+    context_notes: list[str] | None = None,
+    next_steps: list[str] | None = None,
     final_summary: str | None = None,
     message: str = "selftest update",
 ) -> SessionState:
@@ -150,7 +151,7 @@ def _scenario_ci_blocker(home: Path) -> str:
     close_signal(state, signal.id)
     validate_state(state)
     save_session_state(session_dir, state, message="selftest ci blocker closed")
-    if state.now.reason != NowReason.TASK:
+    if state.now.reason != NowReason.TASK:  # type: ignore[comparison-overlap]
         raise AssertionError("Expected now.reason to return to task")
     return "CI blocker opened and cleared"
 
@@ -189,10 +190,97 @@ def _scenario_dependency_chain(home: Path) -> str:
     return "Dependency chain resolved"
 
 
-_SCENARIOS: List[tuple[str, Callable[[Path], str]]] = [
+def _scenario_signal_and_tasks(home: Path) -> str:
+    state = create_session("Selftest Signal and Tasks", "Handle signal then tasks", project_root=Path("/selftest/signal_tasks"))
+    session_dir = home / SESSIONS_DIR / state.session
+
+    # 1. Add initial tasks
+    state = _apply_update(
+        state,
+        session_dir,
+        add_tasks=[
+            AddTaskInput(title="Initial Task 1", type=TaskType.FEATURE),
+            AddTaskInput(title="Initial Task 2", type=TaskType.FEATURE),
+            AddTaskInput(title="Initial Task 3", type=TaskType.FEATURE),
+        ],
+        context_notes=["Scenario initialized with tasks"],
+    )
+    if state.now.reason != NowReason.TASK or state.now.task_id != 1:
+        raise AssertionError("Expected Task 1 to be active initially")
+
+    # 2. Start working on Task 1
+    state = _apply_update(
+        state,
+        session_dir,
+        status_changes=[(1, TaskStatus.IN_PROGRESS)],
+        message="Started Task 1",
+    )
+    if state.now.reason != NowReason.TASK or state.now.task_id != 1:
+        raise AssertionError("Expected Task 1 to be in progress")
+
+    # 3. Introduce a CI blocker signal
+    signal = Signal(
+        id="ci-blocker-for-tasks",
+        type=SignalType.CI,
+        kind="build",
+        level=SignalLevel.BLOCKER,
+        title="Simulated CI failure during tasks",
+        message="CI failed, blocking further task work",
+    )
+    open_signal(state, signal=signal)
+    validate_state(state)
+    save_session_state(session_dir, state, message="CI blocker opened")
+
+    if state.now.reason != NowReason.CI_BLOCKER:
+        raise AssertionError("Expected now.reason to reflect ci_blocker after signal")
+
+    # 4. Resolve the CI blocker
+    close_signal(state, signal.id)
+    validate_state(state)
+    save_session_state(session_dir, state, message="CI blocker closed")
+
+    if state.now.reason != NowReason.TASK or state.now.task_id != 1:
+        raise AssertionError("Expected now.reason to return to Task 1 after signal resolution")
+
+    # 5. Complete remaining tasks
+    state = _apply_update(
+        state,
+        session_dir,
+        status_changes=[(1, TaskStatus.DONE)],
+        message="Completed Task 1 after CI fix",
+    )
+    if state.now.reason != NowReason.TASK or state.now.task_id != 2:
+        raise AssertionError("Expected Task 2 to be active after Task 1 completion")
+
+    state = _apply_update(
+        state,
+        session_dir,
+        status_changes=[(2, TaskStatus.DONE)],
+        message="Completed Task 2",
+    )
+    if state.now.reason != NowReason.TASK or state.now.task_id != 3:
+        raise AssertionError("Expected Task 3 to be active after Task 2 completion")
+
+    state = _apply_update(
+        state,
+        session_dir,
+        status_changes=[(3, TaskStatus.DONE)],
+        final_summary="All tasks completed after signal handling",
+        message="Completed Task 3",
+    )
+
+    reloaded = load_session_state_from_disk(session_dir)
+    if reloaded.now.reason != NowReason.COMPLETED:
+        raise AssertionError("Expected scenario to complete after all tasks are done")
+
+    return "Signal handled and all tasks completed successfully"
+
+
+_SCENARIOS: list[tuple[str, Callable[[Path], str]]] = [
     ("clean_run", _scenario_clean_run),
     ("ci_blocker", _scenario_ci_blocker),
     ("dependency_chain", _scenario_dependency_chain),
+    ("signal_and_tasks", _scenario_signal_and_tasks),
 ]
 
 
