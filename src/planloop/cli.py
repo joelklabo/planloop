@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -19,7 +21,7 @@ from .cli_utils import format_log_tail
 from .history import create_snapshot, restore_snapshot
 from .logging_utils import log_event, log_session_event
 from .tui import TEXTUAL_AVAILABLE, PlanloopViewApp, SessionViewModel
-from .core.lock import acquire_lock, get_lock_status
+from .core.lock import acquire_lock, get_lock_queue_status, get_lock_status
 from .core.session import refresh_registry, save_session_state
 from .core.session_pointer import get_current_session
 from .core.signals import close_signal, open_signal
@@ -33,6 +35,23 @@ from .home import SESSIONS_DIR, initialize_home
 app = typer.Typer(help="planloop CLI")
 sessions_app = typer.Typer(help="Manage sessions")
 app.add_typer(sessions_app, name="sessions")
+
+
+TRACE_RESULTS_ENV = "PLANLOOP_LAB_RESULTS"
+TRACE_AGENT_ENV = "PLANLOOP_LAB_AGENT_NAME"
+
+
+def _log_trace_event(step: str, detail: str) -> None:
+    results_path = os.environ.get(TRACE_RESULTS_ENV)
+    agent_name = os.environ.get(TRACE_AGENT_ENV)
+    if not results_path or not agent_name:
+        return
+    trace_dir = Path(results_path) / agent_name
+    trace_dir.mkdir(parents=True, exist_ok=True)
+    trace_path = trace_dir / "trace.log"
+    timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    with trace_path.open("a", encoding="utf-8") as fp:
+        fp.write(f"{timestamp}\t{step}\t{detail}\n")
 
 
 class PlanloopError(RuntimeError):
@@ -73,15 +92,18 @@ def status(session: Optional[str] = typer.Option(None, help="Session ID"), json_
         state, session_dir = _load_session(session)
         validate_state(state)
         lock_status = get_lock_status(session_dir)
+        queue_status = get_lock_queue_status(session_dir, agent=os.environ.get("PLANLOOP_AGENT_NAME"))
         payload = {
             "session": state.session,
             "now": state.now.model_dump(),
             "tasks": [task.model_dump(mode="json") for task in state.tasks],
             "signals": [signal.model_dump(mode="json") for signal in state.signals],
             "lock_info": lock_status.info.to_dict() if lock_status.info else None,
+            "lock_queue": queue_status.to_dict(),
             "safe_mode_defaults": safe_mode_defaults(),
         }
         log_session_event(session_dir, "Status command executed")
+        _log_trace_event("status", f"reason={state.now.reason.value}")
         typer.echo(json.dumps(payload, indent=2))
     except PlanloopError as exc:
         raise typer.Exit(code=1) from exc
@@ -150,6 +172,10 @@ def update(
                 session_dir,
                 f"Update applied (add_tasks={len(payload.add_tasks)}, patches={len(payload.tasks)})",
             )
+            _log_trace_event(
+                "update",
+                f"version={state.version} tasks={len(payload.tasks)} add={len(payload.add_tasks)} update_tasks={len(payload.update_tasks)} reason={state.now.reason.value}",
+            )
     except UpdateError as exc:
         raise typer.Exit(code=1) from exc
     typer.echo(json.dumps({"status": "ok", "version": state.version}, indent=2))
@@ -174,6 +200,7 @@ def alert(
             if close:
                 close_signal(state, id)
                 log_session_event(session_dir, f"Signal {id} closed")
+                _log_trace_event("signal-close", f"id={id}")
             else:
                 signal = Signal(
                     id=id,
@@ -186,6 +213,7 @@ def alert(
                 )
                 open_signal(state, signal=signal)
                 log_session_event(session_dir, f"Signal {id} opened ({level.value})")
+                _log_trace_event("signal-open", f"id={id}")
             validate_state(state)
             save_session_state(session_dir, state, message="Signal update")
         typer.echo(json.dumps({"status": "ok"}, indent=2))

@@ -1,7 +1,7 @@
 # planloop
 
 Agent-first local planning loop that keeps AI coders synced with CI signals
-using structured markdown plans. `docs/plan.md` is the living backlog; update it
+using structured markdown plans. `docs/plans/plan.md` is the living backlog; update it
 before and after every commit so humans and agents stay aligned.
 
 ## Requirements
@@ -19,7 +19,7 @@ pip install -e .[dev]
 ## Workflow expectations
 - Practice TDD whenever practical: write or update tests, watch them fail, make
   them pass, then refactor.
-- Commit early/often. When you pick up a task from `docs/plan.md`, set its
+- Commit early/often. When you pick up a task from `docs/plans/plan.md`, set its
   status to `IN_PROGRESS`, implement the change, run tests, commit, push,
   update the plan with the commit SHA, then grab the next task.
 - Never commit failing tests. If work is incomplete, keep it local and leave
@@ -89,6 +89,15 @@ exit with a descriptive error.
 - `pip install 'fastapi[standard]' uvicorn` enables `planloop web`.
 
 Both commands detect missing dependencies and print clear instructions.
+
+## Lock queue visibility
+`planloop status` now surfaces a `lock_queue` section that lists the agents currently waiting on the session lock and the caller’s position in that queue. Agents should only attempt structural edits (updates/alerts) when their `position` is `1`; if you are waiting, mention the queue status in your plan update so humans and auditors can follow along.
+
+## Prompt lab leaderboard
+
+We run an automated **prompt lab** that seeds a session, injects a CI blocker signal, and drives every CLI agent (Copilot CLI, OpenAI runner, Claude adapter) through the workflow while collecting a `trace.log`. Each run now computes a **compliance score (0‑100)** that rewards the `status-before → update → status-after` path, closing blockers before writing tasks, and avoiding edits while a signal is open. The latest scoreboard and trace references are in [`docs/prompt_lab_results.md`](docs/prompt_lab_results.md).  
+
+To add a new CLI/model combination, point its adapter to `planloop/labs/agents/mock_agent.sh`, rerun `planloop/labs/optimize_prompt.sh`, and publish the resulting JSON in `labs/results/cli-basics-*`. The README, docs, and scoring logic will automatically treat every run as part of the leaderboard.
 
 ## Logging
 `planloop` writes per-session logs to `sessions/<id>/logs/planloop.log`. You can

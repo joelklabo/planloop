@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from planloop.core.deadlock import check_deadlock
+from planloop.core.deadlock import DeadlockTracker, check_deadlock
 from planloop.core.session import create_session
 from planloop.core.state import NowReason
 
@@ -24,3 +24,15 @@ def test_deadlock_tracker_counts(tmp_path, monkeypatch):
 
     assert state.now.reason == NowReason.DEADLOCKED
     assert (session_dir / "deadlock.json").exists()
+
+
+def test_register_queue_head_counts():
+    tracker = DeadlockTracker()
+    assert tracker.register_queue_head("agent-a", should_track=True, threshold=2) is False
+    assert tracker.queue_stall_counter == 1
+    assert tracker.register_queue_head("agent-a", should_track=True, threshold=2) is True
+    assert tracker.queue_stall_counter == 2
+    assert tracker.register_queue_head("agent-b", should_track=True, threshold=2) is False
+    assert tracker.queue_stall_counter == 1
+    assert tracker.register_queue_head(None, should_track=False, threshold=2) is False
+    assert tracker.queue_stall_counter == 0

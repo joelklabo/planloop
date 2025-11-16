@@ -55,6 +55,7 @@ def validate_update_payload(state: SessionState, payload: UpdatePayload) -> None
 
 
 def apply_update(state: SessionState, payload: UpdatePayload) -> SessionState:
+    validate_update_payload(state, payload)
 
     id_to_task = {task.id: task for task in state.tasks}
 

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
 
 import yaml
@@ -58,3 +59,40 @@ def test_status_includes_safe_mode_defaults(monkeypatch, tmp_path):
     data = json.loads(result.stdout)
     assert data["safe_mode_defaults"]["dry_run"] is True
     reset_config_cache()
+
+
+def test_status_includes_lock_queue(monkeypatch, tmp_path):
+    home = tmp_path / "home"
+    monkeypatch.setenv("PLANLOOP_HOME", str(home))
+    state = create_session("Test", "title", project_root=Path("/repo"))
+    result = runner.invoke(cli.app, ["status", "--session", state.session])
+    assert result.exit_code == 0
+    data = json.loads(result.stdout)
+    queue = data["lock_queue"]
+    assert queue["pending"] == []
+    assert queue["position"] is None
+
+
+def test_status_reports_queue_position(monkeypatch, tmp_path):
+    home = tmp_path / "home"
+    monkeypatch.setenv("PLANLOOP_HOME", str(home))
+    state = create_session("Test", "title", project_root=Path("/repo"))
+    queue_dir = home / "sessions" / state.session / ".lock_queue"
+    queue_dir.mkdir(parents=True, exist_ok=True)
+    entry = queue_dir / "entry.json"
+    entry.write_text(
+        json.dumps(
+            {
+                "id": "entry",
+                "agent": "agent-test",
+                "operation": "update",
+                "requested_at": time.time(),
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("PLANLOOP_AGENT_NAME", "agent-test")
+    result = runner.invoke(cli.app, ["status", "--session", state.session])
+    assert result.exit_code == 0
+    data = json.loads(result.stdout)
+    assert data["lock_queue"]["position"] == 1
