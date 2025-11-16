@@ -498,6 +498,7 @@ def snapshot(
         sha = create_snapshot(session_dir, note)
         log_session_event(session_dir, f"Snapshot created: {sha}")
     except (PlanloopError, RuntimeError) as exc:
+        typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
     typer.echo(json.dumps({"snapshot": sha}, indent=2))
 
@@ -514,6 +515,7 @@ def restore(
         validate_state(restored_state)
         log_session_event(session_dir, f"Restored snapshot {snapshot_ref}")
     except (PlanloopError, RuntimeError, ValueError) as exc:
+        typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
     typer.echo(json.dumps({"restored": snapshot_ref}, indent=2))
 
