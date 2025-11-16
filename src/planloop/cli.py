@@ -23,7 +23,7 @@ from .logging_utils import log_event, log_session_event
 from .tui import TEXTUAL_AVAILABLE, PlanloopViewApp, SessionViewModel
 from .core.lock import acquire_lock, get_lock_queue_status, get_lock_status
 from .core.session import refresh_registry, save_session_state
-from .core.session_pointer import get_current_session
+from .core.session_pointer import get_current_session, set_current_session, clear_current_session
 from .core.signals import close_signal, open_signal
 from .core.state import SessionState, Signal, SignalLevel, SignalType, validate_state
 from .core.update import UpdateError, apply_update, validate_update_payload
@@ -238,6 +238,7 @@ def describe_command(json_output: bool = typer.Option(True, "--json")) -> None:
 
 @sessions_app.command("list")
 def sessions_list(json_output: bool = typer.Option(True, "--json")) -> None:
+    """List all sessions."""
     entries = registry.load_registry()
     data = [entry.to_dict() for entry in entries]
     if json_output:
@@ -249,16 +250,45 @@ def sessions_list(json_output: bool = typer.Option(True, "--json")) -> None:
 
 @sessions_app.command("info")
 def sessions_info(session: Optional[str] = typer.Argument(None)) -> None:
-    home = initialize_home()
-    target = session or get_current_session()
-    if not target:
-        raise PlanloopError("No session specified and no current session set")
-    summary = registry.find_session(target)
-    if not summary:
-        raise PlanloopError(f"Session {target} not found in registry")
-    info = summary.to_dict()
-    info["path"] = str(home / SESSIONS_DIR / target)
-    typer.echo(json.dumps(info, indent=2))
+    """Show detailed information about a session."""
+    try:
+        home = initialize_home()
+        target = session or get_current_session()
+        if not target:
+            raise PlanloopError("No session specified and no current session set")
+        summary = registry.find_session(target)
+        if not summary:
+            raise PlanloopError(f"Session {target} not found in registry")
+        info = summary.to_dict()
+        info["path"] = str(home / SESSIONS_DIR / target)
+        typer.echo(json.dumps(info, indent=2))
+    except PlanloopError as exc:
+        typer.echo(f"Error: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+
+
+@sessions_app.command("current")
+def sessions_current() -> None:
+    """Show the current session."""
+    session_id = get_current_session()
+    if not session_id:
+        typer.echo(json.dumps({"current_session": None}, indent=2))
+    else:
+        typer.echo(json.dumps({"current_session": session_id}, indent=2))
+
+
+@sessions_app.command("switch")
+def sessions_switch(session: str = typer.Argument(..., help="Session ID to switch to")) -> None:
+    """Switch to a different session."""
+    try:
+        summary = registry.find_session(session)
+        if not summary:
+            raise PlanloopError(f"Session {session} not found in registry")
+        set_current_session(session)
+        typer.echo(json.dumps({"current_session": session, "status": "ok"}, indent=2))
+    except PlanloopError as exc:
+        typer.echo(f"Error: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
 
 
 @app.command()
