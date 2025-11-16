@@ -96,6 +96,22 @@ Both commands detect missing dependencies and print clear instructions.
 ## Lock queue visibility
 `planloop status` now surfaces a `lock_queue` section that lists the agents currently waiting on the session lock and the caller’s position in that queue. Agents should only attempt structural edits (updates/alerts) when their `position` is `1`; if you are waiting, mention the queue status in your plan update so humans and auditors can follow along.
 
+## 📊 Agent Performance Data
+
+**Total Test Runs:** 35 | **Latest:** `cli-basics-20251116T085040Z-6fc8`
+
+### Compliance Rates
+![claude](https://img.shields.io/badge/claude-6.1%25-red) ![copilot](https://img.shields.io/badge/copilot-5.9%25-red) ![openai](https://img.shields.io/badge/openai-20.6%25-red)
+
+| Agent | Runs | Passes | Fails | Pass Rate | Top Errors |
+|-------|------|--------|-------|-----------|------------|
+| claude | 33 | 2 | 31 | 6.1% | missing status-after (18), missing update (14) |
+| copilot | 34 | 2 | 32 | 5.9% | missing status-after (17), missing update (16) |
+| openai | 34 | 7 | 27 | 20.6% | trace log missing (14), missing status-after (13) |
+
+*Data from automated lab runs testing workflow compliance. See [docs/agent-performance.md](docs/agent-performance.md) for details. Stats auto-update via GitHub Actions.*
+
+
 ## Prompt lab leaderboard
 
 We run an automated **prompt lab** that seeds a session, injects a CI blocker signal, and drives every CLI agent (Copilot CLI, OpenAI runner, Claude adapter) through the workflow while collecting a `trace.log`. Each run now computes a **compliance score (0‑100)** that rewards the `status-before → update → status-after` path, closing blockers before writing tasks, and avoiding edits while a signal is open. The latest scoreboard and trace references are in [`docs/prompt_lab_results.md`](docs/prompt_lab_results.md).  

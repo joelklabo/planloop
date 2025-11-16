@@ -1,0 +1,44 @@
+name: Update Agent Performance Metrics
+
+on:
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:  # Allow manual triggers
+  push:
+    paths:
+      - 'labs/results/**'  # Update when new results are added
+
+jobs:
+  update-metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install -e .
+      
+      - name: Aggregate metrics
+        run: |
+          python3 labs/aggregate_metrics.py
+          python3 labs/generate_viz.py
+      
+      - name: Update README with latest metrics
+        run: |
+          python3 labs/update_readme.py
+      
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add README.md docs/agent-performance.md labs/metrics.json
+          git diff --staged --quiet || git commit -m "📊 Auto-update agent performance metrics"
+          git push

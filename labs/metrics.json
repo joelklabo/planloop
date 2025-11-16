@@ -1,0 +1,69 @@
+{
+  "total_runs": 35,
+  "latest_run": "cli-basics-20251116T085040Z-6fc8",
+  "agents": {
+    "openai": {
+      "runs": 34,
+      "passes": 7,
+      "fails": 27,
+      "pass_rate": 0.20588235294117646,
+      "fail_rate": 0.7941176470588235,
+      "top_errors": [
+        [
+          "trace log missing",
+          14
+        ],
+        [
+          "missing status-after",
+          13
+        ],
+        [
+          "missing update",
+          9
+        ]
+      ]
+    },
+    "claude": {
+      "runs": 33,
+      "passes": 2,
+      "fails": 31,
+      "pass_rate": 0.06060606060606061,
+      "fail_rate": 0.9393939393939394,
+      "top_errors": [
+        [
+          "missing status-after",
+          18
+        ],
+        [
+          "missing update",
+          14
+        ],
+        [
+          "trace log missing",
+          13
+        ]
+      ]
+    },
+    "copilot": {
+      "runs": 34,
+      "passes": 2,
+      "fails": 32,
+      "pass_rate": 0.058823529411764705,
+      "fail_rate": 0.9411764705882353,
+      "top_errors": [
+        [
+          "missing status-after",
+          17
+        ],
+        [
+          "missing update",
+          16
+        ],
+        [
+          "trace log missing",
+          15
+        ]
+      ]
+    }
+  }
+}
