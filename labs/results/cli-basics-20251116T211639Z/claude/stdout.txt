@@ -1,0 +1,2 @@
+Running: claude -p <prompt> --print --allowedTools "Bash" --model sonnet
+Claude agent run complete. Check labs/results/cli-basics-20251116T211639Z/claude/trace.log for details.

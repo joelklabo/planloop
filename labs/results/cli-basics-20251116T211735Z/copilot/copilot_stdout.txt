@@ -1,0 +1,28 @@
+Run planloop status for session
+   $ planloop status --session cli-basics-20251116T211735Z-f5e6 --json || python -m planloop status
+   --session cli-basics-20251116T211735Z-f5e6 --json
+   ↪ 43 lines...
+
+✓ Read payload.json (11 lines)
+
+✓ Edit payload.json (+2 -2)
+   ╭──────────────────────────────────────────────────────────────────────────────────────────────╮
+   │ 1     {                                                                                      │
+   │ 2       "session": "cli-basics-20251116T211735Z-f5e6",                                       │
+   │ 3  -    "tasks": [{"id": 1, "status": "IN_PROGRESS"}],                                       │
+   │ 3  +    "tasks": [{"id": 2, "status": "IN_PROGRESS"}],                                       │
+   │ 4       "context_notes": ["Started working on this task"],                                   │
+   │ 5  -    "final_summary": "Updated task 1 to IN_PROGRESS"                                     │
+   │ 5  +    "final_summary": "Updated task 2 to IN_PROGRESS"                                     │
+   │ 6     }                                                                                      │
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✓ Update task and show status
+   $ planloop update --session cli-basics-20251116T211735Z-f5e6 --file payload.json && planloop
+   status --session cli-basics-20251116T211735Z-f5e6 --json || python -m planloop update --session
+   cli-basics-20251116T211735Z-f5e6 --file payload.json && python -m planloop status --session
+   cli-basics-20251116T211735Z-f5e6 --json
+   ↪ 89 lines...
+
+Tasks 1 and 2 now IN_PROGRESS; status verified. No blockers present; process complete. Let me know if you want to progress or complete tasks next.
+

@@ -15,16 +15,34 @@ trace_dir=${PLANLOOP_LAB_RESULTS:?}/$agent_name
 mkdir -p "$trace_dir"
 
 # Prompt for the agent - guide it through the planloop workflow
-prompt=${PLANLOOP_LAB_AGENT_PROMPT:-"You are working with planloop, a CI-aware task management system. Follow these steps:
+# This should align with ~/.planloop/prompts/core-v1/handshake.prompt.md
+prompt=${PLANLOOP_LAB_AGENT_PROMPT:-"You are testing planloop workflow compliance. Follow these steps EXACTLY:
 
-1. Run 'planloop status --session $session --json' to see the current state
-2. Check the 'now.reason' field - if it's a blocker (ci_blocker, lint_blocker, etc.), close it with 'planloop alert --close --id <signal-id>' before proceeding
-3. After closing any blocker, rerun 'planloop status --session $session --json' to verify it's cleared
-4. When now.reason is 'task', update the referenced task to IN_PROGRESS using 'planloop update --session $session --file <payload.json>'
-5. After updating, run 'planloop status --session $session --json' again to verify
-6. If there are more tasks, continue autonomously until all tasks are DONE
+STEP 1: Run 'planloop status --session $session --json' to see current state
 
-Be methodical and follow the workflow exactly."}
+STEP 2: Check 'now.reason' in the status output:
+- If it's a blocker (ci_blocker, lint_blocker): Close it with 'planloop alert --close --id <signal-id>'
+- If waiting_on_lock: Stop here
+- If deadlocked: Stop here
+- If completed: Stop here  
+- If task: Continue to step 3
+
+STEP 3: After closing ANY blocker, MUST rerun 'planloop status' to verify it's cleared
+
+STEP 4: Create a JSON payload file to update the referenced task to IN_PROGRESS:
+{
+  \"tasks\": [{\"id\": <task-id>, \"status\": \"IN_PROGRESS\"}],
+  \"context_notes\": [\"Started working on this task\"],
+  \"final_summary\": \"Updated task <id> to IN_PROGRESS\"
+}
+
+STEP 5: Run 'planloop update --session $session --file payload.json'
+
+STEP 6: ALWAYS run 'planloop status --session $session --json' after updating to verify
+
+STEP 7: If more TODO tasks exist, repeat from step 4 for the next task
+
+Be systematic. Follow ALL steps."}
 
 log_trace "run-start" "agent=claude workspace=$workspace session=$session"
 

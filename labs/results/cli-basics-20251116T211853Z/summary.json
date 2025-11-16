@@ -1,0 +1,35 @@
+{
+  "scenario": "cli-basics",
+  "session": "cli-basics-20251116T211853Z-14f0",
+  "agents": [
+    {
+      "name": "claude",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T211853Z/claude/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T211853Z/claude/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "score": 30.0,
+        "reasons": [
+          "missing update",
+          "missing status-after"
+        ]
+      }
+    },
+    {
+      "name": "copilot",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T211853Z/copilot/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T211853Z/copilot/stderr.txt",
+      "compliance": {
+        "pass": true,
+        "score": 70.0,
+        "reasons": []
+      }
+    }
+  ]
+}

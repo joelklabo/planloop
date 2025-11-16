@@ -1,0 +1,52 @@
+✓ Planloop status JSON
+   $ planloop status --session cli-basics-20251116T211639Z-b11d --json
+   ↪ 43 lines...
+
+✓ Update task 1 to IN_PROGRESS and status
+   $ cat > payload.json <<'EOF'
+   {
+     "tasks": [{"id": 1, "status": "IN_PROGRESS"}],
+     "context_notes": ["Started working on this task"],
+     "final_summary": "Updated task 1 to IN_PROGRESS"...
+   ↪ 10 lines...
+
+✓ Describe update payload schema
+   $ planloop describe update && cat payload.json
+   ↪ 6 lines...
+
+✓ Read payload.json (10 lines)
+
+✓ Edit payload.json (+1)
+   ╭──────────────────────────────────────────────────────────────────────────────────────────────╮
+   │ 1     {                                                                                      │
+   │ 2  +    "session": "cli-basics-20251116T211639Z-b11d",                                       │
+   │ 3       "tasks": [{"id": 1, "status": "IN_PROGRESS"}],                                       │
+   │ 4       "context_notes": ["Started working on this task"],                                   │
+   │ 5       "final_summary": "Updated task 1 to IN_PROGRESS"                                     │
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✓ Run update then status
+   $ planloop update --session cli-basics-20251116T211639Z-b11d --file payload.json && planloop
+   status --session cli-basics-20251116T211639Z-b11d --json
+   ↪ 47 lines...
+
+✓ Edit payload.json (+3 -3)
+   ╭──────────────────────────────────────────────────────────────────────────────────────────────╮
+   │ 1     {                                                                                      │
+   │ 2       "session": "cli-basics-20251116T211639Z-b11d",                                       │
+   │ 3  -    "tasks": [{"id": 1, "status": "IN_PROGRESS"}],                                       │
+   │ 4  -    "context_notes": ["Started working on this task"],                                   │
+   │ 5  -    "final_summary": "Updated task 1 to IN_PROGRESS"                                     │
+   │ 3  +    "tasks": [{"id": 2, "status": "IN_PROGRESS"}],                                       │
+   │ 4  +    "context_notes": ["Started working on task 2 after starting task 1"],                │
+   │ 5  +    "final_summary": "Updated task 2 to IN_PROGRESS"                                     │
+   │ 6     }                                                                                      │
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✓ Update task 2 then status
+   $ planloop update --session cli-basics-20251116T211639Z-b11d --file payload.json && planloop
+   status --session cli-basics-20251116T211639Z-b11d --json
+   ↪ 47 lines...
+
+All tasks set to IN_PROGRESS and status verified. Let me know if you want to proceed to completion.
+
