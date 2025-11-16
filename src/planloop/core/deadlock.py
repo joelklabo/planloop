@@ -4,7 +4,6 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 
 from .state import Now, NowReason, SessionState, Signal, SignalLevel, SignalType
 
@@ -15,7 +14,7 @@ DEADLOCK_FILE = "deadlock.json"
 class DeadlockTracker:
     last_state_hash: str = ""
     no_progress_counter: int = 0
-    queue_head: Optional[str] = None
+    queue_head: str | None = None
     queue_stall_counter: int = 0
 
     def to_json(self) -> str:
@@ -24,7 +23,7 @@ class DeadlockTracker:
         return json.dumps(self.__dict__)
 
     @classmethod
-    def from_file(cls, path: Path) -> "DeadlockTracker":
+    def from_file(cls, path: Path) -> DeadlockTracker:
         if not path.exists():
             return cls()
         import json
@@ -36,7 +35,7 @@ class DeadlockTracker:
         path.write_text(self.to_json(), encoding="utf-8")
 
 
-    def register_queue_head(self, head_agent: Optional[str], should_track: bool, threshold: int) -> bool:
+    def register_queue_head(self, head_agent: str | None, should_track: bool, threshold: int) -> bool:
         if not should_track or not head_agent:
             self.queue_head = None
             self.queue_stall_counter = 0

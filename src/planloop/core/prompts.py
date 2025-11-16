@@ -2,9 +2,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from functools import lru_cache
+from functools import cache
 from importlib import resources
-from typing import Tuple
 
 import yaml
 
@@ -17,7 +16,7 @@ class TemplateDoc:
     body: str
 
 
-def _split_front_matter(text: str) -> Tuple[dict, str]:
+def _split_front_matter(text: str) -> tuple[dict, str]:
     if not text.startswith("---"):
         return {}, text
     parts = text.split("---", 2)
@@ -40,14 +39,14 @@ def _load_resource(path: str) -> TemplateDoc:
     return TemplateDoc(metadata=metadata, body=body)
 
 
-@lru_cache(maxsize=None)
+@cache
 def load_prompt(prompt_set: str, kind: str) -> TemplateDoc:
     filename = f"{kind}.prompt.md"
     path = f"prompts/{prompt_set}/{filename}"
     return _load_resource(path)
 
 
-@lru_cache(maxsize=None)
+@cache
 def load_message(name: str) -> TemplateDoc:
     filename = f"{name}.md"
     path = f"messages/{filename}"

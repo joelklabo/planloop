@@ -2,9 +2,8 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional
 
-from .state import SessionState, Signal, SignalLevel, SignalType
+from .state import SessionState, Signal
 
 
 def open_signal(state: SessionState, *, signal: Signal) -> None:

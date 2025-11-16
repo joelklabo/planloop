@@ -1,0 +1,10 @@
+2025-11-16T20:41:06Z	run-start	session=cli-basics-20251116T204106Z-8aa2 workspace=/Users/honk/code/planloop
+2025-11-16T20:41:07Z	status	reason=task
+2025-11-16T20:41:07Z	status-before	reason=task
+2025-11-16T20:41:07Z	signal-open	id=ci-blocker-lab
+2025-11-16T20:41:07Z	update	version=2 tasks=2 add=0 update_tasks=0 reason=ci_blocker
+2025-11-16T20:41:08Z	update	status=completed
+2025-11-16T20:41:08Z	signal-close	id=ci-blocker-lab
+2025-11-16T20:41:08Z	status	reason=task
+2025-11-16T20:41:08Z	status-after	reason=task
+2025-11-16T20:41:08Z	run-end	status=done

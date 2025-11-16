@@ -1,0 +1,19 @@
+{
+  "scenario": "cli-basics",
+  "session": "cli-basics-20251116T205259Z-4fa1",
+  "agents": [
+    {
+      "name": "copilot",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T205259Z/copilot/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T205259Z/copilot/stderr.txt",
+      "compliance": {
+        "pass": true,
+        "score": 70.0,
+        "reasons": []
+      }
+    }
+  ]
+}

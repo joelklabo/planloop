@@ -6,7 +6,8 @@ from datetime import datetime
 import pytest
 
 try:  # pragma: no cover - optional dev dependency
-    from hypothesis import given, strategies as st
+    from hypothesis import given
+    from hypothesis import strategies as st
 except ImportError:  # pragma: no cover
     given = None  # type: ignore
     st = None  # type: ignore
@@ -19,10 +20,10 @@ from planloop.core.state import (
     NowReason,
     PromptMetadata,
     SessionState,
-    StateValidationError,
     Signal,
     SignalLevel,
     SignalType,
+    StateValidationError,
     Task,
     TaskStatus,
     TaskType,

@@ -2,8 +2,7 @@
 from __future__ import annotations
 
 from functools import lru_cache
-from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import yaml
 
@@ -11,7 +10,7 @@ from .home import CONFIG_FILE_NAME, initialize_home
 
 
 @lru_cache(maxsize=1)
-def load_config() -> Dict[str, Any]:
+def load_config() -> dict[str, Any]:
     home = initialize_home()
     path = home / CONFIG_FILE_NAME
     if not path.exists():

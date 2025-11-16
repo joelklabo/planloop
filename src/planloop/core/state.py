@@ -36,9 +36,9 @@ class Task(BaseModel):
     title: str
     type: TaskType
     status: TaskStatus = TaskStatus.TODO
-    depends_on: List[PositiveInt] = Field(default_factory=list)
-    commit_sha: Optional[str] = None
-    last_updated_at: Optional[datetime] = None
+    depends_on: list[PositiveInt] = Field(default_factory=list)
+    commit_sha: str | None = None
+    last_updated_at: datetime | None = None
 
 
 class SignalLevel(str, Enum):
@@ -63,7 +63,7 @@ class Signal(BaseModel):
     open: bool = True
     title: str
     message: str
-    link: Optional[str] = None
+    link: str | None = None
     extra: dict = Field(default_factory=dict)
     attempts: int = 0
 
@@ -80,8 +80,8 @@ class NowReason(str, Enum):
 
 class Now(BaseModel):
     reason: NowReason
-    task_id: Optional[int] = None
-    signal_id: Optional[str] = None
+    task_id: int | None = None
+    signal_id: str | None = None
 
 
 class ArtifactType(str, Enum):
@@ -94,24 +94,24 @@ class ArtifactType(str, Enum):
 
 class Artifact(BaseModel):
     type: ArtifactType
-    path: Optional[str] = None
+    path: str | None = None
     summary: str
-    commit_sha: Optional[str] = None
+    commit_sha: str | None = None
     metadata: dict = Field(default_factory=dict)
 
 
 class Environment(BaseModel):
     os: str
-    python: Optional[str] = None
-    xcode: Optional[str] = None
-    node: Optional[str] = None
+    python: str | None = None
+    xcode: str | None = None
+    node: str | None = None
 
 
 class PromptMetadata(BaseModel):
     set: str
-    goal_version: Optional[str] = None
-    handshake_version: Optional[str] = None
-    summary_version: Optional[str] = None
+    goal_version: str | None = None
+    handshake_version: str | None = None
+    summary_version: str | None = None
 
 
 class SessionState(BaseModel):
@@ -124,18 +124,18 @@ class SessionState(BaseModel):
     created_at: datetime
     last_updated_at: datetime
     project_root: str
-    branch: Optional[str] = None
+    branch: str | None = None
     prompts: PromptMetadata
     environment: Environment
-    tags: List[str] = Field(default_factory=list)
-    tasks: List[Task] = Field(default_factory=list)
-    signals: List[Signal] = Field(default_factory=list)
-    next_steps: List[str] = Field(default_factory=list)
-    context_notes: List[str] = Field(default_factory=list)
-    artifacts: List[Artifact] = Field(default_factory=list)
+    tags: list[str] = Field(default_factory=list)
+    tasks: list[Task] = Field(default_factory=list)
+    signals: list[Signal] = Field(default_factory=list)
+    next_steps: list[str] = Field(default_factory=list)
+    context_notes: list[str] = Field(default_factory=list)
+    artifacts: list[Artifact] = Field(default_factory=list)
     now: Now
     done: bool = False
-    final_summary: Optional[str] = None
+    final_summary: str | None = None
 
     def compute_now(self) -> Now:
         """Compute the next action based on current state."""
@@ -177,9 +177,9 @@ class StateValidationError(ValueError):
     """Raised when a SessionState fails validation."""
 
 
-def _check_unique_task_ids(tasks: List[Task]) -> List[str]:
-    seen: Set[int] = set()
-    errors: List[str] = []
+def _check_unique_task_ids(tasks: list[Task]) -> list[str]:
+    seen: set[int] = set()
+    errors: list[str] = []
     for task in tasks:
         if task.id in seen:
             errors.append(f"Duplicate task id {task.id}")
@@ -187,9 +187,9 @@ def _check_unique_task_ids(tasks: List[Task]) -> List[str]:
     return errors
 
 
-def _check_dependencies(tasks: List[Task]) -> List[str]:
+def _check_dependencies(tasks: list[Task]) -> list[str]:
     valid_ids = {task.id for task in tasks}
-    errors: List[str] = []
+    errors: list[str] = []
     for task in tasks:
         for dep in task.depends_on:
             if dep not in valid_ids:
@@ -199,11 +199,11 @@ def _check_dependencies(tasks: List[Task]) -> List[str]:
     return errors
 
 
-def _detect_cycles(tasks: List[Task]) -> List[str]:
-    graph: Dict[int, List[int]] = {task.id: task.depends_on for task in tasks}
-    visiting: Set[int] = set()
-    visited: Set[int] = set()
-    errors: List[str] = []
+def _detect_cycles(tasks: list[Task]) -> list[str]:
+    graph: dict[int, list[int]] = {task.id: task.depends_on for task in tasks}
+    visiting: set[int] = set()
+    visited: set[int] = set()
+    errors: list[str] = []
 
     def dfs(node: int) -> bool:
         if node in visiting:
@@ -228,7 +228,7 @@ def _detect_cycles(tasks: List[Task]) -> List[str]:
 
 def validate_state(state: SessionState) -> None:
     """Validate state invariants, raising StateValidationError when invalid."""
-    errors: List[str] = []
+    errors: list[str] = []
     errors.extend(_check_unique_task_ids(state.tasks))
     errors.extend(_check_dependencies(state.tasks))
     errors.extend(_detect_cycles(state.tasks))

@@ -1,8 +1,7 @@
 """PLAN.md rendering and parsing helpers."""
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 import yaml
 
@@ -11,7 +10,7 @@ from .state import Artifact, SessionState, Signal, Task
 PLANLOOP_VERSION = "1.5"
 
 
-def _front_matter_dict(state: SessionState) -> Dict[str, Any]:
+def _front_matter_dict(state: SessionState) -> dict[str, Any]:
     return {
         "planloop_version": PLANLOOP_VERSION,
         "schema_version": state.schema_version,
@@ -29,12 +28,12 @@ def _front_matter_dict(state: SessionState) -> Dict[str, Any]:
     }
 
 
-def _render_front_matter(data: Dict[str, Any]) -> str:
+def _render_front_matter(data: dict[str, Any]) -> str:
     dumped = yaml.safe_dump(data, sort_keys=False).strip()
     return f"---\n{dumped}\n---\n"
 
 
-def _format_tasks(tasks: List[Task]) -> str:
+def _format_tasks(tasks: list[Task]) -> str:
     if not tasks:
         return "_No tasks defined._"
     lines = [
@@ -50,13 +49,13 @@ def _format_tasks(tasks: List[Task]) -> str:
     return "\n".join(lines)
 
 
-def _format_bullets(items: List[str]) -> str:
+def _format_bullets(items: list[str]) -> str:
     if not items:
         return "- _None_"
     return "\n".join(f"- {item}" for item in items)
 
 
-def _format_signals(signals: List[Signal]) -> str:
+def _format_signals(signals: list[Signal]) -> str:
     if not signals:
         return "- _No signals_"
     lines = []
@@ -68,7 +67,7 @@ def _format_signals(signals: List[Signal]) -> str:
     return "\n".join(lines)
 
 
-def _format_artifacts(artifacts: List[Artifact]) -> str:
+def _format_artifacts(artifacts: list[Artifact]) -> str:
     if not artifacts:
         return "- _No artifacts recorded_"
     lines = []
@@ -109,7 +108,7 @@ def render_plan(state: SessionState) -> str:
     return front_matter + "\n" + body + "\n"
 
 
-def parse_front_matter(document: str) -> Tuple[Dict[str, Any], str]:
+def parse_front_matter(document: str) -> tuple[dict[str, Any], str]:
     """Parse front matter from a PLAN.md string."""
     if not document.startswith("---\n"):
         return {}, document

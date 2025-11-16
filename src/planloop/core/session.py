@@ -5,17 +5,17 @@ import secrets
 from datetime import datetime
 from pathlib import Path
 
-from .deadlock import DeadlockTracker
-from .registry import SessionSummary, upsert_session
-from .render import render_plan
-from .state import Environment, Now, NowReason, PromptMetadata, SessionState
+from ..history import commit_state
 from ..home import (
     CURRENT_SESSION_POINTER,
     SESSIONS_DIR,
     initialize_home,
 )
-from ..history import commit_state
 from ..logging_utils import log_session_event
+from .deadlock import DeadlockTracker
+from .registry import SessionSummary, upsert_session
+from .render import render_plan
+from .state import Environment, Now, NowReason, PromptMetadata, SessionState
 
 
 def _slugify(text: str) -> str:

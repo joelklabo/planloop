@@ -1,26 +1,27 @@
 # 📊 Agent Performance Data
+**Total Test Runs:** 50
 
-**Total Test Runs:** 43
+**Latest Run:** `cli-basics-20251116T210925Z-3c54`
 
-**Latest Run:** `cli-basics-20251116T204252Z-e038`
+## Agent Performance by Model
 
+![claude:sonnet](https://img.shields.io/badge/claude_sonnet-26.1%25-orange) **Score:** 21.8/100
 
-## Agent Compliance Rates
+![copilot:gpt-5](https://img.shields.io/badge/copilot_gpt--5-26.5%25-orange) **Score:** 21.7/100
 
-![claude](https://img.shields.io/badge/claude-22.0%25-red)
-![copilot](https://img.shields.io/badge/copilot-21.4%25-red)
-![openai](https://img.shields.io/badge/openai-33.3%25-red)
+![openai:unknown](https://img.shields.io/badge/openai_unknown-33.3%25-orange) **Score:** 17.9/100
 
 ## Detailed Statistics
 
-| Agent | Runs | Passes | Fails | Pass Rate | Top Errors |
-|-------|------|--------|-------|-----------|------------|
-| claude | 41 | 9 | 32 | 22.0% | missing status-after (18), trace log missing (14) |
-| copilot | 42 | 9 | 33 | 21.4% | missing status-after (17), trace log missing (16) |
-| openai | 42 | 14 | 28 | 33.3% | trace log missing (15), missing status-after (13) |
+| Agent+Model | Runs | Passes | Fails | Pass Rate | Avg Score | Top Errors |
+|-------------|------|--------|-------|-----------|-----------|------------|
+| claude:sonnet | 46 | 12 | 34 | 26.1% | 21.8 | missing status-after (20), missing update (16) |
+| copilot:gpt-5 | 49 | 13 | 36 | 26.5% | 21.7 | missing update (19), missing status-after (18) |
+| openai:unknown | 42 | 14 | 28 | 33.3% | 17.9 | trace log missing (15), missing status-after (13) |
 
 ## Notes
 
 - Data collected from automated lab runs testing agent compliance with planloop workflow
-- Metrics track: status command usage, update command usage, proper workflow sequence
-- Updated automatically via GitHub Actions (see `.github/workflows/update-metrics.yml`)
+- **Scores:** 0-100 scale based on workflow compliance (status usage, updates, signal handling)
+- **Models:** Specific model version used by each agent CLI
+- **Real agents tested:** Copilot (gpt-5), Claude (sonnet)

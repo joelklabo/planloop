@@ -6,16 +6,16 @@ import logging
 import os
 import time
 import uuid
+from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterator, List, Optional
 
 from ..logging_utils import log_session_event
 from .deadlock import DEADLOCK_FILE, DeadlockTracker
 from .session import load_session_state_from_disk, save_session_state
-from .signals import Signal, SignalLevel, SignalType, open_signal
-from .state import Now, NowReason
+from .signals import Signal, open_signal
+from .state import Now, NowReason, SignalLevel, SignalType
 
 LOCK_FILE = ".lock"
 LOCK_INFO_FILE = ".lock_info"
@@ -36,7 +36,7 @@ class LockInfo:
         return {"held_by": self.held_by, "since": self.since, "operation": self.operation}
 
     @classmethod
-    def from_file(cls, path: Path) -> "LockInfo | None":
+    def from_file(cls, path: Path) -> LockInfo | None:
         if not path.exists():
             return None
         try:
@@ -45,6 +45,8 @@ class LockInfo:
         except json.JSONDecodeError:
             return None
 
+
+from typing import Optional
 
 @dataclass
 class LockStatus:
@@ -68,7 +70,7 @@ class QueueEntry:
         }
 
     @classmethod
-    def from_dict(cls, raw: dict) -> "QueueEntry":
+    def from_dict(cls, raw: dict) -> QueueEntry:
         return cls(
             id=raw["id"],
             agent=raw["agent"],
@@ -79,8 +81,8 @@ class QueueEntry:
 
 @dataclass
 class LockQueueStatus:
-    pending: List[QueueEntry]
-    position: Optional[int]
+    pending: list[QueueEntry]
+    position: int | None
 
     def to_dict(self) -> dict:
         return {
@@ -117,11 +119,11 @@ def _remove_queue_entry(session_dir: Path, entry_id: str, log_event: bool = True
         log_session_event(session_dir, f"Queue entry {entry_id} removed")
 
 
-def _load_raw_queue_entries(session_dir: Path) -> List[QueueEntry]:
+def _load_raw_queue_entries(session_dir: Path) -> list[QueueEntry]:
     queue_dir = _queue_dir(session_dir)
     if not queue_dir.exists():
         return []
-    entries: List[QueueEntry] = []
+    entries: list[QueueEntry] = []
     for path in sorted(queue_dir.iterdir()):
         if path.suffix != ".json":
             continue
@@ -133,9 +135,9 @@ def _load_raw_queue_entries(session_dir: Path) -> List[QueueEntry]:
     return sorted(entries, key=lambda entry: entry.requested_at)
 
 
-def _prune_stale_entries(session_dir: Path, entries: List[QueueEntry], max_age: float) -> List[QueueEntry]:
+def _prune_stale_entries(session_dir: Path, entries: list[QueueEntry], max_age: float) -> list[QueueEntry]:
     now = time.time()
-    keep: List[QueueEntry] = []
+    keep: list[QueueEntry] = []
     for entry in entries:
         if now - entry.requested_at > max_age:
             _remove_queue_entry(session_dir, entry.id, log_event=True)
@@ -144,14 +146,14 @@ def _prune_stale_entries(session_dir: Path, entries: List[QueueEntry], max_age: 
     return keep
 
 
-def _load_queue_entries(session_dir: Path, max_age: float) -> List[QueueEntry]:
+def _load_queue_entries(session_dir: Path, max_age: float) -> list[QueueEntry]:
     entries = _load_raw_queue_entries(session_dir)
     return _prune_stale_entries(session_dir, entries, max_age)
 
 
-def get_lock_queue_status(session_dir: Path, agent: Optional[str] = None, max_age: float = DEFAULT_TIMEOUT) -> LockQueueStatus:
+def get_lock_queue_status(session_dir: Path, agent: str | None = None, max_age: float = DEFAULT_TIMEOUT) -> LockQueueStatus:
     entries = _load_queue_entries(session_dir, max_age)
-    position: Optional[int] = None
+    position: int | None = None
     if agent:
         for idx, entry in enumerate(entries):
             if entry.agent == agent:
@@ -160,7 +162,7 @@ def get_lock_queue_status(session_dir: Path, agent: Optional[str] = None, max_ag
     return LockQueueStatus(pending=entries, position=position)
 
 
-def _emit_queue_stall_signal(session_dir: Path, head_agent: Optional[str], threshold: int) -> None:
+def _emit_queue_stall_signal(session_dir: Path, head_agent: str | None, threshold: int) -> None:
     state = load_session_state_from_disk(session_dir)
     signal_id = QUEUE_STALL_SIGNAL_ID
     if any(sig.id == signal_id and sig.open for sig in state.signals):
@@ -204,7 +206,7 @@ def acquire_lock(session_dir: Path, operation: str, timeout: int = DEFAULT_TIMEO
     tracker_path = session_dir / DEADLOCK_FILE
     tracker = DeadlockTracker.from_file(tracker_path)
     queue_stall_detected = False
-    queue_stall_head: Optional[str] = None
+    queue_stall_head: str | None = None
 
     try:
         while True:
@@ -266,5 +268,7 @@ def get_lock_status(session_dir: Path) -> LockStatus:
     lock_path = session_dir / LOCK_FILE
     info_path = session_dir / LOCK_INFO_FILE
     locked = lock_path.exists()
-    info = LockInfo.from_file(info_path) if locked else None
-    return LockStatus(locked=locked, info=info)
+    info_obj: LockInfo | None = None
+    if locked:
+        info_obj = LockInfo.from_file(info_path)
+    return LockStatus(locked=locked, info=info_obj)

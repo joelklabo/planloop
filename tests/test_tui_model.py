@@ -3,8 +3,16 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from planloop.core.state import (
+    Environment,
+    Now,
+    NowReason,
+    PromptMetadata,
+    SessionState,
+    Task,
+    TaskType,
+)
 from planloop.tui.app import SessionViewModel
-from planloop.core.state import Environment, Now, NowReason, PromptMetadata, SessionState, Task, TaskType
 
 
 def fake_state() -> SessionState:

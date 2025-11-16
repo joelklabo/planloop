@@ -1,0 +1,4 @@
+# file: /Users/honk/code/planloop/src/planloop/core/selftest.py
+# hypothesis_version: 6.148.1
+
+['/selftest/ci', '/selftest/clean', '/selftest/coverage', 'Add button', 'Add coverage tests', 'CI blocker closed', 'CI blocker opened', 'Completed Task 2', 'Completed Task 3', 'Coverage pipeline', 'Crash fix', 'Finish both tasks', 'Fix failing test', 'Initial Task 1', 'Initial Task 2', 'Initial Task 3', 'Refactor module', 'ScenarioResult', 'SelfTestFailure', 'Selftest CI', 'Selftest CI failure', 'Selftest Clean', 'Selftest Coverage', 'Started Task 1', 'UI polish', 'UI polish complete', 'Write docs', 'build', 'ci-blocker-for-tasks', 'ci-selftest', 'ci_blocker', 'clean_run', 'dependency_chain', 'detail', 'failed', 'name', 'passed', 'planloop-selftest-', 'run_selftest', 'selftest update', 'signal_and_tasks', 'status']

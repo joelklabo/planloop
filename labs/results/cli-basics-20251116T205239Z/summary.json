@@ -1,0 +1,23 @@
+{
+  "scenario": "cli-basics",
+  "session": "cli-basics-20251116T205239Z-a7d5",
+  "agents": [
+    {
+      "name": "copilot",
+      "enabled": true,
+      "returncode": 1,
+      "message": "exit code 1",
+      "stdout": "labs/results/cli-basics-20251116T205239Z/copilot/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T205239Z/copilot/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "score": 5.0,
+        "reasons": [
+          "missing status-before",
+          "missing update",
+          "missing status-after"
+        ]
+      }
+    }
+  ]
+}

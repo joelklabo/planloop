@@ -1,0 +1,78 @@
+✓ Read payload.json (6 lines)
+
+✓ Run planloop status for session
+   $ planloop status --session cli-basics-20251116T210633Z-1180 --json
+   ↪ 43 lines...
+
+✓ Edit payload.json (+1 -1)
+   ╭──────────────────────────────────────────────────────────────────────────────────────────────╮
+   │ 1  -  {"session": "cli-basics-20251116T205910Z-04e1", "tasks": [{"id": 2, "status":          │
+   │       "DONE"}]}                                                                              │
+   │ 1  +  {"session":"cli-basics-20251116T210633Z-1180","tasks":[{"id":1,"status":"IN_PROGRESS"} │
+   │       ]}                                                                                     │
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✓ Update task 1 to IN_PROGRESS then show status
+   $ planloop update --session cli-basics-20251116T210633Z-1180 --file payload.json && planloop
+   status --session cli-basics-20251116T210633Z-1180 --json
+   ↪ 47 lines...
+
+✓ List directory src/ (8 files)
+
+✓ Read pyproject.toml (85 lines)
+
+✓ glob: "src/**/*.py"
+   ↪ 29 files found
+
+✓ grep: "typer" in src/**/*.py
+   ↪ 112 lines matched
+
+✓ grep: "argparse" in src/**/*.py
+   ↪ No matches found
+
+✓ grep: "click" in src/**/*.py
+   ↪ No matches found
+
+✓ Read src/planloop/cli.py (564 lines)
+
+✓ grep: "hello" in tests/**/*.py
+   ↪ 4 lines matched
+
+✓ Edit payload.json (+1 -1)
+   ╭──────────────────────────────────────────────────────────────────────────────────────────────╮
+   │ 1  -  {"session":"cli-basics-20251116T210633Z-1180","tasks":[{"id":1,"status":"IN_PROGRESS"} │
+   │       ]}                                                                                     │
+   │ 1  +  {"session":"cli-basics-20251116T210633Z-1180","tasks":[{"id":1,"status":"DONE"}]}      │
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✓ Mark task 1 done and show status
+   $ planloop update --session cli-basics-20251116T210633Z-1180 --file payload.json && planloop
+   status --session cli-basics-20251116T210633Z-1180 --json
+   ↪ 47 lines...
+
+✓ Edit payload.json (+1 -1)
+   ╭──────────────────────────────────────────────────────────────────────────────────────────────╮
+   │ 1  -  {"session":"cli-basics-20251116T210633Z-1180","tasks":[{"id":1,"status":"DONE"}]}      │
+   │ 1  +  {"session":"cli-basics-20251116T210633Z-1180","tasks":[{"id":2,"status":"IN_PROGRESS"} │
+   │       ]}                                                                                     │
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✓ Mark task 2 IN_PROGRESS and show status
+   $ planloop update --session cli-basics-20251116T210633Z-1180 --file payload.json && planloop
+   status --session cli-basics-20251116T210633Z-1180 --json
+   ↪ 47 lines...
+
+✓ Edit payload.json (+1 -1)
+   ╭──────────────────────────────────────────────────────────────────────────────────────────────╮
+   │ 1  -  {"session":"cli-basics-20251116T210633Z-1180","tasks":[{"id":2,"status":"IN_PROGRESS"} │
+   │       ]}                                                                                     │
+   │ 1  +  {"session":"cli-basics-20251116T210633Z-1180","tasks":[{"id":2,"status":"DONE"}]}      │
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✓ Mark task 2 DONE and show status
+   $ planloop update --session cli-basics-20251116T210633Z-1180 --file payload.json && planloop
+   status --session cli-basics-20251116T210633Z-1180 --json
+   ↪ 47 lines...
+
+All tasks done; session completed. Let me know if you want to add a final summary or mark session done.
+

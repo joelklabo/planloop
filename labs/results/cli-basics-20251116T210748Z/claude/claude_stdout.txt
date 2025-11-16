@@ -1,0 +1,11 @@
+All tasks are complete. The session status shows:
+- **now.reason**: "completed"
+- **Task 1**: "Add hello command" - DONE
+- **Task 2**: "Write unit tests" - DONE
+- **agent_instructions**: "All tasks complete! Add final_summary to the session or mark it done."
+
+Both tasks in the planloop session have been successfully completed:
+
+1. **Task 1 - Add hello command**: The `hello` command was already implemented in `src/planloop/cli.py:546-552`. It accepts an optional `--name` parameter and outputs either "Hello, world!" or "Hello, {name}!".
+
+2. **Task 2 - Write unit tests**: The tests were already present in `tests/test_cli_hello.py` with two test cases that both pass successfully.

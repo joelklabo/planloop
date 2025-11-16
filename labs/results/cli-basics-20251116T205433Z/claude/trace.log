@@ -1,0 +1,3 @@
+2025-11-16T20:56:45Z	run-start	agent=claude workspace=/Users/honk/code/planloop session=cli-basics-20251116T205433Z-3327
+2025-11-16T20:56:45Z	agent-config	model=claude-3-5-sonnet-20241022
+2025-11-16T20:56:48Z	agent-error	exit_code=1

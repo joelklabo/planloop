@@ -9,9 +9,8 @@ import yaml
 from typer.testing import CliRunner
 
 from planloop import cli
-from planloop.core.session import create_session
 from planloop.config import reset_config_cache
-
+from planloop.core.session import create_session
 
 runner = CliRunner()
 

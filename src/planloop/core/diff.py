@@ -1,9 +1,6 @@
 """Helpers for computing human-friendly diffs between SessionState objects."""
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Dict, List
-
 from .state import SessionState, Task
 
 
@@ -16,10 +13,10 @@ def _task_snapshot(task: Task) -> dict:
     }
 
 
-def _compare_tasks(before: Dict[int, Task], after: Dict[int, Task]) -> dict:
-    added: List[dict] = []
-    removed: List[dict] = []
-    updated: List[dict] = []
+def _compare_tasks(before: dict[int, Task], after: dict[int, Task]) -> dict:
+    added: list[dict] = []
+    removed: list[dict] = []
+    updated: list[dict] = []
 
     for task_id, task in after.items():
         if task_id not in before:

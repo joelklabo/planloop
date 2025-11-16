@@ -7,6 +7,15 @@ Agent-first local planning loop that keeps AI coders synced with CI signals
 using structured markdown plans. `docs/plans/plan.md` is the living backlog; update it
 before and after every commit so humans and agents stay aligned.
 
+## Agent Performance
+
+Real agent testing with automated compliance tracking:
+
+![claude:sonnet](https://img.shields.io/badge/claude_sonnet-26.1%25-orange) **21.8/100**
+![copilot:gpt-5](https://img.shields.io/badge/copilot_gpt--5-26.5%25-orange) **21.7/100**
+
+See [Agent Performance Data](docs/agent-performance.md) for detailed metrics and improvement tracking.
+
 ## Requirements
 - Python 3.11+
 - `pip` 25+

@@ -1,0 +1,6 @@
+All tasks are complete. The status shows `now.reason` is "completed". Both tasks are DONE:
+
+1. **Task 1: Add hello command** - DONE (already implemented at `src/planloop/cli.py:546-552`)
+2. **Task 2: Write unit tests** - DONE (tests exist at `tests/test_cli_hello.py` and pass)
+
+The session is complete. The agent_instructions suggest adding a final_summary or marking it done. The planloop workflow has been successfully followed.

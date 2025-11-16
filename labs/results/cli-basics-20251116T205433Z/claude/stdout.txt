@@ -1,0 +1,2 @@
+Running: claude -p <prompt> --print --allowedTools "Bash" --model claude-3-5-sonnet-20241022
+Claude execution failed with exit code 1

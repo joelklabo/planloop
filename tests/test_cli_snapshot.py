@@ -14,7 +14,6 @@ from planloop.config import reset_config_cache
 from planloop.core.session import create_session
 from planloop.home import initialize_home
 
-
 pytestmark = pytest.mark.skipif(
     shutil.which("git") is None,
     reason="git is required for history snapshots",

@@ -1,0 +1,1736 @@
+UP045 Use `X | None` for type annotations
+  --> src/planloop/cli.py:73:31
+   |
+73 | def _load_session(session_id: Optional[str]) -> tuple[SessionState, Path]:
+   |                               ^^^^^^^^^^^^^
+74 |     home = initialize_home()
+75 |     if not session_id:
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:129:21
+    |
+128 | @app.command()
+129 | def status(session: Optional[str] = typer.Option(None, help="Session ID"), json_output: bool = typer.Option(True, "--json/--no-json",…
+    |                     ^^^^^^^^^^^^^
+130 |     """Show the current planloop session status."""
+131 |     try:
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:156:14
+    |
+154 | @app.command()
+155 | def update(
+156 |     session: Optional[str] = typer.Option(None, help="Session ID"),
+    |              ^^^^^^^^^^^^^
+157 |     file: Optional[Path] = typer.Option(None, "--file", "-f", help="Path to payload JSON"),
+158 |     dry_run: Optional[bool] = typer.Option(None, "--dry-run/--no-dry-run", help="Preview changes without writing"),
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:157:11
+    |
+155 | def update(
+156 |     session: Optional[str] = typer.Option(None, help="Session ID"),
+157 |     file: Optional[Path] = typer.Option(None, "--file", "-f", help="Path to payload JSON"),
+    |           ^^^^^^^^^^^^^^
+158 |     dry_run: Optional[bool] = typer.Option(None, "--dry-run/--no-dry-run", help="Preview changes without writing"),
+159 |     no_plan_edit: Optional[bool] = typer.Option(None, "--no-plan-edit/--allow-plan-edit", help="Reject structural edits"),
+    |
+help: Convert to `X | None`
+
+B008 Do not perform function call `typer.Option` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+   --> src/planloop/cli.py:157:28
+    |
+155 | def update(
+156 |     session: Optional[str] = typer.Option(None, help="Session ID"),
+157 |     file: Optional[Path] = typer.Option(None, "--file", "-f", help="Path to payload JSON"),
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+158 |     dry_run: Optional[bool] = typer.Option(None, "--dry-run/--no-dry-run", help="Preview changes without writing"),
+159 |     no_plan_edit: Optional[bool] = typer.Option(None, "--no-plan-edit/--allow-plan-edit", help="Reject structural edits"),
+    |
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:158:14
+    |
+156 |     session: Optional[str] = typer.Option(None, help="Session ID"),
+157 |     file: Optional[Path] = typer.Option(None, "--file", "-f", help="Path to payload JSON"),
+158 |     dry_run: Optional[bool] = typer.Option(None, "--dry-run/--no-dry-run", help="Preview changes without writing"),
+    |              ^^^^^^^^^^^^^^
+159 |     no_plan_edit: Optional[bool] = typer.Option(None, "--no-plan-edit/--allow-plan-edit", help="Reject structural edits"),
+160 |     strict: Optional[bool] = typer.Option(None, "--strict/--allow-extra-fields", help="Reject payloads with unknown fields"),
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:159:19
+    |
+157 |     file: Optional[Path] = typer.Option(None, "--file", "-f", help="Path to payload JSON"),
+158 |     dry_run: Optional[bool] = typer.Option(None, "--dry-run/--no-dry-run", help="Preview changes without writing"),
+159 |     no_plan_edit: Optional[bool] = typer.Option(None, "--no-plan-edit/--allow-plan-edit", help="Reject structural edits"),
+    |                   ^^^^^^^^^^^^^^
+160 |     strict: Optional[bool] = typer.Option(None, "--strict/--allow-extra-fields", help="Reject payloads with unknown fields"),
+161 | ) -> None:
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:160:13
+    |
+158 |     dry_run: Optional[bool] = typer.Option(None, "--dry-run/--no-dry-run", help="Preview changes without writing"),
+159 |     no_plan_edit: Optional[bool] = typer.Option(None, "--no-plan-edit/--allow-plan-edit", help="Reject structural edits"),
+160 |     strict: Optional[bool] = typer.Option(None, "--strict/--allow-extra-fields", help="Reject payloads with unknown fields"),
+    |             ^^^^^^^^^^^^^^
+161 | ) -> None:
+162 |     """Apply a structured update to the session."""
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:233:14
+    |
+231 | @app.command()
+232 | def alert(
+233 |     session: Optional[str] = typer.Option(None, help="Session ID"),
+    |              ^^^^^^^^^^^^^
+234 |     id: str = typer.Option(..., "--id", help="Signal ID"),
+235 |     level: SignalLevel = typer.Option(SignalLevel.BLOCKER, "--level", help="Signal level"),
+    |
+help: Convert to `X | None`
+
+B008 Do not perform function call `typer.Option` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+   --> src/planloop/cli.py:235:26
+    |
+233 |     session: Optional[str] = typer.Option(None, help="Session ID"),
+234 |     id: str = typer.Option(..., "--id", help="Signal ID"),
+235 |     level: SignalLevel = typer.Option(SignalLevel.BLOCKER, "--level", help="Signal level"),
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+236 |     type_: SignalType = typer.Option(SignalType.CI, "--type", help="Signal type"),
+237 |     kind: Optional[str] = typer.Option(None, "--kind", help="Signal kind"),
+    |
+
+B008 Do not perform function call `typer.Option` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+   --> src/planloop/cli.py:236:25
+    |
+234 |     id: str = typer.Option(..., "--id", help="Signal ID"),
+235 |     level: SignalLevel = typer.Option(SignalLevel.BLOCKER, "--level", help="Signal level"),
+236 |     type_: SignalType = typer.Option(SignalType.CI, "--type", help="Signal type"),
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+237 |     kind: Optional[str] = typer.Option(None, "--kind", help="Signal kind"),
+238 |     title: Optional[str] = typer.Option(None, "--title", help="Signal title"),
+    |
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:237:11
+    |
+235 |     level: SignalLevel = typer.Option(SignalLevel.BLOCKER, "--level", help="Signal level"),
+236 |     type_: SignalType = typer.Option(SignalType.CI, "--type", help="Signal type"),
+237 |     kind: Optional[str] = typer.Option(None, "--kind", help="Signal kind"),
+    |           ^^^^^^^^^^^^^
+238 |     title: Optional[str] = typer.Option(None, "--title", help="Signal title"),
+239 |     message: Optional[str] = typer.Option(None, "--message", help="Signal message"),
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:238:12
+    |
+236 |     type_: SignalType = typer.Option(SignalType.CI, "--type", help="Signal type"),
+237 |     kind: Optional[str] = typer.Option(None, "--kind", help="Signal kind"),
+238 |     title: Optional[str] = typer.Option(None, "--title", help="Signal title"),
+    |            ^^^^^^^^^^^^^
+239 |     message: Optional[str] = typer.Option(None, "--message", help="Signal message"),
+240 |     link: Optional[str] = typer.Option(None, "--link", help="Link"),
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:239:14
+    |
+237 |     kind: Optional[str] = typer.Option(None, "--kind", help="Signal kind"),
+238 |     title: Optional[str] = typer.Option(None, "--title", help="Signal title"),
+239 |     message: Optional[str] = typer.Option(None, "--message", help="Signal message"),
+    |              ^^^^^^^^^^^^^
+240 |     link: Optional[str] = typer.Option(None, "--link", help="Link"),
+241 |     close: bool = typer.Option(False, "--close", help="Close signal"),
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:240:11
+    |
+238 |     title: Optional[str] = typer.Option(None, "--title", help="Signal title"),
+239 |     message: Optional[str] = typer.Option(None, "--message", help="Signal message"),
+240 |     link: Optional[str] = typer.Option(None, "--link", help="Link"),
+    |           ^^^^^^^^^^^^^
+241 |     close: bool = typer.Option(False, "--close", help="Close signal"),
+242 | ) -> None:
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:302:28
+    |
+301 | @sessions_app.command("info")
+302 | def sessions_info(session: Optional[str] = typer.Argument(None)) -> None:
+    |                            ^^^^^^^^^^^^^
+303 |     """Show detailed information about a session."""
+304 |     try:
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:323:12
+    |
+321 | def sessions_create(
+322 |     name: str = typer.Option(..., "--name", help="Session name (used for ID generation)"),
+323 |     title: Optional[str] = typer.Option(None, "--title", help="Human-readable title (defaults to name)"),
+    |            ^^^^^^^^^^^^^
+324 |     project_root: Optional[Path] = typer.Option(None, "--project-root", help="Project root path (defaults to current directory)"),
+325 | ) -> None:
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:324:19
+    |
+322 |     name: str = typer.Option(..., "--name", help="Session name (used for ID generation)"),
+323 |     title: Optional[str] = typer.Option(None, "--title", help="Human-readable title (defaults to name)"),
+324 |     project_root: Optional[Path] = typer.Option(None, "--project-root", help="Project root path (defaults to current directory)"),
+    |                   ^^^^^^^^^^^^^^
+325 | ) -> None:
+326 |     """Create a new session."""
+    |
+help: Convert to `X | None`
+
+B008 Do not perform function call `typer.Option` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+   --> src/planloop/cli.py:324:36
+    |
+322 |     name: str = typer.Option(..., "--name", help="Session name (used for ID generation)"),
+323 |     title: Optional[str] = typer.Option(None, "--title", help="Human-readable title (defaults to name)"),
+324 |     project_root: Optional[Path] = typer.Option(None, "--project-root", help="Project root path (defaults to current directory)"),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+325 | ) -> None:
+326 |     """Create a new session."""
+    |
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:370:14
+    |
+368 | @app.command()
+369 | def debug(
+370 |     session: Optional[str] = typer.Option(None, help="Session ID"),
+    |              ^^^^^^^^^^^^^
+371 |     logs: bool = typer.Option(True, "--logs/--no-logs", help="Include recent logs"),
+372 | ) -> None:
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:407:20
+    |
+406 | @app.command()
+407 | def templates(tag: Optional[str] = typer.Option(None, "--tag", help="Filter by tag")) -> None:
+    |                    ^^^^^^^^^^^^^
+408 |     entries = [entry for entry in registry.load_registry() if entry.done]
+409 |     if tag:
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:418:11
+    |
+416 | def reuse(
+417 |     template_session: str = typer.Argument(..., help="Completed session to reuse"),
+418 |     goal: Optional[str] = typer.Option(None, "--goal", help="New goal description"),
+    |           ^^^^^^^^^^^^^
+419 | ) -> None:
+420 |     try:
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:439:19
+    |
+438 | @app.command()
+439 | def view(session: Optional[str] = typer.Option(None, help="Session ID")) -> None:
+    |                   ^^^^^^^^^^^^^
+440 |     if not TEXTUAL_AVAILABLE:
+441 |         typer.echo("textual is not installed. Run `pip install textual` to use planloop view.")
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:455:13
+    |
+453 | def guide(
+454 |     prompt_set: str = typer.Option("core-v1", help="Prompt set"),
+455 |     output: Optional[Path] = typer.Option(None, "--output", "-o", help="Write to file"),
+    |             ^^^^^^^^^^^^^^
+456 |     apply: bool = typer.Option(False, "--apply", help="Insert into docs/agents.md"),
+457 |     target: Optional[Path] = typer.Option(None, "--target", help="Target file"),
+    |
+help: Convert to `X | None`
+
+B008 Do not perform function call `typer.Option` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+   --> src/planloop/cli.py:455:30
+    |
+453 | def guide(
+454 |     prompt_set: str = typer.Option("core-v1", help="Prompt set"),
+455 |     output: Optional[Path] = typer.Option(None, "--output", "-o", help="Write to file"),
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+456 |     apply: bool = typer.Option(False, "--apply", help="Insert into docs/agents.md"),
+457 |     target: Optional[Path] = typer.Option(None, "--target", help="Target file"),
+    |
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:457:13
+    |
+455 |     output: Optional[Path] = typer.Option(None, "--output", "-o", help="Write to file"),
+456 |     apply: bool = typer.Option(False, "--apply", help="Insert into docs/agents.md"),
+457 |     target: Optional[Path] = typer.Option(None, "--target", help="Target file"),
+    |             ^^^^^^^^^^^^^^
+458 | ) -> None:
+459 |     content = guide_utils.render_guide(prompt_set)
+    |
+help: Convert to `X | None`
+
+B008 Do not perform function call `typer.Option` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+   --> src/planloop/cli.py:457:30
+    |
+455 |     output: Optional[Path] = typer.Option(None, "--output", "-o", help="Write to file"),
+456 |     apply: bool = typer.Option(False, "--apply", help="Insert into docs/agents.md"),
+457 |     target: Optional[Path] = typer.Option(None, "--target", help="Target file"),
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+458 | ) -> None:
+459 |     content = guide_utils.render_guide(prompt_set)
+    |
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:474:18
+    |
+473 | @app.command()
+474 | def web(session: Optional[str] = typer.Option(None, help="Session ID")) -> None:
+    |                  ^^^^^^^^^^^^^
+475 |     try:
+476 |         from .web import server as web_server
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:495:14
+    |
+493 | @app.command()
+494 | def snapshot(
+495 |     session: Optional[str] = typer.Option(None, help="Session ID"),
+    |              ^^^^^^^^^^^^^
+496 |     note: str = typer.Option("Manual snapshot", "--note"),
+497 | ) -> None:
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/cli.py:511:14
+    |
+509 | def restore(
+510 |     snapshot_ref: str = typer.Argument(..., help="Snapshot commit"),
+511 |     session: Optional[str] = typer.Option(None, help="Session ID"),
+    |              ^^^^^^^^^^^^^
+512 | ) -> None:
+513 |     try:
+    |
+help: Convert to `X | None`
+
+UP035 `typing.Dict` is deprecated, use `dict` instead
+ --> src/planloop/config.py:5:1
+  |
+4 | from functools import lru_cache
+5 | from typing import Any, Dict
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+6 |
+7 | import yaml
+  |
+
+UP006 Use `dict` instead of `Dict` for type annotation
+  --> src/planloop/config.py:13:22
+   |
+12 | @lru_cache(maxsize=1)
+13 | def load_config() -> Dict[str, Any]:
+   |                      ^^^^
+14 |     home = initialize_home()
+15 |     path = home / CONFIG_FILE_NAME
+   |
+help: Replace with `dict`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/deadlock.py:18:17
+   |
+16 |     last_state_hash: str = ""
+17 |     no_progress_counter: int = 0
+18 |     queue_head: Optional[str] = None
+   |                 ^^^^^^^^^^^^^
+19 |     queue_stall_counter: int = 0
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/deadlock.py:39:47
+   |
+39 |     def register_queue_head(self, head_agent: Optional[str], should_track: bool, threshold: int) -> bool:
+   |                                               ^^^^^^^^^^^^^
+40 |         if not should_track or not head_agent:
+41 |             self.queue_head = None
+   |
+help: Convert to `X | None`
+
+UP035 `typing.Dict` is deprecated, use `dict` instead
+ --> src/planloop/core/describe.py:4:1
+  |
+2 | from __future__ import annotations
+3 |
+4 | from typing import Any, Dict
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+5 |
+6 | from .state import (
+  |
+
+UP006 Use `dict` instead of `Dict` for type annotation
+  --> src/planloop/core/describe.py:18:23
+   |
+18 | def state_schema() -> Dict[str, Any]:
+   |                       ^^^^
+19 |     """Return the JSON schema for SessionState."""
+20 |     return SessionState.model_json_schema()
+   |
+help: Replace with `dict`
+
+UP006 Use `dict` instead of `Dict` for type annotation
+  --> src/planloop/core/describe.py:23:24
+   |
+23 | def update_schema() -> Dict[str, Any]:
+   |                        ^^^^
+24 |     """Return the JSON schema for update payloads."""
+25 |     return UpdatePayload.model_json_schema()
+   |
+help: Replace with `dict`
+
+UP006 Use `dict` instead of `Dict` for type annotation
+  --> src/planloop/core/describe.py:28:25
+   |
+28 | def enum_reference() -> Dict[str, Any]:
+   |                         ^^^^
+29 |     """Return the enum values agents care about."""
+30 |     return {
+   |
+help: Replace with `dict`
+
+UP006 Use `dict` instead of `Dict` for type annotation
+  --> src/planloop/core/describe.py:40:27
+   |
+40 | def describe_payload() -> Dict[str, Any]:
+   |                           ^^^^
+41 |     """Aggregate describe output for planloop agents."""
+42 |     return {
+   |
+help: Replace with `dict`
+
+UP035 `typing.Dict` is deprecated, use `dict` instead
+ --> src/planloop/core/diff.py:4:1
+  |
+2 | from __future__ import annotations
+3 |
+4 | from typing import Dict, List
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+5 |
+6 | from .state import SessionState, Task
+  |
+
+UP035 `typing.List` is deprecated, use `list` instead
+ --> src/planloop/core/diff.py:4:1
+  |
+2 | from __future__ import annotations
+3 |
+4 | from typing import Dict, List
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+5 |
+6 | from .state import SessionState, Task
+  |
+
+UP006 Use `dict` instead of `Dict` for type annotation
+  --> src/planloop/core/diff.py:18:28
+   |
+18 | def _compare_tasks(before: Dict[int, Task], after: Dict[int, Task]) -> dict:
+   |                            ^^^^
+19 |     added: List[dict] = []
+20 |     removed: List[dict] = []
+   |
+help: Replace with `dict`
+
+UP006 Use `dict` instead of `Dict` for type annotation
+  --> src/planloop/core/diff.py:18:52
+   |
+18 | def _compare_tasks(before: Dict[int, Task], after: Dict[int, Task]) -> dict:
+   |                                                    ^^^^
+19 |     added: List[dict] = []
+20 |     removed: List[dict] = []
+   |
+help: Replace with `dict`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/diff.py:19:12
+   |
+18 | def _compare_tasks(before: Dict[int, Task], after: Dict[int, Task]) -> dict:
+19 |     added: List[dict] = []
+   |            ^^^^
+20 |     removed: List[dict] = []
+21 |     updated: List[dict] = []
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/diff.py:20:14
+   |
+18 | def _compare_tasks(before: Dict[int, Task], after: Dict[int, Task]) -> dict:
+19 |     added: List[dict] = []
+20 |     removed: List[dict] = []
+   |              ^^^^
+21 |     updated: List[dict] = []
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/diff.py:21:14
+   |
+19 |     added: List[dict] = []
+20 |     removed: List[dict] = []
+21 |     updated: List[dict] = []
+   |              ^^^^
+22 |
+23 |     for task_id, task in after.items():
+   |
+help: Replace with `list`
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/planloop/core/lock.py:13:1
+   |
+11 | from dataclasses import dataclass
+12 | from pathlib import Path
+13 | from typing import List, Optional
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+14 |
+15 | from ..logging_utils import log_session_event
+   |
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/lock.py:53:11
+   |
+51 | class LockStatus:
+52 |     locked: bool
+53 |     info: Optional[LockInfo]
+   |           ^^^^^^^^^^^^^^^^^^
+   |
+help: Convert to `X | None`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/lock.py:83:14
+   |
+81 | @dataclass
+82 | class LockQueueStatus:
+83 |     pending: List[QueueEntry]
+   |              ^^^^
+84 |     position: Optional[int]
+   |
+help: Replace with `list`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/lock.py:84:15
+   |
+82 | class LockQueueStatus:
+83 |     pending: List[QueueEntry]
+84 |     position: Optional[int]
+   |               ^^^^^^^^^^^^^
+85 |
+86 |     def to_dict(self) -> dict:
+   |
+help: Convert to `X | None`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/lock.py:121:51
+    |
+121 | def _load_raw_queue_entries(session_dir: Path) -> List[QueueEntry]:
+    |                                                   ^^^^
+122 |     queue_dir = _queue_dir(session_dir)
+123 |     if not queue_dir.exists():
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/lock.py:125:14
+    |
+123 |     if not queue_dir.exists():
+124 |         return []
+125 |     entries: List[QueueEntry] = []
+    |              ^^^^
+126 |     for path in sorted(queue_dir.iterdir()):
+127 |         if path.suffix != ".json":
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/lock.py:137:54
+    |
+137 | def _prune_stale_entries(session_dir: Path, entries: List[QueueEntry], max_age: float) -> List[QueueEntry]:
+    |                                                      ^^^^
+138 |     now = time.time()
+139 |     keep: List[QueueEntry] = []
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/lock.py:137:91
+    |
+137 | def _prune_stale_entries(session_dir: Path, entries: List[QueueEntry], max_age: float) -> List[QueueEntry]:
+    |                                                                                           ^^^^
+138 |     now = time.time()
+139 |     keep: List[QueueEntry] = []
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/lock.py:139:11
+    |
+137 | def _prune_stale_entries(session_dir: Path, entries: List[QueueEntry], max_age: float) -> List[QueueEntry]:
+138 |     now = time.time()
+139 |     keep: List[QueueEntry] = []
+    |           ^^^^
+140 |     for entry in entries:
+141 |         if now - entry.requested_at > max_age:
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/lock.py:148:63
+    |
+148 | def _load_queue_entries(session_dir: Path, max_age: float) -> List[QueueEntry]:
+    |                                                               ^^^^
+149 |     entries = _load_raw_queue_entries(session_dir)
+150 |     return _prune_stale_entries(session_dir, entries, max_age)
+    |
+help: Replace with `list`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/lock.py:153:53
+    |
+153 | def get_lock_queue_status(session_dir: Path, agent: Optional[str] = None, max_age: float = DEFAULT_TIMEOUT) -> LockQueueStatus:
+    |                                                     ^^^^^^^^^^^^^
+154 |     entries = _load_queue_entries(session_dir, max_age)
+155 |     position: Optional[int] = None
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/lock.py:155:15
+    |
+153 | def get_lock_queue_status(session_dir: Path, agent: Optional[str] = None, max_age: float = DEFAULT_TIMEOUT) -> LockQueueStatus:
+154 |     entries = _load_queue_entries(session_dir, max_age)
+155 |     position: Optional[int] = None
+    |               ^^^^^^^^^^^^^
+156 |     if agent:
+157 |         for idx, entry in enumerate(entries):
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/lock.py:164:61
+    |
+164 | def _emit_queue_stall_signal(session_dir: Path, head_agent: Optional[str], threshold: int) -> None:
+    |                                                             ^^^^^^^^^^^^^
+165 |     state = load_session_state_from_disk(session_dir)
+166 |     signal_id = QUEUE_STALL_SIGNAL_ID
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/lock.py:208:23
+    |
+206 |     tracker = DeadlockTracker.from_file(tracker_path)
+207 |     queue_stall_detected = False
+208 |     queue_stall_head: Optional[str] = None
+    |                       ^^^^^^^^^^^^^
+209 |
+210 |     try:
+    |
+help: Convert to `X | None`
+
+B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   --> src/planloop/core/lock.py:243:21
+    |
+241 |             except FileExistsError:
+242 |                 if timeout == 0:
+243 |                     raise TimeoutError("Lock already held")
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+244 |                 if time.time() - start > timeout:
+245 |                     info = LockInfo.from_file(info_path)
+    |
+
+B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   --> src/planloop/core/lock.py:252:21
+    |
+250 |                         level=logging.WARNING,
+251 |                     )
+252 |                     raise TimeoutError(f"Lock held by {holder} longer than {timeout}s")
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+253 |                 time.sleep(SLEEP_INTERVAL)
+254 |         if queue_stall_detected:
+    |
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/lock.py:270:11
+    |
+268 |     info_path = session_dir / LOCK_INFO_FILE
+269 |     locked = lock_path.exists()
+270 |     info: Optional[LockInfo] = None
+    |           ^^^^^^^^^^^^^^^^^^
+271 |     if locked:
+272 |         info = LockInfo.from_file(info_path)
+    |
+help: Convert to `X | None`
+
+UP035 `typing.Tuple` is deprecated, use `tuple` instead
+ --> src/planloop/core/prompts.py:7:1
+  |
+5 | from functools import cache
+6 | from importlib import resources
+7 | from typing import Tuple
+  | ^^^^^^^^^^^^^^^^^^^^^^^^
+8 |
+9 | import yaml
+  |
+
+UP006 Use `tuple` instead of `Tuple` for type annotation
+  --> src/planloop/core/prompts.py:20:39
+   |
+20 | def _split_front_matter(text: str) -> Tuple[dict, str]:
+   |                                       ^^^^^
+21 |     if not text.startswith("---"):
+22 |         return {}, text
+   |
+help: Replace with `tuple`
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/planloop/core/registry.py:8:1
+   |
+ 6 | from datetime import datetime
+ 7 | from pathlib import Path
+ 8 | from typing import List
+   | ^^^^^^^^^^^^^^^^^^^^^^^
+ 9 |
+10 | from ..home import initialize_home
+   |
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/registry.py:20:11
+   |
+18 |     name: str
+19 |     title: str
+20 |     tags: List[str]
+   |           ^^^^
+21 |     project_root: str
+22 |     created_at: str
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/registry.py:44:24
+   |
+44 | def load_registry() -> List[SessionSummary]:
+   |                        ^^^^
+45 |     path = _registry_path()
+46 |     if not path.exists():
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/registry.py:53:28
+   |
+53 | def save_registry(entries: List[SessionSummary]) -> None:
+   |                            ^^^^
+54 |     path = _registry_path()
+55 |     payload = {
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/registry.py:76:36
+   |
+76 | def search_sessions(query: str) -> List[SessionSummary]:
+   |                                    ^^^^
+77 |     tokens = [tok.lower() for tok in query.split() if tok.strip()]
+78 |     entries = load_registry()
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/registry.py:91:14
+   |
+89 |         ]).lower()
+90 |
+91 |     results: List[SessionSummary] = []
+   |              ^^^^
+92 |     for entry in entries:
+93 |         text = haystack(entry)
+   |
+help: Replace with `list`
+
+UP035 `typing.Dict` is deprecated, use `dict` instead
+ --> src/planloop/core/render.py:4:1
+  |
+2 | from __future__ import annotations
+3 |
+4 | from typing import Any, Dict, List, Tuple
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+5 |
+6 | import yaml
+  |
+
+UP035 `typing.List` is deprecated, use `list` instead
+ --> src/planloop/core/render.py:4:1
+  |
+2 | from __future__ import annotations
+3 |
+4 | from typing import Any, Dict, List, Tuple
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+5 |
+6 | import yaml
+  |
+
+UP035 `typing.Tuple` is deprecated, use `tuple` instead
+ --> src/planloop/core/render.py:4:1
+  |
+2 | from __future__ import annotations
+3 |
+4 | from typing import Any, Dict, List, Tuple
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+5 |
+6 | import yaml
+  |
+
+UP006 Use `dict` instead of `Dict` for type annotation
+  --> src/planloop/core/render.py:13:48
+   |
+13 | def _front_matter_dict(state: SessionState) -> Dict[str, Any]:
+   |                                                ^^^^
+14 |     return {
+15 |         "planloop_version": PLANLOOP_VERSION,
+   |
+help: Replace with `dict`
+
+UP006 Use `dict` instead of `Dict` for type annotation
+  --> src/planloop/core/render.py:31:32
+   |
+31 | def _render_front_matter(data: Dict[str, Any]) -> str:
+   |                                ^^^^
+32 |     dumped = yaml.safe_dump(data, sort_keys=False).strip()
+33 |     return f"---\n{dumped}\n---\n"
+   |
+help: Replace with `dict`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/render.py:36:26
+   |
+36 | def _format_tasks(tasks: List[Task]) -> str:
+   |                          ^^^^
+37 |     if not tasks:
+38 |         return "_No tasks defined._"
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/render.py:52:28
+   |
+52 | def _format_bullets(items: List[str]) -> str:
+   |                            ^^^^
+53 |     if not items:
+54 |         return "- _None_"
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/render.py:58:30
+   |
+58 | def _format_signals(signals: List[Signal]) -> str:
+   |                              ^^^^
+59 |     if not signals:
+60 |         return "- _No signals_"
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/render.py:70:34
+   |
+70 | def _format_artifacts(artifacts: List[Artifact]) -> str:
+   |                                  ^^^^
+71 |     if not artifacts:
+72 |         return "- _No artifacts recorded_"
+   |
+help: Replace with `list`
+
+UP006 Use `tuple` instead of `Tuple` for type annotation
+   --> src/planloop/core/render.py:111:42
+    |
+111 | def parse_front_matter(document: str) -> Tuple[Dict[str, Any], str]:
+    |                                          ^^^^^
+112 |     """Parse front matter from a PLAN.md string."""
+113 |     if not document.startswith("---\n"):
+    |
+help: Replace with `tuple`
+
+UP006 Use `dict` instead of `Dict` for type annotation
+   --> src/planloop/core/render.py:111:48
+    |
+111 | def parse_front_matter(document: str) -> Tuple[Dict[str, Any], str]:
+    |                                                ^^^^
+112 |     """Parse front matter from a PLAN.md string."""
+113 |     if not document.startswith("---\n"):
+    |
+help: Replace with `dict`
+
+UP035 `typing.List` is deprecated, use `list` instead
+  --> src/planloop/core/selftest.py:9:1
+   |
+ 7 | from dataclasses import dataclass
+ 8 | from pathlib import Path
+ 9 | from typing import Callable, List
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+10 |
+11 | from ..home import PLANLOOP_HOME_ENV, SESSIONS_DIR, initialize_home
+   |
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/selftest.py:52:23
+   |
+52 | def run_selftest() -> List[ScenarioResult]:
+   |                       ^^^^
+53 |     """Execute all scenarios inside a temporary PLANLOOP_HOME."""
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/selftest.py:56:14
+   |
+55 |     original_home = os.environ.get(PLANLOOP_HOME_ENV)
+56 |     results: List[ScenarioResult] = []
+   |              ^^^^
+57 |     with tempfile.TemporaryDirectory(prefix="planloop-selftest-") as tmp_home:
+58 |         os.environ[PLANLOOP_HOME_ENV] = tmp_home
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/selftest.py:82:20
+   |
+80 |     add_tasks: Iterable[AddTaskInput] | None = None,
+81 |     status_changes: Iterable[tuple[int, TaskStatus]] | None = None,
+82 |     context_notes: List[str] | None = None,
+   |                    ^^^^
+83 |     next_steps: List[str] | None = None,
+84 |     final_summary: str | None = None,
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/selftest.py:83:17
+   |
+81 |     status_changes: Iterable[tuple[int, TaskStatus]] | None = None,
+82 |     context_notes: List[str] | None = None,
+83 |     next_steps: List[str] | None = None,
+   |                 ^^^^
+84 |     final_summary: str | None = None,
+85 |     message: str = "selftest update",
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/selftest.py:193:13
+    |
+193 | _SCENARIOS: List[tuple[str, Callable[[Path], str]]] = [
+    |             ^^^^
+194 |     ("clean_run", _scenario_clean_run),
+195 |     ("ci_blocker", _scenario_ci_blocker),
+    |
+help: Replace with `list`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/session_pointer.py:19:30
+   |
+19 | def get_current_session() -> Optional[str]:
+   |                              ^^^^^^^^^^^^^
+20 |     path = pointer_path()
+21 |     data = path.read_text(encoding="utf-8").strip()
+   |
+help: Convert to `X | None`
+
+UP035 `typing.Dict` is deprecated, use `dict` instead
+ --> src/planloop/core/state.py:6:1
+  |
+4 | from datetime import datetime
+5 | from enum import Enum
+6 | from typing import Dict, List, Optional, Set
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+7 |
+8 | from pydantic import BaseModel, Field, PositiveInt
+  |
+
+UP035 `typing.List` is deprecated, use `list` instead
+ --> src/planloop/core/state.py:6:1
+  |
+4 | from datetime import datetime
+5 | from enum import Enum
+6 | from typing import Dict, List, Optional, Set
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+7 |
+8 | from pydantic import BaseModel, Field, PositiveInt
+  |
+
+UP035 `typing.Set` is deprecated, use `set` instead
+ --> src/planloop/core/state.py:6:1
+  |
+4 | from datetime import datetime
+5 | from enum import Enum
+6 | from typing import Dict, List, Optional, Set
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+7 |
+8 | from pydantic import BaseModel, Field, PositiveInt
+  |
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/state.py:39:17
+   |
+37 |     type: TaskType
+38 |     status: TaskStatus = TaskStatus.TODO
+39 |     depends_on: List[PositiveInt] = Field(default_factory=list)
+   |                 ^^^^
+40 |     commit_sha: Optional[str] = None
+41 |     last_updated_at: Optional[datetime] = None
+   |
+help: Replace with `list`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/state.py:40:17
+   |
+38 |     status: TaskStatus = TaskStatus.TODO
+39 |     depends_on: List[PositiveInt] = Field(default_factory=list)
+40 |     commit_sha: Optional[str] = None
+   |                 ^^^^^^^^^^^^^
+41 |     last_updated_at: Optional[datetime] = None
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/state.py:41:22
+   |
+39 |     depends_on: List[PositiveInt] = Field(default_factory=list)
+40 |     commit_sha: Optional[str] = None
+41 |     last_updated_at: Optional[datetime] = None
+   |                      ^^^^^^^^^^^^^^^^^^
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/state.py:66:11
+   |
+64 |     title: str
+65 |     message: str
+66 |     link: Optional[str] = None
+   |           ^^^^^^^^^^^^^
+67 |     extra: dict = Field(default_factory=dict)
+68 |     attempts: int = 0
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/state.py:83:14
+   |
+81 | class Now(BaseModel):
+82 |     reason: NowReason
+83 |     task_id: Optional[int] = None
+   |              ^^^^^^^^^^^^^
+84 |     signal_id: Optional[str] = None
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/state.py:84:16
+   |
+82 |     reason: NowReason
+83 |     task_id: Optional[int] = None
+84 |     signal_id: Optional[str] = None
+   |                ^^^^^^^^^^^^^
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/state.py:97:11
+   |
+95 | class Artifact(BaseModel):
+96 |     type: ArtifactType
+97 |     path: Optional[str] = None
+   |           ^^^^^^^^^^^^^
+98 |     summary: str
+99 |     commit_sha: Optional[str] = None
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/state.py:99:17
+    |
+ 97 |     path: Optional[str] = None
+ 98 |     summary: str
+ 99 |     commit_sha: Optional[str] = None
+    |                 ^^^^^^^^^^^^^
+100 |     metadata: dict = Field(default_factory=dict)
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/state.py:105:13
+    |
+103 | class Environment(BaseModel):
+104 |     os: str
+105 |     python: Optional[str] = None
+    |             ^^^^^^^^^^^^^
+106 |     xcode: Optional[str] = None
+107 |     node: Optional[str] = None
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/state.py:106:12
+    |
+104 |     os: str
+105 |     python: Optional[str] = None
+106 |     xcode: Optional[str] = None
+    |            ^^^^^^^^^^^^^
+107 |     node: Optional[str] = None
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/state.py:107:11
+    |
+105 |     python: Optional[str] = None
+106 |     xcode: Optional[str] = None
+107 |     node: Optional[str] = None
+    |           ^^^^^^^^^^^^^
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/state.py:112:19
+    |
+110 | class PromptMetadata(BaseModel):
+111 |     set: str
+112 |     goal_version: Optional[str] = None
+    |                   ^^^^^^^^^^^^^
+113 |     handshake_version: Optional[str] = None
+114 |     summary_version: Optional[str] = None
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/state.py:113:24
+    |
+111 |     set: str
+112 |     goal_version: Optional[str] = None
+113 |     handshake_version: Optional[str] = None
+    |                        ^^^^^^^^^^^^^
+114 |     summary_version: Optional[str] = None
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/state.py:114:22
+    |
+112 |     goal_version: Optional[str] = None
+113 |     handshake_version: Optional[str] = None
+114 |     summary_version: Optional[str] = None
+    |                      ^^^^^^^^^^^^^
+    |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/state.py:127:13
+    |
+125 |     last_updated_at: datetime
+126 |     project_root: str
+127 |     branch: Optional[str] = None
+    |             ^^^^^^^^^^^^^
+128 |     prompts: PromptMetadata
+129 |     environment: Environment
+    |
+help: Convert to `X | None`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:130:11
+    |
+128 |     prompts: PromptMetadata
+129 |     environment: Environment
+130 |     tags: List[str] = Field(default_factory=list)
+    |           ^^^^
+131 |     tasks: List[Task] = Field(default_factory=list)
+132 |     signals: List[Signal] = Field(default_factory=list)
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:131:12
+    |
+129 |     environment: Environment
+130 |     tags: List[str] = Field(default_factory=list)
+131 |     tasks: List[Task] = Field(default_factory=list)
+    |            ^^^^
+132 |     signals: List[Signal] = Field(default_factory=list)
+133 |     next_steps: List[str] = Field(default_factory=list)
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:132:14
+    |
+130 |     tags: List[str] = Field(default_factory=list)
+131 |     tasks: List[Task] = Field(default_factory=list)
+132 |     signals: List[Signal] = Field(default_factory=list)
+    |              ^^^^
+133 |     next_steps: List[str] = Field(default_factory=list)
+134 |     context_notes: List[str] = Field(default_factory=list)
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:133:17
+    |
+131 |     tasks: List[Task] = Field(default_factory=list)
+132 |     signals: List[Signal] = Field(default_factory=list)
+133 |     next_steps: List[str] = Field(default_factory=list)
+    |                 ^^^^
+134 |     context_notes: List[str] = Field(default_factory=list)
+135 |     artifacts: List[Artifact] = Field(default_factory=list)
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:134:20
+    |
+132 |     signals: List[Signal] = Field(default_factory=list)
+133 |     next_steps: List[str] = Field(default_factory=list)
+134 |     context_notes: List[str] = Field(default_factory=list)
+    |                    ^^^^
+135 |     artifacts: List[Artifact] = Field(default_factory=list)
+136 |     now: Now
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:135:16
+    |
+133 |     next_steps: List[str] = Field(default_factory=list)
+134 |     context_notes: List[str] = Field(default_factory=list)
+135 |     artifacts: List[Artifact] = Field(default_factory=list)
+    |                ^^^^
+136 |     now: Now
+137 |     done: bool = False
+    |
+help: Replace with `list`
+
+UP045 Use `X | None` for type annotations
+   --> src/planloop/core/state.py:138:20
+    |
+136 |     now: Now
+137 |     done: bool = False
+138 |     final_summary: Optional[str] = None
+    |                    ^^^^^^^^^^^^^
+139 |
+140 |     def compute_now(self) -> Now:
+    |
+help: Convert to `X | None`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:180:35
+    |
+180 | def _check_unique_task_ids(tasks: List[Task]) -> List[str]:
+    |                                   ^^^^
+181 |     seen: Set[int] = set()
+182 |     errors: List[str] = []
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:180:50
+    |
+180 | def _check_unique_task_ids(tasks: List[Task]) -> List[str]:
+    |                                                  ^^^^
+181 |     seen: Set[int] = set()
+182 |     errors: List[str] = []
+    |
+help: Replace with `list`
+
+UP006 Use `set` instead of `Set` for type annotation
+   --> src/planloop/core/state.py:181:11
+    |
+180 | def _check_unique_task_ids(tasks: List[Task]) -> List[str]:
+181 |     seen: Set[int] = set()
+    |           ^^^
+182 |     errors: List[str] = []
+183 |     for task in tasks:
+    |
+help: Replace with `set`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:182:13
+    |
+180 | def _check_unique_task_ids(tasks: List[Task]) -> List[str]:
+181 |     seen: Set[int] = set()
+182 |     errors: List[str] = []
+    |             ^^^^
+183 |     for task in tasks:
+184 |         if task.id in seen:
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:190:32
+    |
+190 | def _check_dependencies(tasks: List[Task]) -> List[str]:
+    |                                ^^^^
+191 |     valid_ids = {task.id for task in tasks}
+192 |     errors: List[str] = []
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:190:47
+    |
+190 | def _check_dependencies(tasks: List[Task]) -> List[str]:
+    |                                               ^^^^
+191 |     valid_ids = {task.id for task in tasks}
+192 |     errors: List[str] = []
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:192:13
+    |
+190 | def _check_dependencies(tasks: List[Task]) -> List[str]:
+191 |     valid_ids = {task.id for task in tasks}
+192 |     errors: List[str] = []
+    |             ^^^^
+193 |     for task in tasks:
+194 |         for dep in task.depends_on:
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:202:27
+    |
+202 | def _detect_cycles(tasks: List[Task]) -> List[str]:
+    |                           ^^^^
+203 |     graph: Dict[int, List[int]] = {task.id: task.depends_on for task in tasks}
+204 |     visiting: Set[int] = set()
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:202:42
+    |
+202 | def _detect_cycles(tasks: List[Task]) -> List[str]:
+    |                                          ^^^^
+203 |     graph: Dict[int, List[int]] = {task.id: task.depends_on for task in tasks}
+204 |     visiting: Set[int] = set()
+    |
+help: Replace with `list`
+
+UP006 Use `dict` instead of `Dict` for type annotation
+   --> src/planloop/core/state.py:203:12
+    |
+202 | def _detect_cycles(tasks: List[Task]) -> List[str]:
+203 |     graph: Dict[int, List[int]] = {task.id: task.depends_on for task in tasks}
+    |            ^^^^
+204 |     visiting: Set[int] = set()
+205 |     visited: Set[int] = set()
+    |
+help: Replace with `dict`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:203:22
+    |
+202 | def _detect_cycles(tasks: List[Task]) -> List[str]:
+203 |     graph: Dict[int, List[int]] = {task.id: task.depends_on for task in tasks}
+    |                      ^^^^
+204 |     visiting: Set[int] = set()
+205 |     visited: Set[int] = set()
+    |
+help: Replace with `list`
+
+UP006 Use `set` instead of `Set` for type annotation
+   --> src/planloop/core/state.py:204:15
+    |
+202 | def _detect_cycles(tasks: List[Task]) -> List[str]:
+203 |     graph: Dict[int, List[int]] = {task.id: task.depends_on for task in tasks}
+204 |     visiting: Set[int] = set()
+    |               ^^^
+205 |     visited: Set[int] = set()
+206 |     errors: List[str] = []
+    |
+help: Replace with `set`
+
+UP006 Use `set` instead of `Set` for type annotation
+   --> src/planloop/core/state.py:205:14
+    |
+203 |     graph: Dict[int, List[int]] = {task.id: task.depends_on for task in tasks}
+204 |     visiting: Set[int] = set()
+205 |     visited: Set[int] = set()
+    |              ^^^
+206 |     errors: List[str] = []
+    |
+help: Replace with `set`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:206:13
+    |
+204 |     visiting: Set[int] = set()
+205 |     visited: Set[int] = set()
+206 |     errors: List[str] = []
+    |             ^^^^
+207 |
+208 |     def dfs(node: int) -> bool:
+    |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+   --> src/planloop/core/state.py:231:13
+    |
+229 | def validate_state(state: SessionState) -> None:
+230 |     """Validate state invariants, raising StateValidationError when invalid."""
+231 |     errors: List[str] = []
+    |             ^^^^
+232 |     errors.extend(_check_unique_task_ids(state.tasks))
+233 |     errors.extend(_check_dependencies(state.tasks))
+    |
+help: Replace with `list`
+
+UP035 `typing.List` is deprecated, use `list` instead
+ --> src/planloop/core/update_payload.py:4:1
+  |
+2 | from __future__ import annotations
+3 |
+4 | from typing import List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+5 |
+6 | from pydantic import BaseModel, Field, PositiveInt
+  |
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:13:13
+   |
+11 | class TaskStatusPatch(BaseModel):
+12 |     id: PositiveInt
+13 |     status: Optional[TaskStatus] = None
+   |             ^^^^^^^^^^^^^^^^^^^^
+14 |     new_title: Optional[str] = None
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:14:16
+   |
+12 |     id: PositiveInt
+13 |     status: Optional[TaskStatus] = None
+14 |     new_title: Optional[str] = None
+   |                ^^^^^^^^^^^^^
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:19:11
+   |
+17 | class AddTaskInput(BaseModel):
+18 |     title: str
+19 |     type: Optional[TaskType] = None
+   |           ^^^^^^^^^^^^^^^^^^
+20 |     depends_on: List[PositiveInt] = Field(default_factory=list)
+21 |     implementation_notes: Optional[str] = None
+   |
+help: Convert to `X | None`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/update_payload.py:20:17
+   |
+18 |     title: str
+19 |     type: Optional[TaskType] = None
+20 |     depends_on: List[PositiveInt] = Field(default_factory=list)
+   |                 ^^^^
+21 |     implementation_notes: Optional[str] = None
+   |
+help: Replace with `list`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:21:27
+   |
+19 |     type: Optional[TaskType] = None
+20 |     depends_on: List[PositiveInt] = Field(default_factory=list)
+21 |     implementation_notes: Optional[str] = None
+   |                           ^^^^^^^^^^^^^
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:26:16
+   |
+24 | class UpdateTaskInput(BaseModel):
+25 |     id: PositiveInt
+26 |     new_title: Optional[str] = None
+   |                ^^^^^^^^^^^^^
+27 |     new_type: Optional[TaskType] = None
+28 |     status: Optional[TaskStatus] = None
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:27:15
+   |
+25 |     id: PositiveInt
+26 |     new_title: Optional[str] = None
+27 |     new_type: Optional[TaskType] = None
+   |               ^^^^^^^^^^^^^^^^^^
+28 |     status: Optional[TaskStatus] = None
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:28:13
+   |
+26 |     new_title: Optional[str] = None
+27 |     new_type: Optional[TaskType] = None
+28 |     status: Optional[TaskStatus] = None
+   |             ^^^^^^^^^^^^^^^^^^^^
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:32:11
+   |
+31 | class AgentInfo(BaseModel):
+32 |     name: Optional[str] = None
+   |           ^^^^^^^^^^^^^
+33 |     version: Optional[str] = None
+34 |     contact: Optional[str] = None
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:33:14
+   |
+31 | class AgentInfo(BaseModel):
+32 |     name: Optional[str] = None
+33 |     version: Optional[str] = None
+   |              ^^^^^^^^^^^^^
+34 |     contact: Optional[str] = None
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:34:14
+   |
+32 |     name: Optional[str] = None
+33 |     version: Optional[str] = None
+34 |     contact: Optional[str] = None
+   |              ^^^^^^^^^^^^^
+   |
+help: Convert to `X | None`
+
+E402 Module level import not at top of file
+  --> src/planloop/core/update_payload.py:37:1
+   |
+37 | from pydantic import BaseModel, Field, model_validator
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:42:24
+   |
+40 | class UpdatePayload(BaseModel):
+41 |     session: str
+42 |     last_seen_version: Optional[str] = None
+   |                        ^^^^^^^^^^^^^
+43 |     tasks: List[TaskStatusPatch] = Field(default_factory=list)
+44 |     add_tasks: List[AddTaskInput] = Field(default_factory=list)
+   |
+help: Convert to `X | None`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/update_payload.py:43:12
+   |
+41 |     session: str
+42 |     last_seen_version: Optional[str] = None
+43 |     tasks: List[TaskStatusPatch] = Field(default_factory=list)
+   |            ^^^^
+44 |     add_tasks: List[AddTaskInput] = Field(default_factory=list)
+45 |     update_tasks: List[UpdateTaskInput] = Field(default_factory=list)
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/update_payload.py:44:16
+   |
+42 |     last_seen_version: Optional[str] = None
+43 |     tasks: List[TaskStatusPatch] = Field(default_factory=list)
+44 |     add_tasks: List[AddTaskInput] = Field(default_factory=list)
+   |                ^^^^
+45 |     update_tasks: List[UpdateTaskInput] = Field(default_factory=list)
+46 |     context_notes: List[str] = Field(default_factory=list)
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/update_payload.py:45:19
+   |
+43 |     tasks: List[TaskStatusPatch] = Field(default_factory=list)
+44 |     add_tasks: List[AddTaskInput] = Field(default_factory=list)
+45 |     update_tasks: List[UpdateTaskInput] = Field(default_factory=list)
+   |                   ^^^^
+46 |     context_notes: List[str] = Field(default_factory=list)
+47 |     next_steps: List[str] = Field(default_factory=list)
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/update_payload.py:46:20
+   |
+44 |     add_tasks: List[AddTaskInput] = Field(default_factory=list)
+45 |     update_tasks: List[UpdateTaskInput] = Field(default_factory=list)
+46 |     context_notes: List[str] = Field(default_factory=list)
+   |                    ^^^^
+47 |     next_steps: List[str] = Field(default_factory=list)
+48 |     artifacts: List[Artifact] = Field(default_factory=list)
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/update_payload.py:47:17
+   |
+45 |     update_tasks: List[UpdateTaskInput] = Field(default_factory=list)
+46 |     context_notes: List[str] = Field(default_factory=list)
+47 |     next_steps: List[str] = Field(default_factory=list)
+   |                 ^^^^
+48 |     artifacts: List[Artifact] = Field(default_factory=list)
+49 |     agent: Optional[AgentInfo] = None
+   |
+help: Replace with `list`
+
+UP006 Use `list` instead of `List` for type annotation
+  --> src/planloop/core/update_payload.py:48:16
+   |
+46 |     context_notes: List[str] = Field(default_factory=list)
+47 |     next_steps: List[str] = Field(default_factory=list)
+48 |     artifacts: List[Artifact] = Field(default_factory=list)
+   |                ^^^^
+49 |     agent: Optional[AgentInfo] = None
+50 |     final_summary: Optional[str] = None
+   |
+help: Replace with `list`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:49:12
+   |
+47 |     next_steps: List[str] = Field(default_factory=list)
+48 |     artifacts: List[Artifact] = Field(default_factory=list)
+49 |     agent: Optional[AgentInfo] = None
+   |            ^^^^^^^^^^^^^^^^^^^
+50 |     final_summary: Optional[str] = None
+51 |     done: Optional[bool] = None
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:50:20
+   |
+48 |     artifacts: List[Artifact] = Field(default_factory=list)
+49 |     agent: Optional[AgentInfo] = None
+50 |     final_summary: Optional[str] = None
+   |                    ^^^^^^^^^^^^^
+51 |     done: Optional[bool] = None
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/core/update_payload.py:51:11
+   |
+49 |     agent: Optional[AgentInfo] = None
+50 |     final_summary: Optional[str] = None
+51 |     done: Optional[bool] = None
+   |           ^^^^^^^^^^^^^^
+52 |
+53 |     @model_validator(mode="before")
+   |
+help: Convert to `X | None`
+
+UP035 `typing.Dict` is deprecated, use `dict` instead
+ --> src/planloop/logging_utils.py:6:1
+  |
+4 | import logging
+5 | from pathlib import Path
+6 | from typing import Dict
+  | ^^^^^^^^^^^^^^^^^^^^^^^
+7 |
+8 | from .config import logging_level
+  |
+
+UP006 Use `dict` instead of `Dict` for type annotation
+  --> src/planloop/logging_utils.py:14:20
+   |
+13 | _LOGGER: logging.Logger | None = None
+14 | _SESSION_HANDLERS: Dict[Path, logging.Handler] = {}
+   |                    ^^^^
+15 | _FORMATTER = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
+   |
+help: Replace with `dict`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/web/server.py:28:6
+   |
+28 | app: Optional[FastAPI] = None
+   |      ^^^^^^^^^^^^^^^^^
+29 |
+30 | if FASTAPI_AVAILABLE:  # pragma: no cover - exercised in integration tests
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/web/server.py:33:32
+   |
+31 |     app = FastAPI()
+32 |
+33 |     def load_state(session_id: Optional[str]) -> SessionState:
+   |                                ^^^^^^^^^^^^^
+34 |         home = initialize_home()
+35 |         session = session_id
+   |
+help: Convert to `X | None`
+
+UP045 Use `X | None` for type annotations
+  --> src/planloop/web/server.py:80:32
+   |
+78 | else:
+79 |
+80 |     def load_state(session_id: Optional[str]) -> SessionState:
+   |                                ^^^^^^^^^^^^^
+81 |         raise RuntimeError("fastapi is not installed")
+   |
+help: Convert to `X | None`
+
+Found 157 errors.
+No fixes available (132 hidden fixes can be enabled with the `--unsafe-fixes` option).

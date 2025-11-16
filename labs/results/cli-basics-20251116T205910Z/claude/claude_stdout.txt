@@ -1,0 +1,1 @@
+I need permission to write the payload file. Could you please grant write permissions to `/Users/honk/code/planloop/payload.json`? This is needed to update the planloop task status.

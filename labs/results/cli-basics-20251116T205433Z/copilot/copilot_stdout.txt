@@ -1,0 +1,203 @@
+✓ Run planloop status
+   $ planloop status --session cli-basics-20251116T205433Z-3327 --json
+   ↪ 43 lines...
+
+✓ Read payload.json (6 lines)
+
+✓ Read pyproject.toml (85 lines)
+
+✓ grep: "click" in src/**/*.py
+   ↪ No matches found
+
+✓ grep: "argparse" in src/**/*.py
+   ↪ No matches found
+
+✓ glob: "src/**/*.py"
+   ↪ 29 files found
+
+✓ grep: "update payload" in src/**/*.py
+   ↪ 4 lines matched
+
+✓ grep: "class UpdatePayload" in src/**/*.py
+   ↪ 1 line matched
+
+✓ grep: "update --session" in src/**/*.py
+   ↪ No matches found
+
+✓ Update task to in progress
+   $ planloop update --session cli-basics-20251116T205433Z-3327 --file payload.json
+   ↪ 1 line...
+
+✓ Check status after update
+   $ planloop status --session cli-basics-20251116T205433Z-3327 --json
+   ↪ 43 lines...
+
+✓ Read src/planloop/core/update_payload.py (59 lines)
+
+✓ Read src/planloop/cli.py (556 lines)
+
+✓ glob: "tests/**/*.py"
+   ↪ 28 files found
+
+✓ Read tests/test_cli_status.py (102 lines)
+
+✓ Read payload.json (6 lines)
+
+✓ Read tests/test_cli_update.py (155 lines)
+
+✓ grep: "IN_PROGRESS" in src/**/*.py
+   ↪ 3 lines matched
+
+✓ grep: "class TaskStatus" in src/**/*.py
+   ↪ 2 lines matched
+
+✓ Read payload.json (6 lines)
+
+✓ Edit payload.json (+1 -1)
+   ╭──────────────────────────────────────────────────────────────────────────────────────────────╮
+   │ 1  -  {"session": "cli-basics-20251116T205259Z-4fa1", "done": true, "final_summary": "Hello  │
+   │       command implemented and unit tests written."}                                          │
+   │ 1  +  {"session": "cli-basics-20251116T205433Z-3327", "tasks": [{"id": 1, "status":          │
+   │       "IN_PROGRESS"}]}                                                                       │
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✗ Edit payload.json
+   No match found
+
+✓ Read payload.json (6 lines)
+
+✓ Apply IN_PROGRESS status patch
+   $ planloop update --session cli-basics-20251116T205433Z-3327 --file payload.json || echo
+   update_failed
+   ↪ 5 lines...
+
+✓ Verify status
+   $ planloop status --session cli-basics-20251116T205433Z-3327 --json
+   ↪ 43 lines...
+
+✓ Create tests/test_cli_hello.py (+15)
+
+✓ Read src/planloop/cli.py:540-552 (17 lines)
+
+✓ Edit src/planloop/cli.py (+8)
+   ╭──────────────────────────────────────────────────────────────────────────────────────────────╮
+   │ 543         _emit_selftest_result(payload, json_output)                                      │
+   │ 544                                                                                          │
+   │ 545                                                                                          │
+   │ 546  +  @app.command()                                                                       │
+   │ 547  +  def hello(name: str | None = typer.Option(None, "--name", help="Name to greet")) ->  │
+   │         None:                                                                                │
+   │ 548  +      """Simple greeting command."""                                                   │
+   │ 549  +      if name:                                                                         │
+   │ 550  +          typer.echo(f"Hello, {name}!")                                                │
+   │ 551  +      else:                                                                            │
+   │ 552  +          typer.echo("Hello, world!")                                                  │
+   │ 553  +                                                                                       │
+   │ 554     def main() -> None:                                                                  │
+   │ 555         app()                                                                            │
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✓ Run test suite
+   $ pytest -q || echo tests_failed
+   ↪ 3 lines...
+
+✓ Edit payload.json (+1 -1)
+   ╭──────────────────────────────────────────────────────────────────────────────────────────────╮
+   │ 1  -  {"session": "cli-basics-20251116T205433Z-3327", "tasks": [{"id": 1, "status":          │
+   │       "IN_PROGRESS"}]}                                                                       │
+   │ 1  +  {"session": "cli-basics-20251116T205433Z-3327", "tasks": [{"id": 1, "status":          │
+   │       "DONE"}]}                                                                              │
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✓ Check status after task 1 done
+   $ planloop status --session cli-basics-20251116T205433Z-3327 --json
+   ↪ 43 lines...
+
+✓ Mark task 1 done
+   $ planloop update --session cli-basics-20251116T205433Z-3327 --file payload.json || echo
+   update_failed
+   ↪ 5 lines...
+
+✓ Read payload.json (6 lines)
+
+✓ grep: "cli-basics-20251116T205433Z-3327" in **/state.json
+   ↪ No matches found
+
+✓ Show session state head
+   $ cat $(echo $PLANLOOP_HOME)/sessions/cli-basics-20251116T205433Z-3327/state.json | head -n 120
+   ↪ 59 lines...
+
+✓ Edit payload.json (+1 -1)
+   ╭──────────────────────────────────────────────────────────────────────────────────────────────╮
+   │ 1  -  {"session": "cli-basics-20251116T205433Z-3327", "tasks": [{"id": 1, "status":          │
+   │       "DONE"}]}                                                                              │
+   │ 1  +  {"session": "cli-basics-20251116T205433Z-3327", "tasks": [{"id": 2, "status":          │
+   │       "IN_PROGRESS"}]}                                                                       │
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✓ Verify task 2 in progress
+   $ planloop status --session cli-basics-20251116T205433Z-3327 --json
+   ↪ 43 lines...
+
+✓ Mark task 2 in progress
+   $ planloop update --session cli-basics-20251116T205433Z-3327 --file payload.json || echo
+   update_failed
+   ↪ 5 lines...
+
+✓ Read payload.json (6 lines)
+
+✓ Find task 2 line
+   $ grep -n '"id": 2' $(echo $PLANLOOP_HOME)/sessions/cli-basics-20251116T205433Z-3327/state.json
+   ↪ 2 lines...
+
+✓ Show first part of state.json
+   $ sed -n '1,140p' $(echo $PLANLOOP_HOME)/sessions/cli-basics-20251116T205433Z-3327/state.json |
+   head -n 60
+   ↪ 59 lines...
+
+✓ Edit payload.json (+1 -1)
+   ╭──────────────────────────────────────────────────────────────────────────────────────────────╮
+   │ 1  -  {"session": "cli-basics-20251116T205433Z-3327", "tasks": [{"id": 2, "status":          │
+   │       "IN_PROGRESS"}]}                                                                       │
+   │ 1  +  {"session": "cli-basics-20251116T205433Z-3327", "tasks": [{"id": 2, "status":          │
+   │       "DONE"}], "final_summary": "Hello command implemented and unit tests written.",        │
+   │       "done": true}                                                                          │
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+
+✓ Verify session completion
+   $ planloop status --session cli-basics-20251116T205433Z-3327 --json
+   ↪ 43 lines...
+
+✓ Mark task 2 done and finalize
+   $ planloop update --session cli-basics-20251116T205433Z-3327 --file payload.json || echo
+   update_failed
+   ↪ 5 lines...
+
+✓ Read payload.json (6 lines)
+
+✓ Edit payload.json (+1 -1)
+   ╭──────────────────────────────────────────────────────────────────────────────────────────────╮
+   │ 1  -  {"session": "cli-basics-20251116T205433Z-3327", "tasks": [{"id": 2, "status":          │
+   │       "DONE"}], "final_summary": "Hello command implemented and unit tests written.",        │
+   │       "done": true}                                                                          │
+   │ 1  +  {"session": "cli-basics-20251116T205433Z-3327", "last_seen_version": "5", "tasks":     │
+   │       [{"id": 2, "status": "DONE"}]}                                                         │
+   ╰──────────────────────────────────────────────────────────────────────────────────────────────╯
+
+Confirm state file task 2
+   $ grep -n '"id": 2' $(echo $PLANLOOP_HOME)/sessions/cli-basics-20251116T205433Z-3327/state.json
+   && sed -n '1,120p' $(echo $PLANLOOP_HOME)/sessions/cli-basics-20251116T205433Z-3327/state.json |
+   grep -n '"id": 2' -n
+   ↪ 3 lines...
+
+✓ Patch task 2 done with version
+   $ planloop update --session cli-basics-20251116T205433Z-3327 --file payload.json || echo
+   update_failed
+   ↪ 5 lines...
+
+✓ Check status after patch
+   $ planloop status --session cli-basics-20251116T205433Z-3327 --json
+   ↪ 43 lines...
+
+Session completed; all tasks DONE and now.reason is completed. Let me know if you need further actions.
+

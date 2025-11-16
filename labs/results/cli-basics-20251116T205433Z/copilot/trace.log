@@ -1,0 +1,41 @@
+2025-11-16T20:54:33Z	run-start	agent=copilot workspace=/Users/honk/code/planloop session=cli-basics-20251116T205433Z-3327
+2025-11-16T20:54:33Z	agent-config	model=gpt-5
+2025-11-16T20:54:41Z	status	reason=task
+2025-11-16T20:54:52Z	status	reason=task
+2025-11-16T20:55:29Z	status	reason=task
+2025-11-16T20:55:29Z	update	version=2 tasks=1 add=0 update_tasks=0 reason=task
+2025-11-16T20:56:03Z	signal-open	id=ci-1
+2025-11-16T20:56:03Z	signal-open	id=ci-1
+2025-11-16T20:56:03Z	signal-close	id=ci-1
+2025-11-16T20:56:03Z	status	reason=idle
+2025-11-16T20:56:03Z	update	version=2 tasks=0 add=2 update_tasks=0 reason=task
+2025-11-16T20:56:03Z	status	reason=task
+2025-11-16T20:56:03Z	update	version=3 tasks=2 add=0 update_tasks=0 reason=task
+2025-11-16T20:56:03Z	status	reason=task
+2025-11-16T20:56:03Z	signal-open	id=ci-loop
+2025-11-16T20:56:03Z	status	reason=ci_blocker
+2025-11-16T20:56:03Z	signal-close	id=ci-loop
+2025-11-16T20:56:04Z	status	reason=task
+2025-11-16T20:56:04Z	update	version=4 tasks=1 add=0 update_tasks=0 reason=completed
+2025-11-16T20:56:04Z	status	reason=completed
+2025-11-16T20:56:04Z	status	reason=idle
+2025-11-16T20:56:04Z	status	reason=idle
+2025-11-16T20:56:04Z	status	reason=idle
+2025-11-16T20:56:04Z	status	reason=idle
+2025-11-16T20:56:04Z	update	version=2 tasks=1 add=0 update_tasks=0 reason=completed
+2025-11-16T20:56:04Z	update	version=2 tasks=0 add=1 update_tasks=0 reason=task
+2025-11-16T20:56:04Z	update	version=2 tasks=1 add=0 update_tasks=0 reason=completed
+2025-11-16T20:56:04Z	update	version=2 tasks=1 add=0 update_tasks=0 reason=completed
+2025-11-16T20:56:08Z	status	reason=task
+2025-11-16T20:56:08Z	update	version=3 tasks=1 add=0 update_tasks=0 reason=task
+2025-11-16T20:56:15Z	status	reason=task
+2025-11-16T20:56:15Z	update	version=4 tasks=1 add=0 update_tasks=0 reason=task
+2025-11-16T20:56:20Z	status	reason=task
+2025-11-16T20:56:20Z	update	version=5 tasks=1 add=0 update_tasks=0 reason=completed
+2025-11-16T20:56:43Z	status	reason=completed
+2025-11-16T20:56:43Z	update	version=6 tasks=1 add=0 update_tasks=0 reason=completed
+2025-11-16T20:56:44Z	commands-executed	status_calls=8
+2025-11-16T20:56:44Z	status	detected in output
+2025-11-16T20:56:44Z	update	task update detected
+2025-11-16T20:56:44Z	final-state	session_state_not_found
+2025-11-16T20:56:45Z	run-end	status=completed

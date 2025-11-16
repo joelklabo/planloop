@@ -3,24 +3,22 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Dict
 
 from .config import logging_level
-
 
 LOGGER_NAME = "planloop"
 LOG_FILENAME = "planloop.log"
 
 _LOGGER: logging.Logger | None = None
-_SESSION_HANDLERS: Dict[Path, logging.Handler] = {}
+_SESSION_HANDLERS: dict[Path, logging.Handler] = {}
 _FORMATTER = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
 
 
 def _resolve_level(name: str) -> int:
-    try:
-        return getattr(logging, name.upper())
-    except AttributeError:
-        return logging.INFO
+    level = getattr(logging, name.upper(), logging.INFO)
+    if isinstance(level, int):
+        return level
+    return logging.INFO
 
 
 def get_logger() -> logging.Logger:

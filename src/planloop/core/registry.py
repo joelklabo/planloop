@@ -5,7 +5,6 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import List
 
 from ..home import initialize_home
 
@@ -17,7 +16,7 @@ class SessionSummary:
     session: str
     name: str
     title: str
-    tags: List[str]
+    tags: list[str]
     project_root: str
     created_at: str
     last_updated_at: str
@@ -41,7 +40,7 @@ def _registry_path() -> Path:
     return home / REGISTRY_FILE
 
 
-def load_registry() -> List[SessionSummary]:
+def load_registry() -> list[SessionSummary]:
     path = _registry_path()
     if not path.exists():
         return []
@@ -50,7 +49,7 @@ def load_registry() -> List[SessionSummary]:
     return [SessionSummary(**entry) for entry in sessions]
 
 
-def save_registry(entries: List[SessionSummary]) -> None:
+def save_registry(entries: list[SessionSummary]) -> None:
     path = _registry_path()
     payload = {
         "sessions": [entry.to_dict() for entry in entries],
@@ -73,7 +72,7 @@ def find_session(session_id: str) -> SessionSummary | None:
     return None
 
 
-def search_sessions(query: str) -> List[SessionSummary]:
+def search_sessions(query: str) -> list[SessionSummary]:
     tokens = [tok.lower() for tok in query.split() if tok.strip()]
     entries = load_registry()
     if not tokens:
@@ -88,7 +87,7 @@ def search_sessions(query: str) -> List[SessionSummary]:
             entry.project_root,
         ]).lower()
 
-    results: List[SessionSummary] = []
+    results: list[SessionSummary] = []
     for entry in entries:
         text = haystack(entry)
         if all(tok in text for tok in tokens):

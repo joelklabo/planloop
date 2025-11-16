@@ -1,7 +1,7 @@
 """Shared CLI helpers."""
 from __future__ import annotations
 
-from typing import Callable, Iterable
+from collections.abc import Iterable
 
 
 def format_log_tail(lines: Iterable[str], limit: int = 10) -> str:

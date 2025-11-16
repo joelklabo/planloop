@@ -1,0 +1,51 @@
+{
+  "scenario": "cli-basics",
+  "session": "cli-basics-20251116T204053Z-3a48",
+  "agents": [
+    {
+      "name": "claude",
+      "enabled": false,
+      "returncode": null,
+      "message": "Set PLANLOOP_LAB_CLAUDE_CMD to enable claude adapter",
+      "stdout": null,
+      "stderr": null,
+      "compliance": {
+        "pass": false,
+        "score": 0.0,
+        "reasons": [
+          "trace log missing"
+        ]
+      }
+    },
+    {
+      "name": "copilot",
+      "enabled": false,
+      "returncode": null,
+      "message": "Set PLANLOOP_LAB_COPILOT_CMD to enable copilot adapter",
+      "stdout": null,
+      "stderr": null,
+      "compliance": {
+        "pass": false,
+        "score": 0.0,
+        "reasons": [
+          "trace log missing"
+        ]
+      }
+    },
+    {
+      "name": "openai",
+      "enabled": false,
+      "returncode": null,
+      "message": "Set PLANLOOP_LAB_OPENAI_CMD to enable openai adapter",
+      "stdout": null,
+      "stderr": null,
+      "compliance": {
+        "pass": false,
+        "score": 0.0,
+        "reasons": [
+          "trace log missing"
+        ]
+      }
+    }
+  ]
+}

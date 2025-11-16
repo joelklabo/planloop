@@ -7,47 +7,40 @@ are therefore gated by ``FASTAPI_AVAILABLE`` and consumers should use
 """
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Optional
-
-try:  # pragma: no cover - optional dependency guard
-    from fastapi import FastAPI, HTTPException
-    from fastapi.responses import HTMLResponse
-    FASTAPI_AVAILABLE = True
-except ImportError:  # pragma: no cover
-    FastAPI = None  # type: ignore
-    HTMLResponse = None  # type: ignore
-    FASTAPI_AVAILABLE = False
-
-    class HTTPException(Exception):
-        def __init__(self, status_code: int, detail: str) -> None:
-            self.status_code = status_code
-            super().__init__(detail)
-
 from ..core.state import SessionState
 from ..home import CURRENT_SESSION_POINTER, SESSIONS_DIR, initialize_home
 from ..tui.app import SessionViewModel
 
+try:  # pragma: no cover - optional dependency guard
+    from fastapi import FastAPI, HTTPException
+    from fastapi.responses import HTMLResponse
 
-def load_state(session_id: Optional[str]) -> SessionState:
-    home = initialize_home()
-    session = session_id
-    if not session:
-        pointer_path = home / CURRENT_SESSION_POINTER
-        if pointer_path.exists():
-            session = pointer_path.read_text(encoding="utf-8").strip()
-    if not session:
-        raise HTTPException(status_code=404, detail="No session specified")
-    state_path = home / SESSIONS_DIR / session / "state.json"
-    if not state_path.exists():
-        raise HTTPException(status_code=404, detail="Session not found")
-    return SessionState.model_validate_json(state_path.read_text(encoding="utf-8"))
+    FASTAPI_AVAILABLE = True
+except ImportError:  # pragma: no cover
+    FastAPI = None
+    HTMLResponse = None
+    HTTPException = None
+    FASTAPI_AVAILABLE = False
 
 
-app: Optional[FastAPI] = None  # type: ignore[assignment]
+app: FastAPI | None = None
 
 if FASTAPI_AVAILABLE:  # pragma: no cover - exercised in integration tests
     app = FastAPI()
+
+    def load_state(session_id: str | None) -> SessionState:
+        home = initialize_home()
+        session = session_id
+        if not session:
+            pointer_path = home / CURRENT_SESSION_POINTER
+            if pointer_path.exists():
+                session = pointer_path.read_text(encoding="utf-8").strip()
+        if not session:
+            raise HTTPException(status_code=404, detail="No session specified")
+        state_path = home / SESSIONS_DIR / session / "state.json"
+        if not state_path.exists():
+            raise HTTPException(status_code=404, detail="Session not found")
+        return SessionState.model_validate_json(state_path.read_text(encoding="utf-8"))
 
     @app.get("/", response_class=HTMLResponse)
     async def index() -> str:
@@ -79,6 +72,11 @@ if FASTAPI_AVAILABLE:  # pragma: no cover - exercised in integration tests
         <h2>Signals</h2>
         <table border='1'><tr><th>Signal</th><th>State</th></tr>{signals}</table>
         """
+
+else:
+
+    def load_state(session_id: str | None) -> SessionState:
+        raise RuntimeError("fastapi is not installed")
 
 
 def get_app() -> FastAPI:

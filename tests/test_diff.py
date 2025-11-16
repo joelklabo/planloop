@@ -4,7 +4,16 @@ from __future__ import annotations
 from datetime import datetime
 
 from planloop.core.diff import state_diff
-from planloop.core.state import Environment, Now, NowReason, PromptMetadata, SessionState, Task, TaskStatus, TaskType
+from planloop.core.state import (
+    Environment,
+    Now,
+    NowReason,
+    PromptMetadata,
+    SessionState,
+    Task,
+    TaskStatus,
+    TaskType,
+)
 
 
 def build_state(tasks):

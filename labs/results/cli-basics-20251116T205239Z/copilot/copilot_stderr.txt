@@ -1,0 +1,1 @@
+error: option '--model <model>' argument 'gpt-4o' is invalid. Allowed choices are claude-sonnet-4.5, claude-sonnet-4, claude-haiku-4.5, gpt-5, gpt-5.1, gpt-5.1-codex-mini, gpt-5.1-codex.

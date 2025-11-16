@@ -1,0 +1,38 @@
+{
+  "scenario": "cli-basics",
+  "session": "cli-basics-20251116T205433Z-3327",
+  "agents": [
+    {
+      "name": "copilot",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T205433Z/copilot/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T205433Z/copilot/stderr.txt",
+      "compliance": {
+        "pass": true,
+        "score": 80.0,
+        "reasons": [
+          "update occurred while signal open"
+        ]
+      }
+    },
+    {
+      "name": "claude",
+      "enabled": true,
+      "returncode": 1,
+      "message": "exit code 1",
+      "stdout": "labs/results/cli-basics-20251116T205433Z/claude/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T205433Z/claude/stderr.txt",
+      "compliance": {
+        "pass": false,
+        "score": 5.0,
+        "reasons": [
+          "missing status-before",
+          "missing update",
+          "missing status-after"
+        ]
+      }
+    }
+  ]
+}

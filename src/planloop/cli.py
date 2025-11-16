@@ -1,3 +1,4 @@
+# ruff: noqa: B008
 """Typer CLI skeleton for planloop.
 
 Task A3 requires stubbing primary commands (`status`, `update`, `alert`,
@@ -11,26 +12,26 @@ import logging
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 import typer
 
-from .core import describe, registry, selftest as selftest_module
 from . import guide as guide_utils
 from .cli_utils import format_log_tail
-from .history import create_snapshot, restore_snapshot
-from .logging_utils import log_event, log_session_event
-from .tui import TEXTUAL_AVAILABLE, PlanloopViewApp, SessionViewModel
+from .config import safe_mode_defaults
+from .core import describe, registry
+from .core import selftest as selftest_module
+from .core.diff import state_diff
 from .core.lock import acquire_lock, get_lock_queue_status, get_lock_status
 from .core.session import refresh_registry, save_session_state
-from .core.session_pointer import get_current_session, set_current_session, clear_current_session
+from .core.session_pointer import get_current_session, set_current_session
 from .core.signals import close_signal, open_signal
 from .core.state import SessionState, Signal, SignalLevel, SignalType, validate_state
 from .core.update import UpdateError, apply_update, validate_update_payload
-from .core.diff import state_diff
-from .config import safe_mode_defaults
 from .core.update_payload import UpdatePayload
+from .history import create_snapshot, restore_snapshot
 from .home import SESSIONS_DIR, initialize_home
+from .logging_utils import log_event, log_session_event
+from .tui import TEXTUAL_AVAILABLE, PlanloopViewApp, SessionViewModel
 
 app = typer.Typer(help="planloop CLI")
 sessions_app = typer.Typer(help="Manage sessions")
@@ -69,7 +70,7 @@ def _emit_selftest_result(payload: dict, json_output: bool) -> None:
         )
 
 
-def _load_session(session_id: Optional[str]) -> tuple[SessionState, Path]:
+def _load_session(session_id: str | None) -> tuple[SessionState, Path]:
     home = initialize_home()
     if not session_id:
         session_id = get_current_session()
@@ -88,44 +89,44 @@ def _load_session(session_id: Optional[str]) -> tuple[SessionState, Path]:
 def _generate_agent_instructions(state: SessionState, lock_status, queue_status) -> str:
     """Generate actionable guidance for agents based on current state."""
     from .core.state import NowReason
-    
+
     if state.now.reason == NowReason.CI_BLOCKER:
         signal = next((s for s in state.signals if s.id == state.now.signal_id), None)
         if signal:
             return f"Address blocker signal: {signal.title}. Use 'planloop alert' to close the signal once resolved."
         return "Address the CI blocker signal and use 'planloop alert --close' when resolved."
-    
+
     elif state.now.reason == NowReason.TASK:
         task = next((t for t in state.tasks if t.id == state.now.task_id), None)
         if task:
             return f"Work on task {task.id}: {task.title}. Update with 'planloop update' to mark progress or completion."
         return "Work on the current task and update status using 'planloop update'."
-    
+
     elif state.now.reason == NowReason.COMPLETED:
         return "All tasks complete! Add final_summary to the session or mark it done."
-    
+
     elif state.now.reason == NowReason.IDLE:
         return "No tasks defined. Use 'planloop update' to add tasks and define the plan."
-    
+
     elif state.now.reason == NowReason.WAITING_ON_LOCK:
         if lock_status.info:
             return f"Session locked by {lock_status.info.owner}. Wait for lock release or check 'planloop debug' for details."
         return "Session is locked. Wait for lock release or use 'planloop debug' to inspect."
-    
+
     elif state.now.reason == NowReason.DEADLOCKED:
         return "Deadlock detected. Review 'planloop debug' output and resolve blockers or adjust dependencies."
-    
+
     elif state.now.reason == NowReason.ESCALATED:
         signal = next((s for s in state.signals if s.id == state.now.signal_id), None)
         if signal:
             return f"Escalated issue: {signal.title}. Review the signal and take appropriate action."
         return "An issue has been escalated. Review signals and take action."
-    
+
     return "Check 'planloop status' for current state and next steps."
 
 
 @app.command()
-def status(session: Optional[str] = typer.Option(None, help="Session ID"), json_output: bool = typer.Option(True, "--json/--no-json", help="JSON output")) -> None:
+def status(session: str | None = typer.Option(None, help="Session ID"), json_output: bool = typer.Option(True, "--json/--no-json", help="JSON output")) -> None:
     """Show the current planloop session status."""
     try:
         state, session_dir = _load_session(session)
@@ -152,11 +153,11 @@ def status(session: Optional[str] = typer.Option(None, help="Session ID"), json_
 
 @app.command()
 def update(
-    session: Optional[str] = typer.Option(None, help="Session ID"),
-    file: Optional[Path] = typer.Option(None, "--file", "-f", help="Path to payload JSON"),
-    dry_run: Optional[bool] = typer.Option(None, "--dry-run/--no-dry-run", help="Preview changes without writing"),
-    no_plan_edit: Optional[bool] = typer.Option(None, "--no-plan-edit/--allow-plan-edit", help="Reject structural edits"),
-    strict: Optional[bool] = typer.Option(None, "--strict/--allow-extra-fields", help="Reject payloads with unknown fields"),
+    session: str | None = typer.Option(None, help="Session ID"),
+    file: Path | None = typer.Option(None, "--file", "-f", help="Path to payload JSON"),
+    dry_run: bool | None = typer.Option(None, "--dry-run/--no-dry-run", help="Preview changes without writing"),
+    no_plan_edit: bool | None = typer.Option(None, "--no-plan-edit/--allow-plan-edit", help="Reject structural edits"),
+    strict: bool | None = typer.Option(None, "--strict/--allow-extra-fields", help="Reject payloads with unknown fields"),
 ) -> None:
     """Apply a structured update to the session."""
     data = file.read_text(encoding="utf-8") if file else typer.get_text_stream("stdin").read()
@@ -229,14 +230,14 @@ def update(
 
 @app.command()
 def alert(
-    session: Optional[str] = typer.Option(None, help="Session ID"),
+    session: str | None = typer.Option(None, help="Session ID"),
     id: str = typer.Option(..., "--id", help="Signal ID"),
     level: SignalLevel = typer.Option(SignalLevel.BLOCKER, "--level", help="Signal level"),
     type_: SignalType = typer.Option(SignalType.CI, "--type", help="Signal type"),
-    kind: Optional[str] = typer.Option(None, "--kind", help="Signal kind"),
-    title: Optional[str] = typer.Option(None, "--title", help="Signal title"),
-    message: Optional[str] = typer.Option(None, "--message", help="Signal message"),
-    link: Optional[str] = typer.Option(None, "--link", help="Link"),
+    kind: str | None = typer.Option(None, "--kind", help="Signal kind"),
+    title: str | None = typer.Option(None, "--title", help="Signal title"),
+    message: str | None = typer.Option(None, "--message", help="Signal message"),
+    link: str | None = typer.Option(None, "--link", help="Link"),
     close: bool = typer.Option(False, "--close", help="Close signal"),
 ) -> None:
     """Manage signals within a session."""
@@ -298,7 +299,7 @@ def sessions_list(json_output: bool = typer.Option(True, "--json")) -> None:
 
 
 @sessions_app.command("info")
-def sessions_info(session: Optional[str] = typer.Argument(None)) -> None:
+def sessions_info(session: str | None = typer.Argument(None)) -> None:
     """Show detailed information about a session."""
     try:
         home = initialize_home()
@@ -319,8 +320,8 @@ def sessions_info(session: Optional[str] = typer.Argument(None)) -> None:
 @sessions_app.command("create")
 def sessions_create(
     name: str = typer.Option(..., "--name", help="Session name (used for ID generation)"),
-    title: Optional[str] = typer.Option(None, "--title", help="Human-readable title (defaults to name)"),
-    project_root: Optional[Path] = typer.Option(None, "--project-root", help="Project root path (defaults to current directory)"),
+    title: str | None = typer.Option(None, "--title", help="Human-readable title (defaults to name)"),
+    project_root: Path | None = typer.Option(None, "--project-root", help="Project root path (defaults to current directory)"),
 ) -> None:
     """Create a new session."""
     from .core.session import create_session
@@ -366,7 +367,7 @@ def sessions_switch(session: str = typer.Argument(..., help="Session ID to switc
 
 @app.command()
 def debug(
-    session: Optional[str] = typer.Option(None, help="Session ID"),
+    session: str | None = typer.Option(None, help="Session ID"),
     logs: bool = typer.Option(True, "--logs/--no-logs", help="Include recent logs"),
 ) -> None:
     """Print debug information for a session."""
@@ -403,7 +404,7 @@ def search(query: str = typer.Argument(..., help="Search query")) -> None:
 
 
 @app.command()
-def templates(tag: Optional[str] = typer.Option(None, "--tag", help="Filter by tag")) -> None:
+def templates(tag: str | None = typer.Option(None, "--tag", help="Filter by tag")) -> None:
     entries = [entry for entry in registry.load_registry() if entry.done]
     if tag:
         entries = [entry for entry in entries if tag in entry.tags]
@@ -414,7 +415,7 @@ def templates(tag: Optional[str] = typer.Option(None, "--tag", help="Filter by t
 @app.command()
 def reuse(
     template_session: str = typer.Argument(..., help="Completed session to reuse"),
-    goal: Optional[str] = typer.Option(None, "--goal", help="New goal description"),
+    goal: str | None = typer.Option(None, "--goal", help="New goal description"),
 ) -> None:
     try:
         state, _ = _load_session(template_session)
@@ -435,7 +436,7 @@ def reuse(
 
 
 @app.command()
-def view(session: Optional[str] = typer.Option(None, help="Session ID")) -> None:
+def view(session: str | None = typer.Option(None, help="Session ID")) -> None:
     if not TEXTUAL_AVAILABLE:
         typer.echo("textual is not installed. Run `pip install textual` to use planloop view.")
         raise typer.Exit(code=1)
@@ -451,9 +452,9 @@ def view(session: Optional[str] = typer.Option(None, help="Session ID")) -> None
 @app.command()
 def guide(
     prompt_set: str = typer.Option("core-v1", help="Prompt set"),
-    output: Optional[Path] = typer.Option(None, "--output", "-o", help="Write to file"),
+    output: Path | None = typer.Option(None, "--output", "-o", help="Write to file"),
     apply: bool = typer.Option(False, "--apply", help="Insert into docs/agents.md"),
-    target: Optional[Path] = typer.Option(None, "--target", help="Target file"),
+    target: Path | None = typer.Option(None, "--target", help="Target file"),
 ) -> None:
     content = guide_utils.render_guide(prompt_set)
     if apply:
@@ -470,7 +471,7 @@ def guide(
 
 
 @app.command()
-def web(session: Optional[str] = typer.Option(None, help="Session ID")) -> None:
+def web(session: str | None = typer.Option(None, help="Session ID")) -> None:
     try:
         from .web import server as web_server
     except ImportError as exc:  # pragma: no cover
@@ -491,7 +492,7 @@ def web(session: Optional[str] = typer.Option(None, help="Session ID")) -> None:
 
 @app.command()
 def snapshot(
-    session: Optional[str] = typer.Option(None, help="Session ID"),
+    session: str | None = typer.Option(None, help="Session ID"),
     note: str = typer.Option("Manual snapshot", "--note"),
 ) -> None:
     try:
@@ -507,7 +508,7 @@ def snapshot(
 @app.command()
 def restore(
     snapshot_ref: str = typer.Argument(..., help="Snapshot commit"),
-    session: Optional[str] = typer.Option(None, help="Session ID"),
+    session: str | None = typer.Option(None, help="Session ID"),
 ) -> None:
     try:
         _, session_dir = _load_session(session)
@@ -541,6 +542,14 @@ def selftest(json_output: bool = typer.Option(True, "--json/--no-json", help="JS
     log_event("Self-test completed successfully")
     _emit_selftest_result(payload, json_output)
 
+
+@app.command()
+def hello(name: str | None = typer.Option(None, "--name", help="Name to greet")) -> None:
+    """Simple greeting command."""
+    if name:
+        typer.echo(f"Hello, {name}!")
+    else:
+        typer.echo("Hello, world!")
 
 def main() -> None:
     app()

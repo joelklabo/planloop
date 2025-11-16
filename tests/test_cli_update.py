@@ -9,9 +9,9 @@ from typer.testing import CliRunner
 
 from planloop import cli
 from planloop.config import reset_config_cache
-from planloop.home import initialize_home
 from planloop.core.session import create_session, save_session_state
-from planloop.core.state import Task, TaskStatus, TaskType
+from planloop.core.state import Task, TaskType
+from planloop.home import initialize_home
 
 runner = CliRunner()
 

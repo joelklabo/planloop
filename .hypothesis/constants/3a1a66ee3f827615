@@ -1,0 +1,4 @@
+# file: /Users/honk/code/planloop/labs/run_lab.py
+# hypothesis_version: 6.148.1
+
+[0.0, 60.0, 100.0, '%Y%m%dT%H%M%SZ', ',', '--agents', '--results-dir', '--scenario', '--workspace', 'PLANLOOP_HOME', 'PLANLOOP_LAB_RESULTS', 'PLANLOOP_SESSION', 'Scenario name', '__main__', 'agents', 'claude', 'cli-basics', 'compliance', 'copilot', 'detail', 'enabled', 'labs/results', 'message', 'missing status-after', 'missing update', 'name', 'none', 'openai', 'pass', 'planloop-lab-', 'reasons', 'returncode', 'scenario', 'score', 'session', 'signal left open', 'signal-close', 'signal-open', 'skipped', 'status', 'status-before', 'stderr', 'stdout', 'step', 'summary.json', 'timestamp', 'trace log missing', 'trace.log', 'update', 'utf-8']

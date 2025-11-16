@@ -1,0 +1,10 @@
+1. Status (pre-update)
+Opening CI blocker signal
+2. Update tasks via structured payload
+{
+  "status": "ok",
+  "version": 4
+}
+Closing CI blocker signal
+3. Status (post-update)
+Mock agent completed

@@ -1,0 +1,150 @@
+✓ Run planloop status
+   $ planloop status --session cli-basics-20251116T205910Z-04e1 --json
+   ↪ 43 lines...
+
+✓ Read payload.json (6 lines)
+
+✓ Read pyproject.toml (85 lines)
+
+✓ glob: "src/**/*.py"
+   ↪ 29 files found
+
+✓ Read src/planloop/core/update.py (102 lines)
+
+✓ Read src/planloop/core/update_payload.py (59 lines)
+
+✓ Read src/planloop/cli.py (564 lines)
+
+✓ glob: "tests/**/*.py"
+   ↪ 29 files found
+
+✓ Read payload.json (6 lines)
+
+✓ Show payload.json
+   $ cat payload.json
+   ↪ 2 lines...
+
+✓ Run planloop update
+   $ planloop update --session cli-basics-20251116T205910Z-04e1 --file payload.json
+   ↪ 1 line...
+
+✓ Verify status after update
+   $ planloop status --session cli-basics-20251116T205910Z-04e1 --json
+   ↪ 43 lines...
+
+✓ Adjust payload for task 1 in-progress
+   $ python - <<'PY'
+   import json,os,sys
+   # Load existing payload
+   with open('payload.json','r',encoding='utf-8') as f:
+    data=json.load(f)...
+   ↪ 18 lines...
+
+✓ Read src/planloop/core/state.py (246 lines)
+
+✓ Read tests/test_cli_update.py (155 lines)
+
+✓ grep: "IN_PROGRESS" in src/planloop/core/state.py
+   ↪ 2 lines matched
+
+✓ Retry update to see error
+   $ planloop update --session cli-basics-20251116T205910Z-04e1 --file payload.json || echo
+   'COMMAND_FAILED'
+   ↪ 5 lines...
+
+✓ Check status again
+   $ planloop status --session cli-basics-20251116T205910Z-04e1 --json
+   ↪ 43 lines...
+
+✓ Prepare payload mark task 1 DONE
+   $ python - <<'PY'
+   import json
+   payload={'session':'cli-basics-20251116T205910Z-04e1','tasks':[{'id':1,'status':'DONE'}]}
+   open('payload.json','w').write(json.dumps(payload))
+   print(json.dumps(payload))...
+   ↪ 3 lines...
+
+✓ Check status after task 1 done
+   $ planloop status --session cli-basics-20251116T205910Z-04e1 --json
+   ↪ 43 lines...
+
+✓ Mark task 1 done
+   $ planloop update --session cli-basics-20251116T205910Z-04e1 --file payload.json
+   ↪ 5 lines...
+
+✓ Confirm task statuses
+   $ planloop status --session cli-basics-20251116T205910Z-04e1 --json
+   ↪ 43 lines...
+
+✓ Prepare payload set task 2 IN_PROGRESS
+   $ python - <<'PY'
+   import json
+   payload={'session':'cli-basics-20251116T205910Z-04e1','tasks':[{'id':2,'status':'IN_PROGRE
+   SS'}]}
+   open('payload.json','w').write(json.dumps(payload))...
+   ↪ 4 lines...
+
+✓ Check status task 2 in progress
+   $ planloop status --session cli-basics-20251116T205910Z-04e1 --json
+   ↪ 43 lines...
+
+✓ Apply IN_PROGRESS task 2
+   $ planloop update --session cli-basics-20251116T205910Z-04e1 --file payload.json
+   ↪ 5 lines...
+
+✓ grep: "cli-basics-20251116T205910Z-04e1" in **/state.json
+   ↪ No matches found
+
+Show raw state file lines if exists
+   $ cat /Users/honk/code/planloop/home/sessions/cli-basics-20251116T205910Z-04e1/state.json | grep
+   -n 'Write unit tests'
+   ↪ 2 lines...
+
+Inspect status vs payload
+   $ planloop status --session cli-basics-20251116T205910Z-04e1 --json | grep -n 'Write unit tests'
+   || cat payload.json
+   ↪ 3 lines...
+
+✓ Rewrite payload for task 2 IN_PROGRESS
+   $ python - <<'PY'
+   import json
+   payload={'session':'cli-basics-20251116T205910Z-04e1','tasks':[{'id':2,'status':'IN_PROGRE
+   SS'}]}
+   open('payload.json','w').write(json.dumps(payload))...
+   ↪ 4 lines...
+
+✓ Check status again
+   $ planloop status --session cli-basics-20251116T205910Z-04e1 --json
+   ↪ 43 lines...
+
+Apply update again
+   $ planloop update --session cli-basics-20251116T205910Z-04e1 --file payload.json || echo 'FAILED'
+
+   ↪ 5 lines...
+
+✓ Prepare payload mark task 2 DONE
+   $ python - <<'PY'
+   import json
+   payload={'session':'cli-basics-20251116T205910Z-04e1','tasks':[{'id':2,'status':'DONE'}]}
+   open('payload.json','w').write(json.dumps(payload))
+   print(json.dumps(payload))...
+   ↪ 3 lines...
+
+✓ Check status after completing task 2
+   $ planloop status --session cli-basics-20251116T205910Z-04e1 --json
+   ↪ 43 lines...
+
+✓ Mark task 2 done
+   $ planloop update --session cli-basics-20251116T205910Z-04e1 --file payload.json
+   ↪ 5 lines...
+
+✓ Confirm all tasks done
+   $ planloop status --session cli-basics-20251116T205910Z-04e1 --json
+   ↪ 43 lines...
+
+✓ Retry marking task 2 done
+   $ planloop update --session cli-basics-20251116T205910Z-04e1 --file payload.json
+   ↪ 5 lines...
+
+Session tasks progressed and all are DONE; status shows reason completed. No blockers encountered. Workflow finished.
+

@@ -1,0 +1,7 @@
+2025-11-16T21:10:57Z	run-start	agent=copilot workspace=/Users/honk/code/planloop session=cli-basics-20251116T210925Z-3c54
+2025-11-16T21:10:57Z	agent-config	model=gpt-5
+2025-11-16T21:11:06Z	status	reason=completed
+2025-11-16T21:11:07Z	commands-executed	status_calls=2
+2025-11-16T21:11:07Z	status	detected in output
+2025-11-16T21:11:07Z	final-state	session_state_not_found
+2025-11-16T21:11:07Z	run-end	status=completed

@@ -1,7 +1,7 @@
 """Schema export helpers for planloop."""
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 from .state import (
     ArtifactType,
@@ -15,17 +15,17 @@ from .state import (
 from .update_payload import UpdatePayload
 
 
-def state_schema() -> Dict[str, Any]:
+def state_schema() -> dict[str, Any]:
     """Return the JSON schema for SessionState."""
     return SessionState.model_json_schema()
 
 
-def update_schema() -> Dict[str, Any]:
+def update_schema() -> dict[str, Any]:
     """Return the JSON schema for update payloads."""
     return UpdatePayload.model_json_schema()
 
 
-def enum_reference() -> Dict[str, Any]:
+def enum_reference() -> dict[str, Any]:
     """Return the enum values agents care about."""
     return {
         "task_types": [t.value for t in TaskType],
@@ -37,7 +37,7 @@ def enum_reference() -> Dict[str, Any]:
     }
 
 
-def describe_payload() -> Dict[str, Any]:
+def describe_payload() -> dict[str, Any]:
     """Aggregate describe output for planloop agents."""
     return {
         "state_schema": state_schema(),

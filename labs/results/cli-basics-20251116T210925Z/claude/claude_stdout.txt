@@ -1,0 +1,6 @@
+All tasks are completed. The session status shows:
+- **reason**: "completed"
+- **Task 1** (Add hello command): DONE
+- **Task 2** (Write unit tests): DONE
+
+Both the hello command implementation (in `src/planloop/cli.py:547-552`) and the unit tests (in `tests/test_cli_hello.py`) were already in place. The tests pass successfully with 2 tests covering both the default greeting ("Hello, world!") and the named greeting ("Hello, Alice!").

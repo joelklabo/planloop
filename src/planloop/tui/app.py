@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import cast
 
 try:  # pragma: no cover - optional dependency guard
     from textual.app import App, ComposeResult
@@ -25,7 +26,7 @@ class SessionViewModel:
     signals: list[tuple[str, str]]
 
     @classmethod
-    def from_state(cls, state: SessionState) -> "SessionViewModel":
+    def from_state(cls, state: SessionState) -> SessionViewModel:
         tasks = [
             (str(task.id), task.title, task.status.value)
             for task in state.tasks
@@ -61,16 +62,16 @@ if TEXTUAL_AVAILABLE:  # pragma: no cover - UI layer
                 f"Now: {self.model.now_reason}",
                 id="summary",
             )
-            tasks = DataTable(id="tasks")
+            tasks: DataTable = DataTable(id="tasks")
             tasks.add_columns("ID", "Title", "Status")
             for row in self.model.tasks:
                 tasks.add_row(*row)
             yield tasks
 
-            signals = DataTable(id="signals")
+            signals: DataTable = DataTable(id="signals")
             signals.add_columns("Signal", "State")
             for row in self.model.signals:
-                signals.add_row(*row)
+                signals.add_row(*cast(tuple[str, str], row))
             yield signals
             yield Footer()
 

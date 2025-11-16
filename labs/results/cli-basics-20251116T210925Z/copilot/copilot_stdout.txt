@@ -1,0 +1,6 @@
+✓ Run planloop status for session
+   $ planloop status --session cli-basics-20251116T210925Z-3c54 --json
+   ↪ 43 lines...
+
+Session complete; no blockers and all tasks DONE. Provide final_summary or mark session done. Anything else needed?
+

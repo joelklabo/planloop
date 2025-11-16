@@ -1,0 +1,11 @@
+✓ Read payload.json (6 lines)
+
+✓ Read pyproject.toml (85 lines)
+
+Run planloop status for session
+   $ planloop status --session cli-basics-20251116T210748Z-710e --json || python -m planloop status
+   --session cli-basics-20251116T210748Z-710e --json
+   ↪ 43 lines...
+
+Status reason is completed; all tasks already DONE. No blockers and no active task to update. Workflow finished.
+

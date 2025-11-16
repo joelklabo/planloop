@@ -1,0 +1,45 @@
+{
+  "scenario": "cli-basics",
+  "session": "cli-basics-20251116T204206Z-f69c",
+  "agents": [
+    {
+      "name": "copilot",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T204206Z/copilot/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T204206Z/copilot/stderr.txt",
+      "compliance": {
+        "pass": true,
+        "score": 100.0,
+        "reasons": []
+      }
+    },
+    {
+      "name": "openai",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T204206Z/openai/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T204206Z/openai/stderr.txt",
+      "compliance": {
+        "pass": true,
+        "score": 100.0,
+        "reasons": []
+      }
+    },
+    {
+      "name": "claude",
+      "enabled": true,
+      "returncode": 0,
+      "message": "success",
+      "stdout": "labs/results/cli-basics-20251116T204206Z/claude/stdout.txt",
+      "stderr": "labs/results/cli-basics-20251116T204206Z/claude/stderr.txt",
+      "compliance": {
+        "pass": true,
+        "score": 100.0,
+        "reasons": []
+      }
+    }
+  ]
+}

@@ -1,8 +1,6 @@
 """Tests for planloop guide command."""
 from __future__ import annotations
 
-from pathlib import Path
-
 from typer.testing import CliRunner
 
 from planloop import cli

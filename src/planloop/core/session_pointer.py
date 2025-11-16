@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
 
 from ..home import CURRENT_SESSION_POINTER, initialize_home
 
@@ -16,7 +15,7 @@ def set_current_session(session_id: str) -> None:
     pointer_path().write_text(session_id, encoding="utf-8")
 
 
-def get_current_session() -> Optional[str]:
+def get_current_session() -> str | None:
     path = pointer_path()
     data = path.read_text(encoding="utf-8").strip()
     return data or None

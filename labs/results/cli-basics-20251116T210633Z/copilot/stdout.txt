@@ -1,0 +1,2 @@
+Running: copilot -p <prompt> --allow-all-tools --allow-all-paths --no-color --model gpt-5
+Copilot agent run complete. Check labs/results/cli-basics-20251116T210633Z/copilot/trace.log for details.

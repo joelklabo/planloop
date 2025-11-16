@@ -5,7 +5,16 @@ from datetime import datetime
 
 import pytest
 
-from planloop.core.state import Environment, Now, NowReason, PromptMetadata, SessionState, Task, TaskStatus, TaskType
+from planloop.core.state import (
+    Environment,
+    Now,
+    NowReason,
+    PromptMetadata,
+    SessionState,
+    Task,
+    TaskStatus,
+    TaskType,
+)
 from planloop.core.update import UpdateError, apply_update
 from planloop.core.update_payload import AddTaskInput, TaskStatusPatch, UpdatePayload
 
