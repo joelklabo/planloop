@@ -1,5 +1,8 @@
 # planloop
 
+[![CI](https://github.com/joelklabo/planloop/actions/workflows/ci.yml/badge.svg)](https://github.com/joelklabo/planloop/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/joelklabo/planloop/branch/main/graph/badge.svg)](https://codecov.io/gh/joelklabo/planloop)
+
 Agent-first local planning loop that keeps AI coders synced with CI signals
 using structured markdown plans. `docs/plans/plan.md` is the living backlog; update it
 before and after every commit so humans and agents stay aligned.
