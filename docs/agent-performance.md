@@ -1,23 +1,23 @@
 # 📊 Agent Performance Data
 
-**Total Test Runs:** 35
+**Total Test Runs:** 43
 
-**Latest Run:** `cli-basics-20251116T085040Z-6fc8`
+**Latest Run:** `cli-basics-20251116T204252Z-e038`
 
 
 ## Agent Compliance Rates
 
-![claude](https://img.shields.io/badge/claude-6.1%25-red)
-![copilot](https://img.shields.io/badge/copilot-5.9%25-red)
-![openai](https://img.shields.io/badge/openai-20.6%25-red)
+![claude](https://img.shields.io/badge/claude-22.0%25-red)
+![copilot](https://img.shields.io/badge/copilot-21.4%25-red)
+![openai](https://img.shields.io/badge/openai-33.3%25-red)
 
 ## Detailed Statistics
 
 | Agent | Runs | Passes | Fails | Pass Rate | Top Errors |
 |-------|------|--------|-------|-----------|------------|
-| claude | 33 | 2 | 31 | 6.1% | missing status-after (18), missing update (14) |
-| copilot | 34 | 2 | 32 | 5.9% | missing status-after (17), missing update (16) |
-| openai | 34 | 7 | 27 | 20.6% | trace log missing (14), missing status-after (13) |
+| claude | 41 | 9 | 32 | 22.0% | missing status-after (18), trace log missing (14) |
+| copilot | 42 | 9 | 33 | 21.4% | missing status-after (17), trace log missing (16) |
+| openai | 42 | 14 | 28 | 33.3% | trace log missing (15), missing status-after (13) |
 
 ## Notes
 

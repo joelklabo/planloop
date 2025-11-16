@@ -130,7 +130,21 @@ else
   log_entry "signal-open" "none"
 fi
 
-echo "2. Update tasks via structured payload"
+# If signal was injected and we should close it (per handshake prompt), close it NOW before updating
+if [ "$inject_signal" -eq 1 ]; then
+  if [ "$ignore_signal" -eq 0 ] && [ "$should_close_signal" -eq 1 ]; then
+    close_signal
+    # Rerun status after closing blocker to verify it's clear
+    echo "2. Status (after closing blocker)"
+    python3 -m planloop.cli status --session "$session" >/tmp/status-after-close.json
+    reason=$(read_now_reason /tmp/status-after-close.json)
+    log_entry "status-after-close" "reason=$reason"
+  else
+    log_entry "signal-close-skipped" "id=$signal_id"
+  fi
+fi
+
+echo "3. Update tasks via structured payload"
 cat <<EOF >/tmp/update.json
 {
   "session": "$session",
@@ -152,15 +166,7 @@ EOF
 python3 -m planloop.cli update --session "$session" --file /tmp/update.json
 log_entry "update" "status=completed"
 
-if [ "$inject_signal" -eq 1 ]; then
-  if [ "$ignore_signal" -eq 0 ]; then
-    close_signal
-  else
-    log_entry "signal-close-skipped" "id=$signal_id"
-  fi
-fi
-
-echo "3. Status (post-update)"
+echo "4. Status (post-update)"
 if [ "$should_status_after" -eq 1 ] ; then
   python3 -m planloop.cli status --session "$session" >/tmp/status-after.json
   reason=$(read_now_reason /tmp/status-after.json)
