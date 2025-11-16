@@ -84,3 +84,10 @@ human babysitting and provide meaningful status output.
 ## Next Steps
 - Validate this design with stakeholders (human operators + agent authors).
 - Once agreed, translate P3.1–P3.3 into plan tasks for v1.6 implementation.
+
+## Implementation notes
+- Queue metadata helpers (`.lock_queue/`, entry JSON, TTL pruning) now live in `src/planloop/core/lock.py`.
+- `planloop status` includes a `lock_queue` section describing pending entries and agent position, so humans and agents can watch the queue without clobbering state.
+- Queue events are logged as part of every lock acquisition/release, and stale entries are pruned automatically so impatient agents get accurate positions.
+- `DeadlockTracker` now observes the queue head and emits the `queue_stall` signal when the same agent stalls the lock long enough to justify intervention (`src/planloop/core/deadlock.py`), which triggers the same CI-blocker handling flow described in the handshake.
+- The selftest CI blocker scenario opens a blocker, closes it, reruns `planloop status`, and confirms `now.reason` returns to `task`, proving the "close blocker → rerun status → update tasks" loop works end-to-end before any plan edits.

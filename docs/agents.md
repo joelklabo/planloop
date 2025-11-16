@@ -6,7 +6,7 @@ the automated prompt lab still need implementation. Use this guide plus
 `docs/plan.md` to stay aligned with the workflow humans expect.
 
 ## Source of truth
-- `docs/plan.md` – the canonical backlog. Update task statuses there before and
+- `docs/plans/plan.md` – the canonical backlog. Update task statuses there before and
   after every commit, including the commit SHA when you mark items `DONE`.
 - `docs/agents.md` (this file) – the distilled rules you should internalize before
   coding. Re-run `planloop guide --target agents-md --apply` when the prompts or
@@ -18,12 +18,13 @@ the automated prompt lab still need implementation. Use this guide plus
    - `ci_blocker` → fix the signal before touching tasks.
    - `task` → implement the referenced task using TDD.
    - `waiting_on_lock` → sleep and retry `status`.
-2. **Practice TDD**: write/update tests, watch them fail, implement, rerun
+2. **Don’t wait for optional direction** — once a task is done (or a signal is cleared), pick the next `Status: TODO` item from `docs/plan.md`, mark it `IN_PROGRESS`, and keep going. Treat the plan as your instruction set; do not ask “what should I do next?” or seek confirmation before acting, even while processing blockers—just handle the signal, rerun status, and move to the next step autonomously unless a human explicitly interrupts you.
+3. **Practice TDD**: write/update tests, watch them fail, implement, rerun
    tests, then refactor.
-3. **Commit often**: each task in `docs/plan.md` should fit in a single commit.
+4. **Commit often**: each task in `docs/plans/plan.md` should fit in a single commit.
    If work balloons, split the task in the plan before writing code.
-4. **Never** commit failing tests. Local WIP stays local.
-5. **Update the plan**: mark tasks `IN_PROGRESS` when you start, add context
+5. **Never** commit failing tests. Local WIP stays local.
+6. **Update the plan**: mark tasks `IN_PROGRESS` when you start, add context
    while working, and record the commit SHA + summary when finished.
 
 ## Key commands
@@ -70,6 +71,6 @@ the automated prompt lab still need implementation. Use this guide plus
 ## Getting started checklist
 1. Create/activate a Python 3.11+ virtualenv and `pip install -e .[dev]`.
 2. Run `planloop guide --apply` if the workflow changed.
-3. Pick the next `Status: TODO` task from `docs/plan.md`, mark it
+3. Pick the next `Status: TODO` task from `docs/plans/plan.md`, mark it
    `IN_PROGRESS`, follow the workflow contract, and keep looping until the plan
    is empty.

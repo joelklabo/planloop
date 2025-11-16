@@ -552,7 +552,7 @@ starts in `Status: TODO` and depends on the tasks above it.
   enforcement.
 - **Dependencies:** Task P1.
 
-#### Task P3 – Multi-agent queue research *(Status: TODO)*
+#### Task P3 – Multi-agent queue research *(Status: DONE – commit TBD "Multi-agent queue research (Task P3)")*
 - **Scope:** Document approaches for fair locking / queueing so multiple agents
   can share sessions without thrashing (`deadlock` + `waiting_on_lock` loops).
 - **Deliverables:** Design doc or updated plan section summarizing options,
@@ -560,8 +560,13 @@ starts in `Status: TODO` and depends on the tasks above it.
 - **Acceptance Criteria:** Clear proposal ready for implementation, including
   potential config flags and telemetry needs.
 - **Dependencies:** Task F1 (locks), Task E3 (deadlock).
- - **Status Notes:** See `docs/multi-agent-research.md` for the current
-  proposal covering queue metadata, status surfacing, and follow-up tasks.
+- **Status Notes:** Queue metadata helpers, TTL pruning, queue-stall telemetry, and CLI
+  status exposure are now shipping so the lock queue reports pending agents and
+  positions; the `DeadlockTracker` now watches the queue head, emits a `queue_stall`
+  signal when the same agent stalls the lock, and the self-test CI blocker scenario
+  proves we close blockers, rerun `status`, and resume task work. See
+  `src/planloop/core/lock.py`, `src/planloop/core/deadlock.py`, and
+  `docs/multi-agent-research.md` for implementation notes.
 
 #### Task P4 – Automated agent lab research *(Status: DONE – commit TBD "Document agent lab iteration (Task P4)")*
 - **Scope:** Document the automated iteration lab for Copilot/OpenAI/Claude and describe how we’ll measure compliance, iterate prompts, and capture references.
@@ -573,13 +578,14 @@ starts in `Status: TODO` and depends on the tasks above it.
 ---
 
 ## Next Steps
-1. Complete Task P4 by collecting/annotating real-world references on automated
-   prompt labs and codifying how we’ll measure agent compliance for Copilot,
-   OpenAI, and Claude.
-2. Continue updating this plan as tasks close—set items `IN_PROGRESS` when you
-   start, and record the commit SHA + summary when `DONE`.
+1. Continue updating this plan as tasks close—set items `IN_PROGRESS` when you start, and record the commit SHA + summary when `DONE`.
+2. Monitor the prompt lab baseline (`docs/reference/prompt_lab_results.md`) and iterate prompts when new agent behaviors emerge.
+3. Future v1.6+ work will focus on queue fairness enhancements (see `docs/reference/multi-agent-research.md`).
 
 ## Documentation status
-- `docs/plan.md` – fully updated backlog, including Milestone 14 and the new P4 research note. No outstanding TODOs.
-- `README.md` / `docs/agents.md` – describe the CLI safe modes, logging/debug improvements, and prompt lab workflow; no incomplete sections.
-- `docs/multi-agent-research.md` – houses the queue design and automated lab research (Tasks P3 & P4) and is ready for implementation reference.
+- `docs/plans/plan.md` (this file) – fully updated backlog through Milestone 14, P4 now includes consolidated lab details
+- `docs/agents.md` – agent workflow contract and command reference
+- `docs/reference/multi-agent-research.md` – queue fairness design and telemetry notes
+- `docs/reference/prompt_lab_results.md` – baseline compliance results
+- `docs/reference/prompt_lab_run_report.md` – detailed run history and adapter evolution
+- `README.md` – project overview, installation, and workflow quickstart
