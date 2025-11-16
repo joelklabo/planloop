@@ -307,6 +307,30 @@ def sessions_info(session: Optional[str] = typer.Argument(None)) -> None:
         raise typer.Exit(code=1) from exc
 
 
+@sessions_app.command("create")
+def sessions_create(
+    name: str = typer.Option(..., "--name", help="Session name (used for ID generation)"),
+    title: Optional[str] = typer.Option(None, "--title", help="Human-readable title (defaults to name)"),
+    project_root: Optional[Path] = typer.Option(None, "--project-root", help="Project root path (defaults to current directory)"),
+) -> None:
+    """Create a new session."""
+    from .core.session import create_session
+    try:
+        title_value = title or name
+        root = project_root or Path.cwd()
+        state = create_session(name=name, title=title_value, project_root=root)
+        typer.echo(json.dumps({
+            "session": state.session,
+            "name": state.name,
+            "title": state.title,
+            "project_root": state.project_root,
+            "status": "created"
+        }, indent=2))
+    except Exception as exc:
+        typer.echo(f"Error: Failed to create session: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+
+
 @sessions_app.command("current")
 def sessions_current() -> None:
     """Show the current session."""
