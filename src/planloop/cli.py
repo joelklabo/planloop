@@ -232,9 +232,9 @@ def alert(
     id: str = typer.Option(..., "--id", help="Signal ID"),
     level: SignalLevel = typer.Option(SignalLevel.BLOCKER, "--level", help="Signal level"),
     type_: SignalType = typer.Option(SignalType.CI, "--type", help="Signal type"),
-    kind: str = typer.Option(..., "--kind", help="Signal kind"),
-    title: str = typer.Option(..., "--title", help="Signal title"),
-    message: str = typer.Option(..., "--message", help="Signal message"),
+    kind: Optional[str] = typer.Option(None, "--kind", help="Signal kind"),
+    title: Optional[str] = typer.Option(None, "--title", help="Signal title"),
+    message: Optional[str] = typer.Option(None, "--message", help="Signal message"),
     link: Optional[str] = typer.Option(None, "--link", help="Link"),
     close: bool = typer.Option(False, "--close", help="Close signal"),
 ) -> None:
@@ -247,6 +247,13 @@ def alert(
                 log_session_event(session_dir, f"Signal {id} closed")
                 _log_trace_event("signal-close", f"id={id}")
             else:
+                # Validate required fields when opening a signal
+                if not kind:
+                    raise PlanloopError("--kind is required when opening a signal")
+                if not title:
+                    raise PlanloopError("--title is required when opening a signal")
+                if not message:
+                    raise PlanloopError("--message is required when opening a signal")
                 signal = Signal(
                     id=id,
                     type=type_,
@@ -263,6 +270,7 @@ def alert(
             save_session_state(session_dir, state, message="Signal update")
         typer.echo(json.dumps({"status": "ok"}, indent=2))
     except (PlanloopError, ValueError) as exc:
+        typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
 
 
