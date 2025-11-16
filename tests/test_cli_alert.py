@@ -22,7 +22,7 @@ def test_alert_opens_signal(monkeypatch, tmp_path):
     home = setup_session(tmp_path)
     monkeypatch.setenv("PLANLOOP_HOME", str(home))
     state = create_session("Test", "Demo", project_root=Path("/repo"))
-    save_session_state(home / "sessions" / state.session, state)
+    save_session_state(home / "sessions" / state.session, state, message="setup")
 
     result = runner.invoke(
         cli.app,
@@ -50,7 +50,7 @@ def test_alert_close(monkeypatch, tmp_path):
     monkeypatch.setenv("PLANLOOP_HOME", str(home))
     state = create_session("Test", "Demo", project_root=Path("/repo"))
     state.signals = []
-    save_session_state(home / "sessions" / state.session, state)
+    save_session_state(home / "sessions" / state.session, state, message="setup")
 
     runner.invoke(
         cli.app,

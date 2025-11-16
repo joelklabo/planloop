@@ -5,6 +5,12 @@ from datetime import datetime
 
 import pytest
 
+try:  # pragma: no cover - optional dev dependency
+    from hypothesis import given, strategies as st
+except ImportError:  # pragma: no cover
+    given = None  # type: ignore
+    st = None  # type: ignore
+
 from planloop.core.state import (
     Artifact,
     ArtifactType,
@@ -184,3 +190,20 @@ def test_validate_state_now_mismatch():
 
     with pytest.raises(StateValidationError):
         validate_state(state)
+
+
+if st is not None:
+
+    @given(st.lists(st.integers(min_value=1, max_value=20), min_size=1, max_size=5, unique=True))
+    def test_validate_state_accepts_unique_task_ids(ids):
+        state = minimal_state()
+        state.tasks = [Task(id=task_id, title=f"Task {task_id}", type=TaskType.CHORE) for task_id in ids]
+        state.now = state.compute_now()
+
+        # No error should be raised for unique IDs with no dependencies
+        validate_state(state)
+
+else:  # pragma: no cover - executed only without hypothesis installed
+
+    def test_validate_state_accepts_unique_task_ids():
+        pytest.skip("hypothesis not installed")

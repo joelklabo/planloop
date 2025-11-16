@@ -1,51 +1,72 @@
 # planloop – Agent Guide
 
-Welcome! This repository is currently empty except for planning artifacts. Our
-source of truth for implementation work lives in `docs/plan.md`, which breaks
-the v1.5 specification into milestones populated with commit-sized tasks. Read
-that document before you start coding—every task lists scope, deliverables,
-acceptance criteria, and dependencies.
+`planloop` is halfway through its v1.5 roadmap. The CLI, registry, prompts, TUI,
+web view, self-test harness, and history helpers exist; logging and safe modes
+still need implementation. Use this guide plus `docs/plan.md` to stay aligned
+with the workflow humans expect.
 
-## Mission
-Build `planloop`, a local tool that keeps AI coding agents in a strict,
-CI-aware loop driven by `state.json` + `PLAN.md` pairs stored under
-`PLANLOOP_HOME`. The end goal is a deterministic CLI/TUI/Web experience where
-agents always:
-1. Ask `planloop status` to know what to do next.
-2. Clear blocking signals (CI, lint, custom scripts) before working on tasks.
-3. Update the plan exclusively through structured payloads (`planloop update`).
-4. Respect locks and versioning so no work happens on stale state.
+## Source of truth
+- `docs/plan.md` – the canonical backlog. Update task statuses there before and
+  after every commit, including the commit SHA when you mark items `DONE`.
+- `AGENTS.md` (this file) – the distilled rules you should internalize before
+  coding. Re-run `planloop guide --target AGENTS.md --apply` when the prompts or
+  workflow change.
 
-## Ground Rules
-- Treat `docs/plan.md` as the queue. Update task status there before/after each
-  commit so humans and agents stay aligned.
-- Keep changes atomic. If a task feels too big for one commit, split it inside
-  the plan before touching code.
-- Tests accompany every behavior that could silently regress (state validation,
-  locking, CLI commands, rendering, etc.).
-- PLANLOOP_HOME must never leak secrets—assume sessions live outside the repo.
+## Workflow contract
+1. **Always** call `planloop status --json` to decide the next action. Respect
+   `now.reason`:
+   - `ci_blocker` → fix the signal before touching tasks.
+   - `task` → implement the referenced task using TDD.
+   - `waiting_on_lock` → sleep and retry `status`.
+2. **Practice TDD**: write/update tests, watch them fail, implement, rerun
+   tests, then refactor.
+3. **Commit often**: each task in `docs/plan.md` should fit in a single commit.
+   If work balloons, split the task in the plan before writing code.
+4. **Never** commit failing tests. Local WIP stays local.
+5. **Update the plan**: mark tasks `IN_PROGRESS` when you start, add context
+   while working, and record the commit SHA + summary when finished.
 
-## Getting Started
-1. **Read the plan:** `docs/plan.md` → Milestone 0 (Tasks A1–A4) is the current
-   focus since the repo has no code yet.
-2. **Follow task ordering:** Later milestones depend on the foundations, so
-   don't skip ahead without updating the plan.
-3. **Document progress:** When you finish a task, mark it as done in the plan
-   and note any context or follow-ups.
+## Key commands
+- `planloop status --json` → always the first step; surfaces tasks, signals,
+  lock info, and agent instructions.
+- `planloop update --file payload.json` → edit tasks/context via validated JSON
+  payloads instead of editing PLAN.md directly.
+- Safe modes:
+  - `planloop update --dry-run` → preview state changes without writing.
+  - `planloop update --no-plan-edit` → only change task statuses.
+  - `planloop update --strict` → reject payloads with unknown fields.
+  - Configure defaults in `~/.planloop/config.yml` under `safe_modes.update`
+    (e.g., enforce `no_plan_edit: true` for all agents).
+- `planloop alert ...` → open/close CI, lint, bench, or system signals that
+  gate the loop.
+- `planloop sessions list/info`, `planloop search`, `planloop templates`,
+  `planloop reuse` → discover prior work or bootstrap new sessions from
+  templates.
+- `planloop guide --apply` → refresh this file with the latest contract.
+- `planloop view` / `planloop web` → read-only dashboards (require `textual`
+  and `fastapi`+`uvicorn` respectively). Both commands detect missing deps and
+  tell you what to install.
+- `planloop snapshot` / `planloop restore <sha>` → manage per-session history
+  (requires git and `history.enabled: true` in `~/.planloop/config.yml`).
+- `planloop selftest --json` → run the fake-agent harness. It creates a
+  temporary PLANLOOP_HOME, executes clean/CI/dependency scenarios, and reports
+  whether the loop still behaves end-to-end.
 
-## Key Directories (as planned)
-- `src/planloop/`: core package (CLI, state machine, prompts loader, etc.).
-- `tests/`: pytest suite (unit + integration + self-test harness).
-- `docs/`: planning artifacts (this file + plan) and future design notes.
+## History + snapshots quickstart
+1. Run `planloop status` once to create `PLANLOOP_HOME` (defaults to
+   `~/.planloop`).
+2. Edit `config.yml` there, set `history.enabled: true`.
+3. Work through tasks; every call to `save_session_state` makes a git commit in
+   each session directory, using the generated `.gitignore` to ignore logs and
+   artifacts.
+4. Take snapshots before risky work: `planloop snapshot --session <session>`.
+5. Roll back with `planloop restore <sha> --session <session>` – this resets the
+   session repo, refreshes the registry, and revalidates the plan. Rerun tests
+   immediately after restoring.
 
-## High-Level Roadmap
-- **Milestone 0:** bootstrap repo + packaging + placeholder CLI.
-- **Milestone 1:** PLANLOOP_HOME discovery and initialization scaffolding.
-- **Milestone 2:** Session state models and PLAN.md renderer.
-- **Milestones 3–13:** Sessions lifecycle, state machine, lock handling, CLI
-  commands, prompts, TUI/Web dashboards, history/snapshots, self-test harness,
-  logging, and safe-mode options.
-
-Each milestone in `docs/plan.md` specifies the required functionality, so treat
-this file as high-level orientation and keep the plan updated for actionable
-work.
+## Getting started checklist
+1. Create/activate a Python 3.11+ virtualenv and `pip install -e .[dev]`.
+2. Run `planloop guide --apply` if the workflow changed.
+3. Pick the next `Status: TODO` task from `docs/plan.md`, mark it
+   `IN_PROGRESS`, follow the workflow contract, and keep looping until the plan
+   is empty.

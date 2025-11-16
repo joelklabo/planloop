@@ -89,3 +89,12 @@ def test_parse_front_matter_round_trip():
     assert front["session"] == state.session
     assert front["prompt_set"] == state.prompts.set
     assert "# Plan: Demo Plan" in body
+
+
+def test_parse_front_matter_handles_missing_header():
+    text = "# No front matter\n## Section"
+
+    front, body = parse_front_matter(text)
+
+    assert front == {}
+    assert body.startswith("# No front matter")

@@ -47,11 +47,14 @@ def _add_new_task(state: SessionState, add: AddTaskInput, new_id: int) -> Task:
     return task
 
 
-def apply_update(state: SessionState, payload: UpdatePayload) -> SessionState:
+def validate_update_payload(state: SessionState, payload: UpdatePayload) -> None:
     if payload.session and payload.session != state.session:
         raise UpdateError("Payload session does not match state")
     if payload.last_seen_version and payload.last_seen_version != str(state.version):
         raise UpdateError("Version mismatch")
+
+
+def apply_update(state: SessionState, payload: UpdatePayload) -> SessionState:
 
     id_to_task = {task.id: task for task in state.tasks}
 
@@ -88,4 +91,4 @@ def apply_update(state: SessionState, payload: UpdatePayload) -> SessionState:
     return state
 
 
-__all__ = ["apply_update", "UpdateError"]
+__all__ = ["apply_update", "UpdateError", "validate_update_payload"]

@@ -7,21 +7,26 @@ implementation lands.
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import Optional
 
 import typer
 
-from .core import describe, registry
+from .core import describe, registry, selftest as selftest_module
 from . import guide as guide_utils
-from .web.server import app as web_app
+from .cli_utils import format_log_tail
+from .history import create_snapshot, restore_snapshot
+from .logging_utils import log_event, log_session_event
 from .tui import TEXTUAL_AVAILABLE, PlanloopViewApp, SessionViewModel
 from .core.lock import acquire_lock, get_lock_status
-from .core.session import save_session_state
+from .core.session import refresh_registry, save_session_state
 from .core.session_pointer import get_current_session
 from .core.signals import close_signal, open_signal
 from .core.state import SessionState, Signal, SignalLevel, SignalType, validate_state
-from .core.update import UpdateError, apply_update
+from .core.update import UpdateError, apply_update, validate_update_payload
+from .core.diff import state_diff
+from .config import safe_mode_defaults
 from .core.update_payload import UpdatePayload
 from .home import SESSIONS_DIR, initialize_home
 
@@ -32,6 +37,17 @@ app.add_typer(sessions_app, name="sessions")
 
 class PlanloopError(RuntimeError):
     """Base error for CLI failures."""
+
+
+def _emit_selftest_result(payload: dict, json_output: bool) -> None:
+    if json_output:
+        typer.echo(json.dumps(payload, indent=2))
+        return
+    typer.echo(f"Self-test status: {payload['status']}")
+    for scenario in payload.get("scenarios", []):
+        typer.echo(
+            f"- {scenario['name']}: {scenario['status']} ({scenario['detail']})"
+        )
 
 
 def _load_session(session_id: Optional[str]) -> tuple[SessionState, Path]:
@@ -60,10 +76,12 @@ def status(session: Optional[str] = typer.Option(None, help="Session ID"), json_
         payload = {
             "session": state.session,
             "now": state.now.model_dump(),
-            "tasks": [task.model_dump() for task in state.tasks],
-            "signals": [signal.model_dump() for signal in state.signals],
+            "tasks": [task.model_dump(mode="json") for task in state.tasks],
+            "signals": [signal.model_dump(mode="json") for signal in state.signals],
             "lock_info": lock_status.info.to_dict() if lock_status.info else None,
+            "safe_mode_defaults": safe_mode_defaults(),
         }
+        log_session_event(session_dir, "Status command executed")
         typer.echo(json.dumps(payload, indent=2))
     except PlanloopError as exc:
         raise typer.Exit(code=1) from exc
@@ -73,13 +91,20 @@ def status(session: Optional[str] = typer.Option(None, help="Session ID"), json_
 def update(
     session: Optional[str] = typer.Option(None, help="Session ID"),
     file: Optional[Path] = typer.Option(None, "--file", "-f", help="Path to payload JSON"),
+    dry_run: Optional[bool] = typer.Option(None, "--dry-run/--no-dry-run", help="Preview changes without writing"),
+    no_plan_edit: Optional[bool] = typer.Option(None, "--no-plan-edit/--allow-plan-edit", help="Reject structural edits"),
+    strict: Optional[bool] = typer.Option(None, "--strict/--allow-extra-fields", help="Reject payloads with unknown fields"),
 ) -> None:
     """Apply a structured update to the session."""
     data = file.read_text(encoding="utf-8") if file else typer.get_text_stream("stdin").read()
     if not data.strip():
         raise typer.Exit(code=1)
     try:
-        payload = UpdatePayload.model_validate_json(data)
+        raw_payload = json.loads(data)
+    except json.JSONDecodeError as exc:
+        raise typer.Exit(code=1) from exc
+    try:
+        payload = UpdatePayload.model_validate(raw_payload)
     except Exception as exc:  # ValidationError
         raise typer.Exit(code=1) from exc
     target_session = session or payload.session
@@ -87,11 +112,44 @@ def update(
         state, session_dir = _load_session(target_session)
     except PlanloopError as exc:
         raise typer.Exit(code=1) from exc
+    defaults = safe_mode_defaults()
+    dry_run_enabled = defaults["dry_run"] if dry_run is None else dry_run
+    no_plan_edit_enabled = defaults["no_plan_edit"] if no_plan_edit is None else no_plan_edit
+    strict_enabled = defaults["strict"] if strict is None else strict
     try:
+        if strict_enabled:
+            allowed = {
+                "session",
+                "last_seen_version",
+                "tasks",
+                "add_tasks",
+                "update_tasks",
+                "context_notes",
+                "next_steps",
+                "artifacts",
+                "agent",
+                "final_summary",
+            }
+            unknown = set(raw_payload.keys()) - allowed
+            if unknown:
+                raise UpdateError(f"Unknown fields in payload: {', '.join(sorted(unknown))}")
+        if no_plan_edit_enabled and (payload.add_tasks or payload.update_tasks or payload.context_notes or payload.next_steps or payload.artifacts):
+            raise UpdateError("Structural edits are disabled by --no-plan-edit")
+        validate_update_payload(state, payload)
+        if dry_run_enabled:
+            state_copy = state.model_copy(deep=True)
+            apply_update(state_copy, payload)
+            diff = state_diff(state, state_copy)
+            typer.echo(json.dumps({"dry_run": diff}, indent=2))
+            return
         with acquire_lock(session_dir, operation="update"):
             state = apply_update(state, payload)
             validate_state(state)
-            save_session_state(session_dir, state)
+            save_session_state(session_dir, state, message="Update command")
+            log_session_event(
+                session_dir,
+                f"Update applied (add_tasks={len(payload.add_tasks)}, patches={len(payload.tasks)})",
+            )
     except UpdateError as exc:
         raise typer.Exit(code=1) from exc
     typer.echo(json.dumps({"status": "ok", "version": state.version}, indent=2))
@@ -115,6 +173,7 @@ def alert(
         with acquire_lock(session_dir, operation="alert"):
             if close:
                 close_signal(state, id)
+                log_session_event(session_dir, f"Signal {id} closed")
             else:
                 signal = Signal(
                     id=id,
@@ -126,8 +185,9 @@ def alert(
                     link=link,
                 )
                 open_signal(state, signal=signal)
+                log_session_event(session_dir, f"Signal {id} opened ({level.value})")
             validate_state(state)
-            save_session_state(session_dir, state)
+            save_session_state(session_dir, state, message="Signal update")
         typer.echo(json.dumps({"status": "ok"}, indent=2))
     except (PlanloopError, ValueError) as exc:
         raise typer.Exit(code=1) from exc
@@ -166,6 +226,36 @@ def sessions_info(session: Optional[str] = typer.Argument(None)) -> None:
     info = summary.to_dict()
     info["path"] = str(home / SESSIONS_DIR / target)
     typer.echo(json.dumps(info, indent=2))
+
+
+@app.command()
+def debug(
+    session: Optional[str] = typer.Option(None, help="Session ID"),
+    logs: bool = typer.Option(True, "--logs/--no-logs", help="Include recent logs"),
+) -> None:
+    """Print debug information for a session."""
+    try:
+        state, session_dir = _load_session(session)
+        log_path = session_dir / "logs" / "planloop.log"
+        log_tail = ""
+        if logs and log_path.exists():
+            lines = log_path.read_text(encoding="utf-8").splitlines()
+            log_tail = format_log_tail(lines)
+        lock_status = get_lock_status(session_dir)
+        payload = {
+            "session": state.session,
+            "path": str(session_dir),
+            "state_json": str(session_dir / "state.json"),
+            "plan_md": str(session_dir / "PLAN.md"),
+            "lock_info": lock_status.info.to_dict() if lock_status.info else None,
+            "now": state.now.model_dump(),
+            "open_signals": [signal.model_dump(mode="json") for signal in state.signals if signal.open],
+            "logs": log_tail,
+        }
+        log_session_event(session_dir, "Debug command inspected session")
+        typer.echo(json.dumps(payload, indent=2))
+    except PlanloopError as exc:
+        raise typer.Exit(code=1) from exc
 
 
 @app.command()
@@ -241,24 +331,72 @@ def guide(
 @app.command()
 def web(session: Optional[str] = typer.Option(None, help="Session ID")) -> None:
     try:
+        from .web import server as web_server
+    except ImportError as exc:  # pragma: no cover
+        typer.echo("planloop web server module is unavailable.")
+        raise typer.Exit(code=1) from exc
+    if not getattr(web_server, "FASTAPI_AVAILABLE", False):  # pragma: no cover
+        typer.echo("fastapi is not installed. Run `pip install fastapi fastapi[standard]`.")
+        raise typer.Exit(code=1)
+    try:
         import uvicorn
     except ImportError as exc:  # pragma: no cover
         typer.echo("uvicorn not installed. Run `pip install uvicorn` to use planloop web.")
         raise typer.Exit(code=1) from exc
-    try:
-        from .web import server as web_server
-        if not getattr(web_server, "FASTAPI_AVAILABLE", False):
-            raise ImportError
-    except ImportError:
-        typer.echo("fastapi is not installed. Run `pip install fastapi fastapi[standard]`.")
-        raise typer.Exit(code=1)
-    uvicorn.run(web_app, host="127.0.0.1", port=8765)
+
+    app = web_server.get_app()
+    uvicorn.run(app, host="127.0.0.1", port=8765)
 
 
 @app.command()
-def selftest() -> None:
-    """Run planloop's self-test harness (stub)."""
-    raise NotImplementedCLIError(_stub_message("selftest"))
+def snapshot(
+    session: Optional[str] = typer.Option(None, help="Session ID"),
+    note: str = typer.Option("Manual snapshot", "--note"),
+) -> None:
+    try:
+        _, session_dir = _load_session(session)
+        sha = create_snapshot(session_dir, note)
+        log_session_event(session_dir, f"Snapshot created: {sha}")
+    except (PlanloopError, RuntimeError) as exc:
+        raise typer.Exit(code=1) from exc
+    typer.echo(json.dumps({"snapshot": sha}, indent=2))
+
+
+@app.command()
+def restore(
+    snapshot_ref: str = typer.Argument(..., help="Snapshot commit"),
+    session: Optional[str] = typer.Option(None, help="Session ID"),
+) -> None:
+    try:
+        _, session_dir = _load_session(session)
+        restore_snapshot(session_dir, snapshot_ref)
+        restored_state = refresh_registry(session_dir)
+        validate_state(restored_state)
+        log_session_event(session_dir, f"Restored snapshot {snapshot_ref}")
+    except (PlanloopError, RuntimeError, ValueError) as exc:
+        raise typer.Exit(code=1) from exc
+    typer.echo(json.dumps({"restored": snapshot_ref}, indent=2))
+
+
+@app.command()
+def selftest(json_output: bool = typer.Option(True, "--json/--no-json", help="JSON output")) -> None:
+    """Run planloop's self-test harness."""
+    try:
+        results = selftest_module.run_selftest()
+    except selftest_module.SelfTestFailure as exc:
+        payload = {
+            "status": "failed",
+            "scenarios": [result.to_dict() for result in exc.results],
+        }
+        log_event("Self-test failed", level=logging.ERROR)
+        _emit_selftest_result(payload, json_output)
+        raise typer.Exit(code=1) from exc
+    payload = {
+        "status": "ok",
+        "scenarios": [result.to_dict() for result in results],
+    }
+    log_event("Self-test completed successfully")
+    _emit_selftest_result(payload, json_output)
 
 
 def main() -> None:

@@ -27,7 +27,7 @@ def mark_template(home: Path, session_id: str, tag: str | None = None) -> None:
     state.done = True
     if tag:
         state.tags.append(tag)
-    save_session_state(session_dir, state)
+    save_session_state(session_dir, state, message="setup")
 
 
 def test_templates_lists_done_sessions(monkeypatch, tmp_path):

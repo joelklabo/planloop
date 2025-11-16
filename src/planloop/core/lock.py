@@ -9,6 +9,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator
 
+import logging
+
+from ..logging_utils import log_session_event
+
 LOCK_FILE = ".lock"
 LOCK_INFO_FILE = ".lock_info"
 DEFAULT_TIMEOUT = 30
@@ -54,6 +58,7 @@ def acquire_lock(session_dir: Path, operation: str, timeout: int = DEFAULT_TIMEO
             os.close(fd)
             info = LockInfo(held_by=held_by, since=time.time(), operation=operation)
             info_path.write_text(json.dumps(info.to_dict()), encoding="utf-8")
+            log_session_event(session_dir, f"Lock acquired for {operation}")
             break
         except FileExistsError:
             if timeout == 0:
@@ -61,6 +66,7 @@ def acquire_lock(session_dir: Path, operation: str, timeout: int = DEFAULT_TIMEO
             if time.time() - start > timeout:
                 info = LockInfo.from_file(info_path)
                 holder = info.held_by if info else "unknown"
+                log_session_event(session_dir, f"Lock timeout for {operation}; held by {holder}", level=logging.WARNING)
                 raise TimeoutError(f"Lock held by {holder} longer than {timeout}s")
             time.sleep(SLEEP_INTERVAL)
 
@@ -71,6 +77,7 @@ def acquire_lock(session_dir: Path, operation: str, timeout: int = DEFAULT_TIMEO
             lock_path.unlink()
         if info_path.exists():
             info_path.unlink()
+        log_session_event(session_dir, f"Lock released for {operation}")
 
 
 def get_lock_status(session_dir: Path) -> LockStatus:

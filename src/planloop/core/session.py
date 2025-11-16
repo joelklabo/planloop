@@ -14,6 +14,8 @@ from ..home import (
     SESSIONS_DIR,
     initialize_home,
 )
+from ..history import commit_state
+from ..logging_utils import log_session_event
 
 
 def _slugify(text: str) -> str:
@@ -56,23 +58,37 @@ def create_session(name: str, title: str, project_root: Path) -> SessionState:
     session_dir.mkdir(parents=True, exist_ok=True)
 
     state = _initial_state(session_id, name, title, project_root)
-    save_session_state(session_dir, state)
+    save_session_state(session_dir, state, message="Initial session state")
 
     (home / CURRENT_SESSION_POINTER).write_text(session_id, encoding="utf-8")
     DeadlockTracker().persist(session_dir / "deadlock.json")
+    log_session_event(session_dir, f"Session created: {session_id}")
 
     return state
 
 
-def save_session_state(session_dir: Path, state: SessionState) -> None:
+def write_session_files(session_dir: Path, state: SessionState) -> None:
     state_path = session_dir / "state.json"
     plan_path = session_dir / "PLAN.md"
     state_path.write_text(state.model_dump_json(indent=2), encoding="utf-8")
     plan_path.write_text(render_plan(state), encoding="utf-8")
-    _update_registry(state)
 
 
-def _update_registry(state: SessionState) -> None:
+def save_session_state(session_dir: Path, state: SessionState, message: str = "Update session") -> None:
+    write_session_files(session_dir, state)
+    update_registry_from_state(state)
+    commit_state(session_dir, message)
+    log_session_event(session_dir, f"{message}")
+
+
+def load_session_state_from_disk(session_dir: Path) -> SessionState:
+    state_path = session_dir / "state.json"
+    if not state_path.exists():  # pragma: no cover - guard
+        raise FileNotFoundError(f"Missing state.json in {session_dir}")
+    return SessionState.model_validate_json(state_path.read_text(encoding="utf-8"))
+
+
+def update_registry_from_state(state: SessionState) -> None:
     summary = SessionSummary(
         session=state.session,
         name=state.name,
@@ -84,3 +100,10 @@ def _update_registry(state: SessionState) -> None:
         done=state.done,
     )
     upsert_session(summary)
+
+
+def refresh_registry(session_dir: Path) -> SessionState:
+    """Reload session state from disk and update the registry summary."""
+    state = load_session_state_from_disk(session_dir)
+    update_registry_from_state(state)
+    return state

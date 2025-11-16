@@ -27,7 +27,7 @@ def mark_session_done(home: Path, session_id: str) -> None:
     state.done = True
     state.final_summary = "Template summary"
     state.tasks = [Task(id=1, title="Existing", type=TaskType.CHORE)]
-    save_session_state(home / "sessions" / state.session, state)
+    save_session_state(home / "sessions" / state.session, state, message="mark-done")
 
 
 def test_reuse_outputs_template(monkeypatch, tmp_path):
