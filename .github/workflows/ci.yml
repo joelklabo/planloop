@@ -63,3 +63,7 @@ jobs:
     - name: Run mypy type checking
       run: |
         mypy src/planloop --ignore-missing-imports
+    
+    - name: Run ruff linter
+      run: |
+        ruff check src/ tests/
