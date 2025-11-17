@@ -74,7 +74,7 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 #### Phase 3: Discoverability (Day 5)
 - [DONE] **S3.1**: Update `docs/agents.md` with suggest command workflow - commit adf74e3
 - [DONE] **S3.2**: Add hints to `planloop status` when no tasks exist - commit 9514da6
-- [ ] **S3.3**: Help text and README documentation
+- [DONE] **S3.3**: Help text and README documentation - commit 5465385
 
 #### Phase 4: Polish (Days 6-7)
 - [ ] **S4.1**: Integration tests (end-to-end scenarios)
