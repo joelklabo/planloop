@@ -1,0 +1,4 @@
+# file: /Users/honk/code/planloop/labs/agents/command.py
+# hypothesis_version: 6.148.1
+
+['=== STDERR ===\n', '=== STDOUT ===\n', 'AgentResult', 'ClaudeAdapter', 'CommandAdapter', 'CopilotAdapter', 'OpenAIAdapter', 'claude', 'copilot', 'openai', 'stderr.txt', 'stdout.txt', 'success', 'transcript.txt', 'utf-8', 'w']

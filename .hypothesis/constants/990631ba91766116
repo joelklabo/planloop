@@ -1,0 +1,4 @@
+# file: /Users/honk/code/planloop/src/planloop/core/context_builder.py
+# hypothesis_version: 6.148.1
+
+['*', '*.pyc', '*.pyo', '--name-only', '--pretty=format:', '.DS_Store', '.c', '.cpp', '.egg-info', '.git', '.go', '.h', '.hypothesis', '.java', '.js', '.py', '.pytest_cache', '.rs', '.ts', '.venv', 'FIXME', 'HACK', 'NOTE', 'TODO', '__pycache__', 'deep', 'file', 'git', 'inf', 'log', 'medium', 'no_extension', 'node_modules', 'shallow', 'utf-8', 'venv']

@@ -32,8 +32,9 @@ log_trace "run-start" "agent=copilot workspace=$workspace session=$session"
 
 # Detect model from config or default
 # Available models: claude-sonnet-4.5, claude-sonnet-4, claude-haiku-4.5, gpt-5, gpt-5.1, gpt-5.1-codex-mini, gpt-5.1-codex
-model=${COPILOT_MODEL:-"gpt-5"}  # Default to gpt-5
-log_trace "agent-config" "model=$model"
+# NOTE: User may not have access to all models. Omit --model to use account default.
+model=${COPILOT_MODEL:-""}  # Default to empty (use account default)
+log_trace "agent-config" "model=${model:-default}"
 
 # Create temp output files
 copilot_stdout="$trace_dir/copilot_stdout.txt"
@@ -50,14 +51,20 @@ mkdir -p "$copilot_log_dir"
 # NOTE: --no-color causes silent exit code 1 failure in v0.0.358
 cd "$workspace"
 
-echo "Running: copilot -p <prompt> --allow-all-tools --allow-all-paths --model $model --log-level debug --log-dir $copilot_log_dir"
+if [ -n "$model" ]; then
+  echo "Running: copilot -p <prompt> --allow-all-tools --allow-all-paths --model $model --log-level debug --log-dir $copilot_log_dir"
+  model_arg="--model $model"
+else
+  echo "Running: copilot -p <prompt> --allow-all-tools --allow-all-paths --log-level debug --log-dir $copilot_log_dir"
+  model_arg=""
+fi
 
 # Copilot v0.0.358 requires TTY-like behavior - direct redirection causes exit 1
 # Use tee to capture output while maintaining terminal-like output
 copilot -p "$prompt" \
   --allow-all-tools \
   --allow-all-paths \
-  --model "$model" \
+  $model_arg \
   --log-level debug \
   --log-dir "$copilot_log_dir" \
   2>&1 | tee "$copilot_stdout" || {

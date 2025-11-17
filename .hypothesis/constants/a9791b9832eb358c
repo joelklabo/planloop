@@ -1,0 +1,4 @@
+# file: /Users/honk/code/planloop/src/planloop/core/llm_client.py
+# hypothesis_version: 6.148.1
+
+[0.7, 200, 4000, 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY', 'anthropic', 'api_key', 'base_url', 'content', 'format', 'json', 'json_object', 'max_tokens', 'messages', 'model', 'num_predict', 'ollama', 'openai', 'options', 'prompt', 'response', 'response_format', 'role', 'stream', 'temperature', 'type', 'user']

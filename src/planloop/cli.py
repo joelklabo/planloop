@@ -610,7 +610,7 @@ def suggest(
         )
         
         with acquire_lock(session_dir):
-            apply_update(state, session_dir, payload)
+            state = apply_update(state, payload)
             save_session_state(session_dir, state)
         
         typer.echo(f"\n✓ Added {len(approved_suggestions)} task(s) to plan")

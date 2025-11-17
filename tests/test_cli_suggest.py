@@ -114,6 +114,8 @@ def test_suggest_generates_update_payload(runner, mock_suggestions, tmp_path):
                 
                 # Mock the apply_update to verify payload
                 with patch("planloop.cli.apply_update") as mock_apply:
+                    # apply_update returns modified state
+                    mock_apply.return_value = mock_state
                     with patch("planloop.cli.acquire_lock"):
                         result = runner.invoke(app, ["suggest", "--auto-approve"])
                         

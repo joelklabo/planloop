@@ -38,7 +38,10 @@ class CommandAdapter:
         adapter_dir.mkdir(parents=True, exist_ok=True)
         stdout_path = adapter_dir / "stdout.txt"
         stderr_path = adapter_dir / "stderr.txt"
-        with stdout_path.open("w", encoding="utf-8") as stdout_file, stderr_path.open("w", encoding="utf-8") as stderr_file:
+        transcript_path = adapter_dir / "transcript.txt"
+        
+        with stdout_path.open("w", encoding="utf-8") as stdout_file, \
+             stderr_path.open("w", encoding="utf-8") as stderr_file:
             result = subprocess.run(
                 shlex.split(cmd),
                 cwd=workspace,
@@ -46,6 +49,17 @@ class CommandAdapter:
                 stdout=stdout_file,
                 stderr=stderr_file,
             )
+        
+        # Create transcript by combining stdout and stderr
+        with transcript_path.open("w", encoding="utf-8") as transcript_file:
+            if stdout_path.exists():
+                transcript_file.write("=== STDOUT ===\n")
+                transcript_file.write(stdout_path.read_text(encoding="utf-8"))
+                transcript_file.write("\n\n")
+            if stderr_path.exists():
+                transcript_file.write("=== STDERR ===\n")
+                transcript_file.write(stderr_path.read_text(encoding="utf-8"))
+        
         message = "success" if result.returncode == 0 else f"exit code {result.returncode}"
         return AgentResult(self.name, True, result.returncode, stdout_path, stderr_path, message)
 

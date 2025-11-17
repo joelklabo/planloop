@@ -1,6 +1,6 @@
 {
-  "total_runs": 334,
-  "latest_run": "cli-basics-20251117T054602Z-6731",
+  "total_runs": 358,
+  "latest_run": "cli-basics-20251117T064752Z-8f91",
   "agents": {
     "openai": {
       "runs": 80,
@@ -45,23 +45,23 @@
       ]
     },
     "copilot": {
-      "runs": 225,
+      "runs": 249,
       "passes": 104,
-      "fails": 121,
-      "pass_rate": 0.4622222222222222,
-      "fail_rate": 0.5377777777777778,
+      "fails": 145,
+      "pass_rate": 0.41767068273092367,
+      "fail_rate": 0.5823293172690763,
       "top_errors": [
         [
           "missing update",
-          104
+          128
         ],
         [
           "missing status-after",
-          86
+          110
         ],
         [
           "missing status-before",
-          65
+          89
         ]
       ]
     }
@@ -109,24 +109,24 @@
         ]
       ]
     },
-    "copilot:gpt-5": {
-      "runs": 225,
+    "copilot:default": {
+      "runs": 249,
       "passes": 104,
-      "fails": 121,
-      "pass_rate": 0.4622222222222222,
-      "avg_score": 38.48888888888889,
+      "fails": 145,
+      "pass_rate": 0.41767068273092367,
+      "avg_score": 35.261044176706825,
       "top_errors": [
         [
           "missing update",
-          104
+          128
         ],
         [
           "missing status-after",
-          86
+          110
         ],
         [
           "missing status-before",
-          65
+          89
         ]
       ]
     }

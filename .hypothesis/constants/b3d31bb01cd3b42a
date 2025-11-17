@@ -1,0 +1,4 @@
+# file: /Users/honk/code/planloop/src/planloop/config.py
+# hypothesis_version: 6.148.1
+
+[0.7, 100, 4000, '*.egg-info', '*.pyc', '*.pyo', '.DS_Store', '.git', '.hypothesis', '.pytest_cache', '.venv', 'INFO', 'OPENAI_API_KEY', '__pycache__', 'anthropic', 'api_key_env', 'auto_approve', 'base_url', 'context', 'deep', 'depth', 'dry_run', 'enabled', 'filters', 'focus_paths', 'gpt-4o-mini', 'high', 'history', 'ignore_patterns', 'include_git_history', 'include_todos', 'level', 'llm', 'logging', 'low', 'max_count', 'max_files_sample', 'max_recent_commits', 'max_tokens', 'medium', 'min_priority', 'model', 'no_plan_edit', 'node_modules', 'ollama', 'openai', 'provider', 'safe_modes', 'shallow', 'strict', 'suggest', 'suggestions', 'temperature', 'update', 'utf-8', 'venv']

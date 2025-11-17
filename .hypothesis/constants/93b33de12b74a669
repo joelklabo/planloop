@@ -1,0 +1,4 @@
+# file: /Users/honk/code/planloop/src/planloop/core/suggest.py
+# hypothesis_version: 6.148.1
+
+[500, '(No current tasks)', '(No recent changes)', ', ', 'affected_files', 'array', 'deep', 'depends_on', 'enum', 'high', 'implementation_notes', 'integer', 'items', 'low', 'medium', 'object', 'priority', 'properties', 'rationale', 'required', 'shallow', 'string', 'title', 'type']
