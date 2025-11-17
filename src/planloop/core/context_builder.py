@@ -69,6 +69,12 @@ class ContextBuilder:
         """
         self.project_root = Path(project_root)
         self.ignore_patterns = ignore_patterns or self.DEFAULT_IGNORE_PATTERNS
+        
+        # Cache for expensive operations
+        self._structure_cache: dict[str, dict[str, Any]] = {}
+        self._todos_cache: list[TodoComment] | None = None
+        self._git_history_cache: list[str] | None = None
+        self._lang_stats_cache: dict[str, int] | None = None
     
     def build(self, depth: Literal["shallow", "medium", "deep"] = "medium") -> CodebaseContext:
         """Build codebase context at specified depth.
@@ -126,6 +132,10 @@ class ContextBuilder:
     
     def _build_structure(self, depth: Literal["shallow", "medium", "deep"]) -> dict[str, Any]:
         """Build file structure tree."""
+        # Check cache first
+        if depth in self._structure_cache:
+            return self._structure_cache[depth]
+        
         structure: dict[str, Any] = {}
         
         # For shallow, limit depth to 2 levels
@@ -154,10 +164,16 @@ class ContextBuilder:
                 if rel_path.name not in current:
                     current[rel_path.name] = {}
         
+        # Cache the result
+        self._structure_cache[depth] = structure
         return structure
     
     def _count_languages(self) -> dict[str, int]:
         """Count files by extension."""
+        # Check cache
+        if self._lang_stats_cache is not None:
+            return self._lang_stats_cache
+        
         stats: dict[str, int] = defaultdict(int)
         
         for path in self.project_root.rglob("*"):
@@ -170,10 +186,16 @@ class ContextBuilder:
             ext = path.suffix[1:] if path.suffix else "no_extension"
             stats[ext] += 1
         
-        return dict(stats)
+        # Cache and return
+        self._lang_stats_cache = dict(stats)
+        return self._lang_stats_cache
     
     def _extract_todos(self) -> list[TodoComment]:
         """Extract TODO/FIXME/NOTE comments from source files."""
+        # Check cache
+        if self._todos_cache is not None:
+            return self._todos_cache
+        
         todos: list[TodoComment] = []
         
         # Only scan text files (common source extensions)
@@ -205,10 +227,16 @@ class ContextBuilder:
                 # Skip files that can't be read
                 continue
         
+        # Cache and return
+        self._todos_cache = todos
         return todos
     
     def _get_git_history(self, limit: int = 10) -> list[str]:
         """Get recently changed files from git history."""
+        # Check cache
+        if self._git_history_cache is not None:
+            return self._git_history_cache
+        
         try:
             # Get list of changed files in last N commits
             result = subprocess.run(
@@ -229,10 +257,13 @@ class ContextBuilder:
                     files.append(line)
                     seen.add(line)
             
+            # Cache and return
+            self._git_history_cache = files
             return files
         
         except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
             # Not a git repo or git not available
+            self._git_history_cache = []
             return []
     
     def _load_current_tasks(self) -> list[Task]:
