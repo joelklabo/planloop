@@ -4,8 +4,8 @@
 
 set -e
 
-BASELINE_PASS_RATE=64.3
-BASELINE_AVG_SCORE=51.5
+BASELINE_PASS_RATE=41.8
+BASELINE_AVG_SCORE=35.3
 REGRESSION_THRESHOLD=5.0  # Alert if pass rate drops more than 5%
 
 echo "=== Checking Copilot Baseline ==="

@@ -1,6 +1,6 @@
 {
-  "total_runs": 358,
-  "latest_run": "cli-basics-20251117T064752Z-8f91",
+  "total_runs": 388,
+  "latest_run": "cli-basics-20251117T183455Z-7514",
   "agents": {
     "openai": {
       "runs": 80,
@@ -24,11 +24,11 @@
       ]
     },
     "claude": {
-      "runs": 193,
-      "passes": 73,
+      "runs": 223,
+      "passes": 103,
       "fails": 120,
-      "pass_rate": 0.37823834196891193,
-      "fail_rate": 0.6217616580310881,
+      "pass_rate": 0.4618834080717489,
+      "fail_rate": 0.5381165919282511,
       "top_errors": [
         [
           "missing status-after",
@@ -88,12 +88,12 @@
         ]
       ]
     },
-    "claude:unknown": {
-      "runs": 193,
-      "passes": 73,
+    "claude:sonnet": {
+      "runs": 223,
+      "passes": 103,
       "fails": 120,
-      "pass_rate": 0.37823834196891193,
-      "avg_score": 37.27979274611399,
+      "pass_rate": 0.4618834080717489,
+      "avg_score": 41.681614349775785,
       "top_errors": [
         [
           "missing status-after",
@@ -109,7 +109,7 @@
         ]
       ]
     },
-    "copilot:default": {
+    "copilot:unknown": {
       "runs": 249,
       "passes": 104,
       "fails": 145,

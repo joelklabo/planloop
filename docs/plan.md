@@ -36,8 +36,8 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 
 **Status** (158 runs as of 2025-11-17):
 - ✅ **Copilot (gpt-5)**: 64.3% pass rate - Target achieved!
-- ⏳ **Claude (sonnet)**: 29.3% pass rate - Needs prompt optimization
-- ⏳ **OpenAI**: 33.3% pass rate - Needs prompt optimization
+- ⏳ **Claude (sonnet)**: 46.2% pass rate - Needs +13.8% improvement
+- ⏳ **OpenAI**: 33.3% pass rate - Needs +27% improvement
 
 **Next Steps**:
 1. Optimize Claude/OpenAI prompts to reach 60%+ baseline
@@ -99,11 +99,11 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 
 **Current Status**:
 - ✅ Copilot (gpt-5): 64.3% - Target achieved
-- ⏳ Claude (sonnet): 29.3% - Needs +30% improvement
-- ⏳ OpenAI: 33.3% - Needs +27% improvement
+- ⏳ Claude (sonnet): 46.2% pass rate - Needs +13.8% improvement
+- ⏳ OpenAI: 33.3% pass rate - Needs +27% improvement
 
 **Tasks**:
-- [ ] **P1.1**: Optimize Claude prompts (target 60%+ pass rate)
+- [IN_PROGRESS] **P1.1**: Optimize Claude prompts (target 60%+ pass rate)
 - [ ] **P1.2**: Optimize OpenAI prompts (target 60%+ pass rate)
 - [ ] **P1.3**: Document successful prompt patterns per agent
 - [ ] **P1.4**: Implement regression protection for Copilot baseline
@@ -160,6 +160,7 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
   - Vector search for similar code patterns
   - Enhance suggest with semantic understanding
   - Find related implementations
+  - Find related implementations
 - [ ] **P4.4**: Learning from suggestion feedback
   - Track accepted/rejected suggestions
   - Improve suggestion quality over time
@@ -184,7 +185,7 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 ### Reference
 - **`lab-testing.md`** - Testing infrastructure, scenarios, evaluation metrics
 - **`architecture.md`** - System design, queue fairness, state management
-- **`agent-performance.md`** - Auto-generated test metrics (latest results)
+- **`agent-performance.md` - Auto-generated test metrics (latest results)
 
 ### Archive
 - **`archive/v1.5-implementation-tasks.md`** - All 46 completed v1.5 tasks with commit SHAs
