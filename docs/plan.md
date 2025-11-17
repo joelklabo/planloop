@@ -72,7 +72,7 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 - [DONE] **S2.2**: CLI integration (interactive approval, dry-run mode) - commit 4cfd760
 
 #### Phase 3: Discoverability (Day 5)
-- [ ] **S3.1**: Update `docs/agents.md` with suggest command workflow
+- [DONE] **S3.1**: Update `docs/agents.md` with suggest command workflow - commit adf74e3
 - [ ] **S3.2**: Add hints to `planloop status` when no tasks exist
 - [ ] **S3.3**: Help text and README documentation
 
