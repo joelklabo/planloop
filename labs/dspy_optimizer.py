@@ -6,12 +6,17 @@ optimize agent prompts based on workflow compliance metrics.
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
 
 # Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
+
+# Load environment variables
+from dotenv import load_dotenv
+load_dotenv()
 
 import dspy
 
@@ -98,23 +103,27 @@ def load_training_data(results_dir: str = "labs/results", agent: str = "copilot"
             with open(summary_file) as f:
                 summary = json.load(f)
             
-            # Check if this run has our target agent
-            if agent not in summary.get("results", {}):
+            # Find the agent in the agents list
+            agent_data = None
+            for agent_entry in summary.get("agents", []):
+                if agent_entry.get("name") == agent:
+                    agent_data = agent_entry
+                    break
+            
+            if not agent_data:
                 continue
             
-            agent_result = summary["results"][agent]
-            if not agent_result:
-                continue
-            
-            # Get the evaluation score
-            evaluation = agent_result.get("evaluation", {})
-            score = evaluation.get("score", 0)
+            # Get compliance data
+            compliance = agent_data.get("compliance", {})
+            score = compliance.get("score", 0)
+            passed = compliance.get("pass", False)
             
             # Create example
             example = dspy.Example(
-                session_id=summary.get("session_id", ""),
-                scenario_name="cli-basics",
+                session_id=summary.get("session", ""),
+                scenario_name=summary.get("scenario", "cli-basics"),
                 score=score / 100.0,  # Normalize to 0-1
+                passed=passed,
             ).with_inputs("session_id", "scenario_name")
             
             examples.append(example)
@@ -195,19 +204,27 @@ def optimize_agent_prompt(
 
 
 if __name__ == "__main__":
-    # Configure DSPy to use a local LM or API
-    # For now, we'll use a placeholder
-    # In production, this would connect to actual LLM
-    
     print("DSPy Prompt Optimizer for Planloop")
     print("=" * 60)
     
-    # TODO: Configure LM
-    # lm = dspy.OpenAI(model="gpt-4")
-    # dspy.settings.configure(lm=lm)
+    # Configure OpenAI LM
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        print("\n❌ Error: OPENAI_API_KEY not found in environment")
+        print("   Please set it in .env file or export it")
+        sys.exit(1)
+    
+    print("\n✅ Configuring DSPy with OpenAI gpt-4.1 (closest to Copilot's gpt-5)...")
+    lm = dspy.LM('openai/gpt-4.1', api_key=api_key)
+    dspy.configure(lm=lm)
     
     print("\nStep 1: Loading training data...")
     examples = load_training_data(agent="copilot")
+    
+    if not examples:
+        print("\n❌ No training data found!")
+        print("   Make sure labs/results/ has cli-basics-* directories with summary.json")
+        sys.exit(1)
     
     print(f"\nStep 2: Analyzing {len(examples)} historical runs...")
     pass_count = sum(1 for ex in examples if ex.score >= 1.0)
@@ -215,8 +232,10 @@ if __name__ == "__main__":
     print(f"  Pass rate: {pass_count}/{len(examples)} ({pass_count/len(examples):.1%})")
     print(f"  Avg score: {avg_score:.1%}")
     
-    # TODO: Run optimization when LM is configured
+    print("\n✅ Configuration complete!")
+    print("\nNext: Run optimize_agent_prompt(agent='copilot') to start optimization")
+    print("      This will take 30-60 minutes and cost ~$5-10")
+    
+    # Optionally run optimization automatically
     # print("\nStep 3: Running optimization...")
     # optimized = optimize_agent_prompt(agent="copilot")
-    
-    print("\n✅ Setup complete! Next: Configure LM and run optimization")
