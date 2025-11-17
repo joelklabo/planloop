@@ -77,7 +77,7 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 - [DONE] **S3.3**: Help text and README documentation - commit 5465385
 
 #### Phase 4: Polish (Days 6-7)
-- [IN_PROGRESS] **S4.1**: Integration tests (end-to-end scenarios)
+- [DONE] **S4.1**: Integration tests (end-to-end scenarios) - commit a3768ee
 - [ ] **S4.2**: Performance optimization (<5s for medium context)
 - [ ] **S4.3**: Error handling and edge cases
 
