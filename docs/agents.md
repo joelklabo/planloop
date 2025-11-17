@@ -61,6 +61,42 @@ All documentation lives in `docs/`:
   - You need context-aware work suggestions
   - User asks "what should I work on next?"
   - You want to find technical debt, missing tests, or improvement opportunities
+  
+  **Options**:
+  - `--dry-run` → Preview suggestions without adding to plan
+  - `--auto-approve` → Skip interactive approval, add all suggestions
+  - `--limit N` → Limit to N suggestions (default: 5)
+  - `--depth shallow|medium|deep` → Analysis depth (default: medium)
+  - `--focus PATH` → Focus analysis on specific directory
+  
+  **Example workflow**:
+  ```bash
+  # Check status - no tasks left
+  planloop status --json
+  # Output: "now": {"reason": "completed"}
+  
+  # Discover new work
+  planloop suggest
+  # Reviews 5 suggestions interactively, add 3 of them
+  
+  # Continue working
+  planloop status --json
+  # Output: "now": {"reason": "task", "task_id": 15}
+  ```
+  
+  **Configuration**: Set defaults in `~/.planloop/config.yml`:
+  ```yaml
+  suggest:
+    llm:
+      provider: openai  # or anthropic, ollama
+      model: gpt-4o-mini
+      api_key_env: OPENAI_API_KEY
+    context:
+      depth: medium
+      include_git_history: true
+    suggestions:
+      max_count: 5
+  ```
 - `planloop update --file payload.json` → edit tasks/context via validated JSON
   payloads instead of editing PLAN.md directly.
 - Safe modes:
