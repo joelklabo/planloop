@@ -14,55 +14,18 @@ agent_name=${PLANLOOP_LAB_AGENT_NAME:-codex}
 trace_dir=${PLANLOOP_LAB_RESULTS:?}/$agent_name
 mkdir -p "$trace_dir"
 
-# Prompt for the agent - guide it through the planloop workflow
-# v0.2.0: Directive approach (learning: conversational hurt performance)
-prompt=${PLANLOOP_LAB_AGENT_PROMPT:-"You are testing planloop workflow compliance. Your goal: Complete ALL tasks and handle ALL blockers.
+# Prompt for the agent - guide it through the planloop workflow  
+# v0.3.0: Minimal/direct approach (research: "less is more" for Codex CLI)
+prompt=${PLANLOOP_LAB_AGENT_PROMPT:-"Complete all tasks in the planloop workflow. Session: $session
 
-**CRITICAL: Run 'planloop status' after EVERY action**
-After 'planloop update' → Run status
-After 'planloop alert --close' → Run status
-NO EXCEPTIONS.
+Workflow:
+1. Run: planloop status --session $session --json
+2. Read now.reason field
+3. If blocker: close it with planloop alert --close, then status
+4. If task: update to IN_PROGRESS, status, update to DONE, status
+5. Repeat until now.reason is 'completed'
 
-**WORKFLOW LOOP - Repeat until all tasks are DONE:**
-
-1. START: Run 'planloop status --session $session --json'
-
-2. READ 'now.reason' from status output:
-   - If 'ci_blocker' or 'lint_blocker': Go to step 3
-   - If 'task': Go to step 4
-   - If 'waiting_on_lock' or 'deadlocked': STOP
-   - If 'completed': STOP (success!)
-
-3. BLOCKER HANDLING:
-   a) Get blocker ID from 'now.blocker_id'
-   b) Run: planloop alert --close --id <blocker-id>
-   c) **CRITICAL**: Run 'planloop status --session $session --json' immediately
-   d) Verify blocker cleared, go to step 2
-
-4. TASK HANDLING:
-   a) Get task ID from 'now.task_id'
-   
-   b) Mark IN_PROGRESS:
-      echo '{\"tasks\": [{\"id\": TASK_ID, \"status\": \"IN_PROGRESS\"}]}' > payload.json
-      planloop update --session $session --file payload.json
-   
-   c) **CRITICAL**: Run 'planloop status --session $session --json'
-   
-   d) Mark DONE:
-      echo '{\"tasks\": [{\"id\": TASK_ID, \"status\": \"DONE\"}]}' > payload.json
-      planloop update --session $session --file payload.json
-   
-   e) **CRITICAL**: Run 'planloop status --session $session --json'
-   
-   f) Go to step 1
-
-**SUCCESS CRITERIA:**
-- ALL tasks have status='DONE'
-- Status called after EVERY update and alert close
-- NO active blockers
-- Final now.reason='completed'
-
-**REMEMBER: The #1 failure is forgetting status after actions. Always verify your changes worked.**"} 
+Critical: Run status after every update and alert close."} 
 
 log_trace "run-start" "agent=codex workspace=$workspace session=$session"
 
@@ -75,16 +38,16 @@ codex_stdout="$trace_dir/codex_stdout.txt"
 codex_stderr="$trace_dir/codex_stderr.txt"
 
 # Run Codex CLI with appropriate flags
-# Adjust based on actual codex CLI syntax when available
 cd "$workspace"
 
-echo "Running: codex -p <prompt> --model $model"
+echo "Running: codex exec <prompt> --sandbox workspace-write --model $model"
 
-# Placeholder for actual codex command
-# This will need to be updated based on actual Codex CLI syntax
-# For now, using a similar pattern to other agents
+# Use codex exec for non-interactive execution
+# --sandbox workspace-write: Allow file writes in workspace
+# --model: Specify model
 if command -v codex &> /dev/null; then
-    codex -p "$prompt" \
+    echo "$prompt" | codex exec - \
+      --sandbox workspace-write \
       --model "$model" \
       > "$codex_stdout" 2> "$codex_stderr" || {
         exit_code=$?
