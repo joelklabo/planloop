@@ -1,42 +1,61 @@
-# Documentation Index
+# Documentation
 
-This folder contains all planloop documentation for both humans and AI agents.
+All planloop documentation for humans and AI agents.
+
+---
 
 ## Core Documents
 
 ### `agents.md`
-The agent workflow contract and command reference. Primary guide for AI agents working on planloop. Generated/updated via `planloop guide --target agents-md --apply`.
+**Agent workflow contract** - Primary guide for AI agents. Command reference, workflow rules, and project organization.
 
 **Symlinked to**:
 - `AGENTS.md` (root)
 - `CLAUDE.md` (root)
 - `.github/copilot-instructions.md` (GitHub Copilot)
 
-### `plans/`
-Active implementation plans and task backlogs.
+Updated via: `planloop guide --target agents-md --apply`
 
-- **`active.md`** - Current work and backlog (v1.6+)
+### `plan.md`
+**Development plan** - Current work, active goals, backlog. What's built (v1.5 complete), what's in progress (agent testing), what's next (v1.6+).
 
-### `reference/`
-Completed work, research, and technical guides.
+### `architecture.md`
+**System design reference** - State management, locking, queue fairness, session lifecycle, command system, testing infrastructure.
 
-- **`v1.5-implementation-complete.md`** - All v1.5 implementation tasks (DONE)
-- **`lab-testing-guide.md`** - Agent testing infrastructure and metrics
-- **`multi-agent-research.md`** - Queue fairness design notes
+### `lab-testing.md`
+**Testing guide** - Agent testing infrastructure, scenarios, evaluation metrics, running tests, optimization strategy.
 
 ### `agent-performance.md`
-**Auto-generated** - Latest agent testing metrics (updated by `labs/generate_viz.py`)
+**Test metrics** (auto-generated) - Latest agent compliance scores. Updated by `labs/generate_viz.py`.
+
+---
+
+## Archive
+
+### `archive/v1.5-implementation-tasks.md`
+Historical record of all 46 v1.5 implementation tasks with commit SHAs. Complete but kept for reference.
+
+---
 
 ## Quick Start
 
 **For AI Agents**:
-- Read `agents.md` for workflow rules
-- Check `plans/active.md` for current tasks
+1. Read `agents.md` for workflow rules
+2. Check `plan.md` for current work
+3. Reference `architecture.md` when needed
 
 **For Testing**:
-- See `reference/lab-testing-guide.md`
+- See `lab-testing.md` for testing workflow
+
+**For Development**:
+- Check `plan.md` active work section
+- Run tests: `pytest tests/`
+- Update metrics: `./labs/run_iterations.sh`
+
+---
 
 ## Conventions
 
-- All markdown files use `lowercase-with-hyphens.md`
-- Temporary files go in `tmp/` at project root (gitignored)
+- **Naming**: All markdown files use `lowercase-with-hyphens.md` (except AGENTS.md, CLAUDE.md symlinks)
+- **Temp files**: Use `tmp/` folder at project root (gitignored)
+- **Structure**: Flat in `docs/`, archive in `docs/archive/`

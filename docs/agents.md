@@ -1,7 +1,7 @@
 # planloop – Agent Guide
 
 v1.5 is complete! All core features are implemented and tested. Use this guide plus
-`docs/plans/active.md` for current work. Focus is now on agent testing and optimization.
+`docs/plan.md` for current work. Focus is now on agent testing and optimization.
 
 ## Project Organization
 
@@ -11,14 +11,11 @@ All documentation lives in `docs/`:
   - `AGENTS.md` (root)
   - `CLAUDE.md` (root)  
   - `.github/copilot-instructions.md` (GitHub Copilot)
-- **`docs/plans/`** - Active implementation plans and backlog
-  - `active.md` - Current work (lab testing, future enhancements)
-- **`docs/reference/`** - Reference docs (completed work, research, guides)
-  - `v1.5-implementation-complete.md` - All v1.5 implementation tasks (DONE)
-  - `lab-testing-guide.md` - Testing infrastructure and metrics
-  - `multi-agent-research.md` - Queue fairness design
+- **`docs/plan.md`** - Development plan (active work, backlog, what's built)
+- **`docs/architecture.md`** - System design reference
+- **`docs/lab-testing.md`** - Testing infrastructure guide
 - **`docs/agent-performance.md`** - Auto-generated test metrics
-- **`docs/README.md`** - Documentation index
+- **`docs/archive/`** - Historical documentation (v1.5 task list)
 
 **Naming Convention**: All markdown files use `lowercase-with-hyphens.md`
 
@@ -29,7 +26,7 @@ All documentation lives in `docs/`:
 - This folder is gitignored and safe for any temporary work
 
 ## Source of Truth
-- **`docs/plans/active.md`** - Current backlog and active work
+- **`docs/plan.md`** - Current work and backlog
 - **`docs/agents.md`** (this file) - Workflow rules and command reference
 - Re-run `planloop guide --target agents-md --apply` when prompts/workflow change
 
@@ -39,7 +36,7 @@ All documentation lives in `docs/`:
    - `ci_blocker` → fix the signal before touching tasks.
    - `task` → implement the referenced task using TDD.
    - `waiting_on_lock` → sleep and retry `status`.
-2. **Don’t wait for optional direction** — once a task is done (or a signal is cleared), pick the next `Status: TODO` item from `docs/plans/active.md`, mark it `IN_PROGRESS`, and keep going. Treat the plan as your instruction set; do not ask “what should I do next?” or seek confirmation before acting, even while processing blockers—just handle the signal, rerun status, and move to the next step autonomously unless a human explicitly interrupts you.
+2. **Don’t wait for optional direction** — once a task is done (or a signal is cleared), pick the next `Status: TODO` item from `docs/plan.md`, mark it `IN_PROGRESS`, and keep going. Treat the plan as your instruction set; do not ask “what should I do next?” or seek confirmation before acting, even while processing blockers—just handle the signal, rerun status, and move to the next step autonomously unless a human explicitly interrupts you.
 3. **Practice TDD**: write/update tests, watch them fail, implement, rerun
    tests, then refactor.
 4. **Commit often**: each task should fit in a single commit.
