@@ -1,0 +1,89 @@
+{
+  "generate.predict": {
+    "traces": [],
+    "train": [],
+    "demos": [
+      {
+        "augmented": true,
+        "session_id": "cli-basics-20251116T211853Z-14f0",
+        "scenario_name": "cli-basics",
+        "reasoning": "The scenario \"cli-basics\" likely involves teaching or demonstrating fundamental command-line interface (CLI) operations. The initial step should be to assess the user's familiarity with the CLI, then provide clear, step-by-step instructions for basic commands such as listing files, navigating directories, viewing file contents, and understanding command syntax. Status tracking will involve marking each step as completed before moving to the next.",
+        "agent_instructions": "1. Greet the user and briefly explain the purpose of the CLI basics scenario.\n2. Ask the user about their current experience level with the command line.\n3. Begin with the most basic command: instruct the user to type `ls` (on Unix\/Linux\/macOS) or `dir` (on Windows) to list files in the current directory.\n4. Wait for the user to confirm completion, then mark this step as completed.\n5. Proceed to the next command: instruct the user to use `cd` to change directories, providing an example.\n6. Continue with other basic commands such as `pwd` (print working directory), `cat` or `type` (view file contents), and explain command syntax.\n7. After each command, wait for user confirmation and mark the step as completed.\n8. Track the status of each step, ensuring all are completed before concluding the scenario.\n9. At the end, summarize what was covered and offer resources for further learning."
+      },
+      {
+        "augmented": true,
+        "session_id": "cli-basics-20251116T212030Z-26d8",
+        "scenario_name": "cli-basics",
+        "reasoning": "The scenario \"cli-basics\" likely involves teaching or demonstrating fundamental command-line interface (CLI) operations. The agent should ensure that the user understands basic CLI commands, navigation, file manipulation, and help commands. The workflow should be tracked step-by-step, confirming completion of each task before moving to the next.",
+        "agent_instructions": "1. Greet the user and briefly explain the purpose of the CLI basics scenario.\n2. Guide the user through the following fundamental CLI tasks, one at a time:\n   a. Navigating directories (e.g., `ls`, `cd`, `pwd`)\n   b. Creating and removing files\/directories (e.g., `touch`, `mkdir`, `rm`, `rmdir`)\n   c. Viewing file contents (e.g., `cat`, `less`, `head`, `tail`)\n   d. Using help commands (e.g., `man`, `--help`)\n3. After each task, ask the user to confirm completion or provide the output.\n4. Track the status of each task and only proceed when the previous one is confirmed as complete.\n5. At the end, summarize what was covered and offer additional resources or next steps."
+      },
+      {
+        "augmented": true,
+        "session_id": "cli-basics-20251116T023204Z-01fb",
+        "scenario_name": "cli-basics",
+        "reasoning": "The scenario \"cli-basics\" likely involves teaching or demonstrating fundamental command-line interface (CLI) operations. The agent should ensure that the user understands basic CLI commands, navigation, file manipulation, and help commands. The workflow should track progress through each basic task, confirming completion before moving to the next.",
+        "agent_instructions": "1. Greet the user and briefly explain the purpose of the CLI basics scenario.\n2. Guide the user through the following steps, one at a time:\n   a. Navigating directories (e.g., `ls`, `cd`, `pwd`)\n   b. Viewing and creating files (e.g., `cat`, `touch`, `nano` or `vim`)\n   c. Copying, moving, and deleting files (e.g., `cp`, `mv`, `rm`)\n   d. Using help commands (e.g., `man`, `--help`)\n3. After each step, confirm the user’s understanding or completion before proceeding.\n4. Track the status of each task and mark them as complete when finished.\n5. At the end, summarize what was covered and provide resources for further learning."
+      },
+      {
+        "augmented": true,
+        "session_id": "cli-basics-20251116T225132Z-1ace",
+        "scenario_name": "cli-basics",
+        "reasoning": "The \"cli-basics\" scenario likely involves teaching or demonstrating fundamental command-line interface (CLI) operations. The agent should provide clear, step-by-step instructions for basic CLI tasks such as navigating directories, listing files, viewing file contents, and managing files. The instructions should be concise, beginner-friendly, and include example commands for common operating systems (e.g., Linux, macOS, Windows).",
+        "agent_instructions": "1. Begin with a brief introduction to the command-line interface (CLI) and its purpose.\n2. Demonstrate how to open the CLI\/terminal on different operating systems.\n3. Provide step-by-step instructions for the following basic tasks:\n   - Navigating directories (e.g., `cd`, `ls`, `dir`)\n   - Listing files and directories\n   - Viewing the contents of a file (e.g., `cat`, `type`, `more`)\n   - Creating, renaming, and deleting files and directories\n4. Include example commands for both Unix-like systems (Linux\/macOS) and Windows where appropriate.\n5. Encourage the user to try each command and observe the output.\n6. Offer tips for getting help with commands (e.g., `man`, `--help`, `\/?`).\n7. Track the completion status of each step and prompt the user to confirm before moving to the next."
+      },
+      {
+        "session_id": "cli-basics-20251116T205910Z-04e1",
+        "scenario_name": "cli-basics",
+        "score": 0.7,
+        "passed": true
+      },
+      {
+        "session_id": "cli-basics-20251116T232957Z-8452",
+        "scenario_name": "cli-basics",
+        "score": 0.7,
+        "passed": true
+      },
+      {
+        "session_id": "cli-basics-20251116T230150Z-adc5",
+        "scenario_name": "cli-basics",
+        "score": 0.7,
+        "passed": true
+      },
+      {
+        "session_id": "cli-basics-20251117T002241Z-8a38",
+        "scenario_name": "cli-basics",
+        "score": 0.7,
+        "passed": true
+      }
+    ],
+    "signature": {
+      "instructions": "Complete all planloop workflow tasks with proper status tracking.",
+      "fields": [
+        {
+          "prefix": "Session Id:",
+          "description": "Session ID for the workflow"
+        },
+        {
+          "prefix": "Scenario Name:",
+          "description": "Scenario to execute"
+        },
+        {
+          "prefix": "Reasoning: Let's think step by step in order to",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Agent Instructions:",
+          "description": "Instructions for the agent to follow"
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.9",
+      "dspy": "2.6.27",
+      "cloudpickle": "3.1"
+    }
+  }
+}
