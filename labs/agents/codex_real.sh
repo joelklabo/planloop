@@ -52,6 +52,15 @@ if command -v codex &> /dev/null; then
       > "$codex_stdout" 2> "$codex_stderr" || {
         exit_code=$?
         log_trace "agent-error" "exit_code=$exit_code"
+        
+        # Check for common error patterns
+        if grep -qi "usage limit\|rate limit\|quota exceeded\|purchase more credits" "$codex_stderr" "$codex_stdout" 2>/dev/null; then
+          echo "⚠️  RATE LIMIT ERROR: Codex usage limit reached" >&2
+          log_trace "agent-error" "rate_limit_exceeded"
+          cat "$codex_stderr"
+          exit 2  # Distinct exit code for rate limits
+        fi
+        
         echo "Codex execution failed with exit code $exit_code"
         cat "$codex_stderr"
         exit $exit_code

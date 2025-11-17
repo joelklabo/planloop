@@ -84,6 +84,15 @@ claude -p "$prompt" \
   > "$claude_stdout" 2> "$claude_stderr" || {
     exit_code=$?
     log_trace "agent-error" "exit_code=$exit_code"
+    
+    # Check for common error patterns
+    if grep -qi "rate limit\|usage limit\|quota exceeded\|session limit" "$claude_stderr" "$claude_stdout" 2>/dev/null; then
+      echo "⚠️  RATE LIMIT ERROR: Claude usage limit reached" >&2
+      log_trace "agent-error" "rate_limit_exceeded"
+      cat "$claude_stderr"
+      exit 2  # Distinct exit code for rate limits
+    fi
+    
     echo "Claude execution failed with exit code $exit_code"
     cat "$claude_stderr"
     exit $exit_code

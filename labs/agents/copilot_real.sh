@@ -83,6 +83,15 @@ copilot -p "$prompt" \
   > "$copilot_stdout" 2> "$copilot_stderr" || {
     exit_code=$?
     log_trace "agent-error" "exit_code=$exit_code"
+    
+    # Check for common error patterns
+    if grep -qi "rate limit\|usage limit\|quota exceeded" "$copilot_stderr" "$copilot_stdout" 2>/dev/null; then
+      echo "⚠️  RATE LIMIT ERROR: Copilot usage limit reached" >&2
+      log_trace "agent-error" "rate_limit_exceeded"
+      cat "$copilot_stderr"
+      exit 2  # Distinct exit code for rate limits
+    fi
+    
     echo "Copilot execution failed with exit code $exit_code"
     cat "$copilot_stderr"
     exit $exit_code
