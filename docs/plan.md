@@ -68,7 +68,7 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 - [DONE] **S1.3**: Configuration schema extensions - commit 3b0a63c
 
 #### Phase 2: Core Engine (Days 3-4)
-- [IN_PROGRESS] **S2.1**: Suggestion engine (LLM orchestration, validation, deduplication)
+- [DONE] **S2.1**: Suggestion engine (LLM orchestration, validation, deduplication) - commit f74a021
 - [ ] **S2.2**: CLI integration (interactive approval, dry-run mode)
 
 #### Phase 3: Discoverability (Day 5)
