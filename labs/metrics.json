@@ -1,6 +1,6 @@
 {
-  "total_runs": 218,
-  "latest_run": "cli-basics-20251117T020547Z-3372",
+  "total_runs": 228,
+  "latest_run": "cli-basics-20251117T022117Z-f9ec",
   "agents": {
     "openai": {
       "runs": 42,
@@ -24,23 +24,23 @@
       ]
     },
     "claude": {
-      "runs": 183,
+      "runs": 193,
       "passes": 73,
-      "fails": 110,
-      "pass_rate": 0.3989071038251366,
-      "fail_rate": 0.6010928961748634,
+      "fails": 120,
+      "pass_rate": 0.37823834196891193,
+      "fail_rate": 0.6217616580310881,
       "top_errors": [
         [
           "missing status-after",
-          95
+          105
         ],
         [
           "missing update",
-          92
+          102
         ],
         [
           "missing status-before",
-          18
+          28
         ]
       ]
     },
@@ -89,23 +89,23 @@
       ]
     },
     "claude:sonnet": {
-      "runs": 183,
+      "runs": 193,
       "passes": 73,
-      "fails": 110,
-      "pass_rate": 0.3989071038251366,
-      "avg_score": 39.04371584699454,
+      "fails": 120,
+      "pass_rate": 0.37823834196891193,
+      "avg_score": 37.27979274611399,
       "top_errors": [
         [
           "missing status-after",
-          95
+          105
         ],
         [
           "missing update",
-          92
+          102
         ],
         [
           "missing status-before",
-          18
+          28
         ]
       ]
     },

@@ -121,7 +121,7 @@
 
 ---
 
-## OpenAI GPT-4 / ChatGPT
+## Codex (OpenAI GPT-4)
 
 ### Current Performance
 - 33.3% pass rate (needs optimization)
@@ -170,11 +170,12 @@
 ❌ Purely imperative (add reasoning)  
 ❌ Assuming knowledge
 
-### Planned Optimization
-**v0.1.0 - TODO**
-- Conversational + directive hybrid
+### Current Prompt
+**v0.1.0** - Conversational + directive hybrid
+- Friendly "Let's work together" tone
 - Goal framing at top
-- Markdown structure (not XML)
+- Markdown structure with code blocks
+- Clear success checklist
 - Target: 33% → 50%+
 
 ### Research Sources
