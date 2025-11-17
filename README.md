@@ -43,6 +43,7 @@ Most commands accept `--json` for agent consumption.
 | Command | Purpose |
 | --- | --- |
 | `planloop status [--session <id>]` | Inspect the current session, lock status, tasks, and signals. |
+| `planloop suggest [options]` | **NEW** AI-powered codebase analysis to discover tasks automatically. |
 | `planloop update --file payload.json` | Apply structured plan/task updates. |
 | `planloop alert --session <id> ...` | Open/close CI, lint, or custom blocker signals. |
 | `planloop describe --json` | Emit JSON Schemas for state and update payloads. |
@@ -58,6 +59,71 @@ Most commands accept `--json` for agent consumption.
 temporary PLANLOOP_HOME, executes several scripted scenarios (clean run, CI
 blocker, dependency chain), and reports JSON results so you know the loop still
 works end-to-end.
+
+## AI-Powered Task Discovery
+
+**NEW in v1.6**: `planloop suggest` analyzes your codebase and suggests tasks automatically.
+
+The AI examines:
+- Project structure and code patterns
+- TODO/FIXME comments
+- Recent git changes
+- Missing tests and documentation
+- Technical debt opportunities
+
+### Basic Usage
+
+```bash
+# Analyze codebase and get suggestions
+planloop suggest
+
+# Preview suggestions without adding to plan
+planloop suggest --dry-run
+
+# Focus on specific area
+planloop suggest --focus src/auth
+
+# Deeper analysis (slower, more thorough)
+planloop suggest --depth deep
+
+# Auto-approve all suggestions
+planloop suggest --auto-approve
+
+# Limit number of suggestions
+planloop suggest --limit 3
+```
+
+### Configuration
+
+Create `~/.planloop/config.yml` to customize:
+
+```yaml
+suggest:
+  llm:
+    provider: openai  # or anthropic, ollama
+    model: gpt-4o-mini
+    api_key_env: OPENAI_API_KEY
+  context:
+    depth: medium  # shallow, medium, deep
+    include_git_history: true
+  suggestions:
+    max_count: 5
+```
+
+API keys can be set via environment variables (e.g., `OPENAI_API_KEY`) or in the config.
+
+### Agent Workflow
+
+When agents run `planloop status` and see no tasks, they'll be prompted to use `planloop suggest`:
+
+```json
+{
+  "now": {"reason": "idle"},
+  "agent_instructions": "No tasks defined. Run 'planloop suggest' to discover work..."
+}
+```
+
+This enables fully autonomous task discovery when agents run out of work.
 
 ## Session history, snapshots, and restore
 `planloop` can keep a per-session git repo so you can checkpoint plan state
