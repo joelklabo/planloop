@@ -65,7 +65,7 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 #### Phase 1: Foundation (Days 1-2)
 - [DONE] **S1.1**: LLM Client abstraction (OpenAI/Anthropic/Ollama support) - commit 91b6aac
 - [DONE] **S1.2**: Context builder core (file structure, TODOs, git history) - commit e96465d
-- [ ] **S1.3**: Configuration schema extensions
+- [DONE] **S1.3**: Configuration schema extensions - commit 3b0a63c
 
 #### Phase 2: Core Engine (Days 3-4)
 - [ ] **S2.1**: Suggestion engine (LLM orchestration, validation, deduplication)
