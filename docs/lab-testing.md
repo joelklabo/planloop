@@ -121,3 +121,42 @@ cat docs/agent-performance.md
 - `labs/evaluate.py` - Compliance scoring
 - `labs/metrics.json` - Historical metrics data
 - `docs/agent-performance.md` - Latest results (auto-generated)
+
+## Checking for Rate Limits
+
+Rate limits can cause test failures that look like prompt issues. Check for them:
+
+```bash
+./labs/check_rate_limits.sh
+```
+
+This scans all test results and reports:
+- Which agents hit limits
+- When limits were hit
+- Links to usage settings
+
+### Rate Limit Indicators
+
+Each agent adapter detects rate limits automatically:
+
+- **Codex**: "usage limit", "purchase more credits"
+- **Claude**: "session limit", "rate limit"  
+- **Copilot**: "rate limit", "quota exceeded"
+
+When detected:
+- Returns exit code 2 (distinct from other failures)
+- Logs `rate_limit_exceeded` trace event
+- Shows clear warning message
+
+### Handling Rate Limits
+
+If you hit a rate limit:
+
+1. Note the reset time from error message
+2. Exclude those runs from metrics analysis
+3. Wait for quota to reset before retesting
+
+**Example**: Codex Nov 17, 2025:
+- 9 runs hit usage limit starting at 3:11am
+- Reset scheduled for Nov 20, 2025 9:22am
+- Performance appeared to decline but was actually limit errors
