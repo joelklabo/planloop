@@ -69,7 +69,7 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 
 #### Phase 2: Core Engine (Days 3-4)
 - [DONE] **S2.1**: Suggestion engine (LLM orchestration, validation, deduplication) - commit f74a021
-- [ ] **S2.2**: CLI integration (interactive approval, dry-run mode)
+- [DONE] **S2.2**: CLI integration (interactive approval, dry-run mode) - commit 4cfd760
 
 #### Phase 3: Discoverability (Day 5)
 - [ ] **S3.1**: Update `docs/agents.md` with suggest command workflow
