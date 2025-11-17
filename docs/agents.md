@@ -33,23 +33,34 @@ All documentation lives in `docs/`:
 - Re-run `planloop guide --target agents-md --apply` when prompts/workflow change
 
 ## Workflow contract
+## Workflow contract
 1. **Always** call `planloop status --json` to decide the next action. Respect
    `now.reason`:
    - `ci_blocker` → fix the signal before touching tasks.
    - `task` → implement the referenced task using TDD.
    - `waiting_on_lock` → sleep and retry `status`.
-2. **Don’t wait for optional direction** — once a task is done (or a signal is cleared), pick the next `Status: TODO` item from `docs/plan.md`, mark it `IN_PROGRESS`, and keep going. Treat the plan as your instruction set; do not ask “what should I do next?” or seek confirmation before acting, even while processing blockers—just handle the signal, rerun status, and move to the next step autonomously unless a human explicitly interrupts you.
-3. **Practice TDD**: write/update tests, watch them fail, implement, rerun
+   - `completed` + empty plan → run `planloop suggest` to discover new work.
+2. **Don't wait for optional direction** — once a task is done (or a signal is cleared), pick the next `Status: TODO` item from `docs/plan.md`, mark it `IN_PROGRESS`, and keep going. Treat the plan as your instruction set; do not ask "what should I do next?" or seek confirmation before acting, even while processing blockers—just handle the signal, rerun status, and move to the next step autonomously unless a human explicitly interrupts you.
+3. **Discover work proactively** — when the plan is empty or you're asked "what's
+   next?", run `planloop suggest` to analyze the codebase for gaps, technical
+   debt, and improvements. It generates context-rich tasks ready for implementation.
+4. **Practice TDD**: write/update tests, watch them fail, implement, rerun
    tests, then refactor.
-4. **Commit often**: each task should fit in a single commit.
+5. **Commit often**: each task should fit in a single commit.
    If work balloons, split the task in the plan before writing code.
-5. **Never** commit failing tests. Local WIP stays local.
-6. **Update the plan**: mark tasks `IN_PROGRESS` when you start, add context
+6. **Never** commit failing tests. Local WIP stays local.
+7. **Update the plan**: mark tasks `IN_PROGRESS` when you start, add context
    while working, and record completion status when finished.
 
 ## Key commands
 - `planloop status --json` → always the first step; surfaces tasks, signals,
   lock info, and agent instructions.
+- `planloop suggest` → **AI-powered task discovery**. Analyzes the codebase and
+  current plan to suggest new tasks. Use this when:
+  - The plan is empty or all tasks are complete
+  - You need context-aware work suggestions
+  - User asks "what should I work on next?"
+  - You want to find technical debt, missing tests, or improvement opportunities
 - `planloop update --file payload.json` → edit tasks/context via validated JSON
   payloads instead of editing PLAN.md directly.
 - Safe modes:

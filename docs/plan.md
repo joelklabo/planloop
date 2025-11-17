@@ -52,7 +52,44 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 
 ## 📋 Backlog (v1.6+)
 
-### Testing
+### v1.6 Priority: Code-Aware Task Suggestions
+
+**Feature**: `planloop suggest` - AI-powered codebase analysis for proactive task discovery
+
+**Goal**: Help AI agents discover work autonomously by analyzing codebases for gaps, technical debt, and improvements.
+
+**Status**: Planning Complete (see `tmp/strategy2-implementation-plan.md`)
+
+**Implementation Tasks** (7 days):
+
+#### Phase 1: Foundation (Days 1-2)
+- [IN_PROGRESS] **S1.1**: LLM Client abstraction (OpenAI/Anthropic/Ollama support)
+- [ ] **S1.2**: Context builder core (file structure, TODOs, git history)
+- [ ] **S1.3**: Configuration schema extensions
+
+#### Phase 2: Core Engine (Days 3-4)
+- [ ] **S2.1**: Suggestion engine (LLM orchestration, validation, deduplication)
+- [ ] **S2.2**: CLI integration (interactive approval, dry-run mode)
+
+#### Phase 3: Discoverability (Day 5)
+- [ ] **S3.1**: Update `docs/agents.md` with suggest command workflow
+- [ ] **S3.2**: Add hints to `planloop status` when no tasks exist
+- [ ] **S3.3**: Help text and README documentation
+
+#### Phase 4: Polish (Days 6-7)
+- [ ] **S4.1**: Integration tests (end-to-end scenarios)
+- [ ] **S4.2**: Performance optimization (<5s for medium context)
+- [ ] **S4.3**: Error handling and edge cases
+
+**Success Criteria**:
+- ✅ AI agents autonomously discover `planloop suggest` from status hints
+- ✅ Generates 3-5 relevant, non-duplicate tasks with implementation context
+- ✅ <5s response time for medium-depth analysis
+- ✅ Works with OpenAI/Anthropic out of box
+
+---
+
+### Lab Testing (Ongoing)
 - [ ] Implement multi-signal-cascade scenario
 - [ ] Implement dependency-chain scenario  
 - [ ] Implement full-plan-completion scenario
@@ -61,12 +98,15 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 
 **Blocked Until**: All agents reach 60%+ baseline on `cli-basics`
 
-### Future Features
+### Future Features (v1.7+)
 - [ ] Task dependency visualization
 - [ ] Session analytics/telemetry dashboard
 - [ ] Lock queue metrics and tuning
 - [ ] Advanced multi-agent coordination patterns
 - [ ] Performance profiling for large plans
+- [ ] `planloop inject` interactive decomposition (Strategy 1)
+- [ ] Embeddings-based semantic code search for suggest
+- [ ] Learning from suggestion feedback
 
 ---
 
