@@ -24,7 +24,7 @@ for instruction in "${instructions[@]}"; do
   echo "Running lab with updated prompt..."
   output=$(cd "$ROOT" && PLANLOOP_LAB_INJECT_SIGNAL=1 PLANLOOP_LAB_SIGNAL_IGNORE=0 \
     PLANLOOP_LAB_COPILOT_CMD="bash labs/agents/mock_agent.sh" \
-    PLANLOOP_LAB_OPENAI_CMD="bash labs/agents/mock_agent.sh" \
+    PLANLOOP_LAB_OPENAI_CMD="bash labs/agents/openai_real.sh" \
     PLANLOOP_LAB_CLAUDE_CMD="bash labs/agents/mock_agent.sh" \
     PYTHONPATH="$PYTHONPATH" \
     python3 labs/run_lab.py --scenario cli-basics --agents "$AGENTS")

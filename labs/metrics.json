@@ -1,14 +1,18 @@
 {
-  "total_runs": 388,
-  "latest_run": "cli-basics-20251117T183455Z-7514",
+  "total_runs": 703,
+  "latest_run": "cli-basics-20251117T215342Z-b72c",
   "agents": {
     "openai": {
-      "runs": 80,
+      "runs": 263,
       "passes": 14,
-      "fails": 66,
-      "pass_rate": 0.175,
-      "fail_rate": 0.825,
+      "fails": 249,
+      "pass_rate": 0.053231939163498096,
+      "fail_rate": 0.9467680608365019,
       "top_errors": [
+        [
+          "trace log missing",
+          200
+        ],
         [
           "missing status-after",
           49
@@ -16,10 +20,6 @@
         [
           "missing update",
           45
-        ],
-        [
-          "missing status-before",
-          36
         ]
       ]
     },
@@ -45,35 +45,39 @@
       ]
     },
     "copilot": {
-      "runs": 249,
-      "passes": 104,
-      "fails": 145,
-      "pass_rate": 0.41767068273092367,
-      "fail_rate": 0.5823293172690763,
+      "runs": 381,
+      "passes": 222,
+      "fails": 159,
+      "pass_rate": 0.5826771653543307,
+      "fail_rate": 0.41732283464566927,
       "top_errors": [
         [
           "missing update",
-          128
+          130
         ],
         [
           "missing status-after",
-          110
+          112
         ],
         [
           "missing status-before",
-          89
+          90
         ]
       ]
     }
   },
   "agents_by_model": {
     "openai:unknown": {
-      "runs": 80,
+      "runs": 263,
       "passes": 14,
-      "fails": 66,
-      "pass_rate": 0.175,
-      "avg_score": 11.625,
+      "fails": 249,
+      "pass_rate": 0.053231939163498096,
+      "avg_score": 3.536121673003802,
       "top_errors": [
+        [
+          "trace log missing",
+          200
+        ],
         [
           "missing status-after",
           49
@@ -81,14 +85,10 @@
         [
           "missing update",
           45
-        ],
-        [
-          "missing status-before",
-          36
         ]
       ]
     },
-    "claude:sonnet": {
+    "claude:unknown": {
       "runs": 223,
       "passes": 103,
       "fails": 120,
@@ -109,24 +109,24 @@
         ]
       ]
     },
-    "copilot:unknown": {
-      "runs": 249,
-      "passes": 104,
-      "fails": 145,
-      "pass_rate": 0.41767068273092367,
-      "avg_score": 35.261044176706825,
+    "copilot:default": {
+      "runs": 381,
+      "passes": 222,
+      "fails": 159,
+      "pass_rate": 0.5826771653543307,
+      "avg_score": 44.816272965879264,
       "top_errors": [
         [
           "missing update",
-          128
+          130
         ],
         [
           "missing status-after",
-          110
+          112
         ],
         [
           "missing status-before",
-          89
+          90
         ]
       ]
     }

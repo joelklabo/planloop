@@ -35,7 +35,7 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 **Goal**: Achieve 60%+ baseline compliance across all major AI agents
 
 **Status** (158 runs as of 2025-11-17):
-- ✅ **Copilot (gpt-5)**: 64.3% pass rate - Target achieved!
+- ⏳ **Copilot (gpt-5)**: 58.3% pass rate - Needs +1.7% improvement
 - ⏳ **Claude (sonnet)**: 46.2% pass rate - Needs +13.8% improvement
 - ⏳ **OpenAI**: 33.3% pass rate - Needs +27% improvement
 
@@ -100,11 +100,11 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 **Current Status**:
 - ✅ Copilot (gpt-5): 64.3% - Target achieved
 - ⏳ Claude (sonnet): 46.2% pass rate - Needs +13.8% improvement
-- ⏳ OpenAI: 33.3% pass rate - Needs +27% improvement
+- ⏳ OpenAI: 5.7% pass rate - Needs +54.3% improvement
 
 **Tasks**:
-- [IN_PROGRESS] **P1.1**: Optimize Claude prompts (target 60%+ pass rate)
-- [ ] **P1.2**: Optimize OpenAI prompts (target 60%+ pass rate)
+- [✅] **P1.1**: Optimize Claude prompts (target 60%+ pass rate) - commit 3b60c7b
+- [❌] **P1.2**: Optimize OpenAI prompts (target 60%+ pass rate) - *Deprioritized, focusing on Copilot.*
 - [ ] **P1.3**: Document successful prompt patterns per agent
 - [ ] **P1.4**: Implement regression protection for Copilot baseline
 - [ ] **P1.5**: Create agent-specific prompt variations if needed
@@ -183,7 +183,7 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 - **`agents.md`** - Workflow contract and command reference (symlinked to AGENTS.md, CLAUDE.md, .github/copilot-instructions.md)
 
 ### Reference
-- **`lab-testing.md`** - Testing infrastructure, scenarios, evaluation metrics
+- **`lab-testing.md` - Testing infrastructure, scenarios, evaluation metrics
 - **`architecture.md`** - System design, queue fairness, state management
 - **`agent-performance.md` - Auto-generated test metrics (latest results)
 

@@ -1,38 +1,35 @@
-You are testing planloop workflow compliance. Your goal: Complete ALL tasks and handle ALL blockers.
+**CRITICAL RULES:**
+1.  **ALWAYS** run 'planloop status --session $SESSION --json' after *every* action that modifies the plan or session state.
+2.  **NEVER** stop until 'planloop status --session $SESSION --json' shows all tasks are 'completed'.
 
-**WORKFLOW LOOP - Repeat until all tasks are DONE:**
+You are an AI agent interacting with the 'planloop' CLI. Your goal is to complete ALL tasks and handle ALL blockers within a given session.
 
-1. ALWAYS START: Run 'planloop status --session $SESSION --json'
+**RESPONSE FORMAT:**
+You must respond with a "Thought" section followed by the commands to execute.
 
-2. READ 'now.reason' from status output:
-   - If 'ci_blocker' or 'lint_blocker': Go to BLOCKER HANDLING
-   - If 'task': Go to TASK HANDLING
-   - If 'waiting_on_lock' or 'deadlocked': STOP
-   - If 'completed': STOP
+Thought: <Your reasoning process here, explaining what you are doing and why.>
 
-3. BLOCKER HANDLING (if now.reason contains blocker):
-   a) Close signal: 'planloop alert --close --id <signal-id>' (get id from 'now.blocker_id')
-   b) CRITICAL: MUST run 'planloop status --session $SESSION --json' again to verify blocker cleared
-   c) Go back to step 2
+<COMMANDS TO EXECUTE>
 
-4. TASK HANDLING (if now.reason is 'task'):
-   a) Get task id from 'now.task_id' in status output
-   b) Write payload.json with:
-      {"tasks": [{"id": <task-id>, "status": "IN_PROGRESS"}]}
-   c) Run 'planloop update --session $SESSION --file payload.json'
-   d) CRITICAL: MUST run 'planloop status --session $SESSION --json' after EVERY update
-   e) Write payload.json to mark DONE:
-      {"tasks": [{"id": <task-id>, "status": "DONE"}]}
-   f) Run 'planloop update --session $SESSION --file payload.json'
-   g) CRITICAL: MUST run 'planloop status --session $SESSION --json' after update
-   h) Go back to step 1
+**WORKFLOW STEPS (Generate and execute these commands):**
 
-5. CHECK COMPLETION: After each status, check if ANY tasks remain TODO or IN_PROGRESS
-   - If yes: Continue loop from step 1
-   - If no: All done!
+1.  **GET STATUS:**
+    `planloop status --session $SESSION --json`
 
-RULES:
-- Run status AFTER closing ANY signal
-- Run status AFTER ANY update
-- Keep going until ALL tasks show status='DONE'
-- Don't stop early
+2.  **HANDLE BLOCKERS (if 'now.reason' is 'ci_blocker' or 'lint_blocker'):**
+    `planloop alert --close --id <signal-id>` (replace <signal-id> with 'now.blocker_id')
+    `planloop status --session $SESSION --json` (CRITICAL: Verify blocker cleared)
+
+3.  **HANDLE TASKS (if 'now.reason' is 'task'):**
+    a.  **MARK IN_PROGRESS:**
+        `echo '{"tasks": [{"id": "<task-id>", "status": "IN_PROGRESS"}]}' > payload.json` (replace <task-id> with 'now.task_id')
+        `planloop update --session $SESSION --file payload.json`
+        `planloop status --session $SESSION --json` (CRITICAL: Verify update)
+    b.  **MARK DONE:**
+        `echo '{"tasks": [{"id": "<task-id>", "status": "DONE"}]}' > payload.json` (replace <task-id> with 'now.task_id')
+        `planloop update --session $SESSION --file payload.json`
+        `planloop status --session $SESSION --json` (CRITICAL: Verify update)
+
+**IMPORTANT:**
+-   Prioritize running `planloop status` to get the latest state.
+-   Ensure all tasks are marked 'DONE' before stopping.
