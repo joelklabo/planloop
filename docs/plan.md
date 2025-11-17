@@ -5,11 +5,15 @@
 
 ---
 
-## ✅ What's Built (v1.5 - Complete)
+## ✅ What's Built
 
-All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-implementation-tasks.md`.
+### v1.6: Code-Aware Task Suggestions
+- **`planloop suggest`**: AI-powered codebase analysis for proactive task discovery.
+- **LLM Abstraction**: Support for OpenAI, Anthropic, and local models.
+- **Context Engine**: Analyzes file structure, git history, and TODOs to inform suggestions.
+- **Agent Discoverability**: Hints in `planloop status` guide agents to find new work.
 
-### Core Features
+### v1.5: Core Loop & Session Management
 - **Session Management** - Create, list, navigate sessions with `PLANLOOP_HOME`
 - **State System** - `state.json` + `PLAN.md` with validation and compute_now logic
 - **Locking** - File-based locks with queue fairness, deadlock detection
@@ -51,47 +55,6 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 
 ---
 
-## 📋 Backlog (v1.6+)
-
-### v1.6 Priority: Code-Aware Task Suggestions
-
-**Feature**: `planloop suggest` - AI-powered codebase analysis for proactive task discovery
-
-**Goal**: Help AI agents discover work autonomously by analyzing codebases for gaps, technical debt, and improvements.
-
-**Status**: ✅ COMPLETE - All phases delivered (see `archive/v1.6-suggest-implementation-plan.md`)
-
-**Implementation Tasks** (7 days):
-
-#### Phase 1: Foundation (Days 1-2)
-- [DONE] **S1.1**: LLM Client abstraction (OpenAI/Anthropic/Ollama support) - commit 91b6aac
-- [DONE] **S1.2**: Context builder core (file structure, TODOs, git history) - commit e96465d
-- [DONE] **S1.3**: Configuration schema extensions - commit 3b0a63c
-
-#### Phase 2: Core Engine (Days 3-4)
-- [DONE] **S2.1**: Suggestion engine (LLM orchestration, validation, deduplication) - commit f74a021
-- [DONE] **S2.2**: CLI integration (interactive approval, dry-run mode) - commit 4cfd760
-
-#### Phase 3: Discoverability (Day 5)
-- [DONE] **S3.1**: Update `docs/agents.md` with suggest command workflow - commit adf74e3
-- [DONE] **S3.2**: Add hints to `planloop status` when no tasks exist - commit 9514da6
-- [DONE] **S3.3**: Help text and README documentation - commit 5465385
-
-#### Phase 4: Polish (Days 6-7)
-- [DONE] **S4.1**: Integration tests (end-to-end scenarios) - commit a3768ee
-- [DONE] **S4.2**: Performance optimization (<5s for medium context) - commit 9b7740b
-- [DONE] **S4.3**: Error handling and edge cases - commit f31e6dd
-
-**Success Criteria**:
-- ✅ AI agents autonomously discover `planloop suggest` from status hints
-- ✅ Generates 3-5 relevant, non-duplicate tasks with implementation context
-- ✅ <5s response time for medium-depth analysis
-- ✅ Works with OpenAI/Anthropic out of box
-
----
-
----
-
 ## 📋 v1.7 Priorities: Quality & Usability
 
 ### Phase 1: Agent Performance (Priority: Critical)
@@ -105,7 +68,7 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 **Tasks**:
 - [✅] **P1.1**: Optimize Claude prompts (target 60%+ pass rate) - commit 3b60c7b
 - [❌] **P1.2**: Optimize OpenAI prompts (target 60%+ pass rate) - *Deprioritized, focusing on Copilot.*
-- [ ] **P1.3**: Document successful prompt patterns per agent
+- [🔄] **P1.3**: Document successful prompt patterns per agent - *IN PROGRESS by Copilot-CLI*
 - [ ] **P1.4**: Implement regression protection for Copilot baseline
 - [ ] **P1.5**: Create agent-specific prompt variations if needed
 
@@ -160,7 +123,6 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
   - Vector search for similar code patterns
   - Enhance suggest with semantic understanding
   - Find related implementations
-  - Find related implementations
 - [ ] **P4.4**: Learning from suggestion feedback
   - Track accepted/rejected suggestions
   - Improve suggestion quality over time
@@ -169,11 +131,22 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 ---
 
 ### Future Research (v1.8+)
-- Multi-agent collaboration patterns
-- Natural language plan editing
-- Integration with GitHub Issues/PRs
-- Plan templates and best practices library
-- Real-time agent coordination dashboard
+- **Self-Bootstrapping Agent Instructions**: Ensure agents always have the latest workflow contract by making the synchronization of `agents.md` the implicit first task of any new session. The `planloop status` command would detect an out-of-sync `agents.md` and return a `sync_instructions` reason, prompting the agent to update its own rulebook before proceeding.
+- **Embeddings-based search**: Use vector DB for semantic code search
+- **Learning from feedback**: Track accepted/rejected suggestions to improve quality
+- **Batch workflows**: `planloop suggest --weekly` for regular audits
+- **Custom analyzers**: Plugin system for domain-specific patterns
+- **Diff suggestions**: "This PR introduces X, suggest follow-up tasks"
+- **Advanced Analysis**:
+  - Test coverage gap analysis (e.g., via `pytest-cov`)
+  - Security pattern detection (e.g., via `bandit`, `semgrep`)
+  - Performance profiling to suggest optimization tasks
+  - Automated dependency update suggestions
+- **Multi-agent collaboration patterns**
+- **Natural language plan editing**
+- **Integration with GitHub Issues/PRs**
+- **Plan templates and best practices library**
+- **Real-time agent coordination dashboard
 
 ---
 
@@ -185,10 +158,11 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 ### Reference
 - **`lab-testing.md` - Testing infrastructure, scenarios, evaluation metrics
 - **`architecture.md`** - System design, queue fairness, state management
-- **`agent-performance.md` - Auto-generated test metrics (latest results)
+- **`agent-workflow-visualization.md`** - Diagram of the core agent-CLI interaction loop
+- **`agent-performance.md`** - Auto-generated test metrics (latest results)
 
 ### Archive
-- **`archive/v1.5-implementation-tasks.md`** - All 46 completed v1.5 tasks with commit SHAs
+- This section is reserved for historical plans and completed task lists.
 
 ---
 
