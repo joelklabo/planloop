@@ -105,10 +105,10 @@ def _generate_agent_instructions(state: SessionState, lock_status, queue_status)
         return "Work on the current task and update status using 'planloop update'."
 
     elif state.now.reason == NowReason.COMPLETED:
-        return "All tasks complete! Add final_summary to the session or mark it done."
+        return "All tasks complete! Run 'planloop suggest' to find more work, or add final_summary to close the session."
 
     elif state.now.reason == NowReason.IDLE:
-        return "No tasks defined. Use 'planloop update' to add tasks and define the plan."
+        return "No tasks defined. Run 'planloop suggest' to discover work, or use 'planloop update' to add tasks manually."
 
     elif state.now.reason == NowReason.WAITING_ON_LOCK:
         if lock_status.info:
