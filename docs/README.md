@@ -30,6 +30,16 @@ Updated via: `planloop guide --target agents-md --apply`
 
 ---
 
+## Reference
+
+### `reference/agent-testing-reference.md`
+Quick reference for testing agents - output capture, authentication, debugging, common issues.
+
+### `reference/prompt-optimization.md`
+Best practices for prompting different AI agents (Claude, Copilot, OpenAI).
+
+---
+
 ## Archive
 
 ### `archive/v1.5-implementation-tasks.md`
