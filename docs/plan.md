@@ -1,6 +1,7 @@
 # planloop Development Plan
 
 **Last Updated**: 2025-11-17
+**Version**: 1.7 (Active Development)
 
 ---
 
@@ -58,7 +59,7 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 
 **Goal**: Help AI agents discover work autonomously by analyzing codebases for gaps, technical debt, and improvements.
 
-**Status**: Planning Complete (see `tmp/strategy2-implementation-plan.md`)
+**Status**: ✅ COMPLETE - All phases delivered (see `archive/v1.6-suggest-implementation-plan.md`)
 
 **Implementation Tasks** (7 days):
 
@@ -89,24 +90,89 @@ All 46 implementation tasks completed. Full task breakdown in `archive/v1.5-impl
 
 ---
 
-### Lab Testing (Ongoing)
-- [ ] Implement multi-signal-cascade scenario
-- [ ] Implement dependency-chain scenario  
-- [ ] Implement full-plan-completion scenario
-- [ ] A/B test prompt variations
-- [ ] Cross-agent prompt pattern documentation
+---
 
-**Blocked Until**: All agents reach 60%+ baseline on `cli-basics`
+## 📋 v1.7 Priorities: Quality & Usability
 
-### Future Features (v1.7+)
-- [ ] Task dependency visualization
-- [ ] Session analytics/telemetry dashboard
-- [ ] Lock queue metrics and tuning
-- [ ] Advanced multi-agent coordination patterns
-- [ ] Performance profiling for large plans
-- [ ] `planloop inject` interactive decomposition (Strategy 1)
-- [ ] Embeddings-based semantic code search for suggest
-- [ ] Learning from suggestion feedback
+### Phase 1: Agent Performance (Priority: Critical)
+**Goal**: Reach 60%+ baseline compliance for all agents
+
+**Current Status**:
+- ✅ Copilot (gpt-5): 64.3% - Target achieved
+- ⏳ Claude (sonnet): 29.3% - Needs +30% improvement
+- ⏳ OpenAI: 33.3% - Needs +27% improvement
+
+**Tasks**:
+- [ ] **P1.1**: Optimize Claude prompts (target 60%+ pass rate)
+- [ ] **P1.2**: Optimize OpenAI prompts (target 60%+ pass rate)
+- [ ] **P1.3**: Document successful prompt patterns per agent
+- [ ] **P1.4**: Implement regression protection for Copilot baseline
+- [ ] **P1.5**: Create agent-specific prompt variations if needed
+
+**Tools**: `labs/optimize_safely.sh`, `labs/check_baseline.sh`
+
+---
+
+### Phase 2: Advanced Testing Scenarios (Priority: High)
+**Blocked Until**: All agents reach 60%+ baseline
+
+**Tasks**:
+- [ ] **P2.1**: Implement multi-signal-cascade scenario (5 tasks, 3 signals)
+- [ ] **P2.2**: Implement dependency-chain scenario (complex dependencies)
+- [ ] **P2.3**: Implement full-plan-completion scenario (12-task feature)
+- [ ] **P2.4**: A/B test prompt variations across agents
+- [ ] **P2.5**: Document cross-agent prompt patterns
+
+---
+
+### Phase 3: Analytics & Monitoring (Priority: Medium)
+**Goal**: Improve visibility into agent performance and system health
+
+**Tasks**:
+- [ ] **P3.1**: Session analytics dashboard
+  - Task completion times
+  - Agent performance by task type
+  - Success/failure patterns
+- [ ] **P3.2**: Lock queue metrics and tuning
+  - Wait time analytics
+  - Queue fairness verification
+  - Performance under contention
+- [ ] **P3.3**: Performance profiling for large plans
+  - Benchmark plans with 50+ tasks
+  - Identify bottlenecks
+  - Optimize compute_now() for scale
+
+---
+
+### Phase 4: Advanced Features (Priority: Low)
+**Goal**: Enhance agent capabilities and developer experience
+
+**Tasks**:
+- [ ] **P4.1**: Task dependency visualization
+  - Generate dependency graphs
+  - Identify critical paths
+  - Visual plan representation
+- [ ] **P4.2**: `planloop inject` interactive decomposition
+  - Break down complex tasks
+  - Generate subtasks interactively
+  - Validate dependencies
+- [ ] **P4.3**: Embeddings-based semantic code search
+  - Vector search for similar code patterns
+  - Enhance suggest with semantic understanding
+  - Find related implementations
+- [ ] **P4.4**: Learning from suggestion feedback
+  - Track accepted/rejected suggestions
+  - Improve suggestion quality over time
+  - Personalize to team preferences
+
+---
+
+### Future Research (v1.8+)
+- Multi-agent collaboration patterns
+- Natural language plan editing
+- Integration with GitHub Issues/PRs
+- Plan templates and best practices library
+- Real-time agent coordination dashboard
 
 ---
 
