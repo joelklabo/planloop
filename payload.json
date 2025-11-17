@@ -1,6 +1,1 @@
-{
-  "session": "cli-basics-20251116T211853Z-14f0",
-  "tasks": [{"id": 2, "status": "IN_PROGRESS"}],
-  "context_notes": ["Started working on this second task"],
-  "final_summary": "Updated task 2 to IN_PROGRESS"
-}
+{"session":"cli-basics-20251117T004736Z-ceda","tasks":[{"id":2,"status":"DONE"}]}

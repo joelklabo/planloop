@@ -15,34 +15,45 @@ trace_dir=${PLANLOOP_LAB_RESULTS:?}/$agent_name
 mkdir -p "$trace_dir"
 
 # Prompt for the agent - guide it through the planloop workflow
-# This should align with ~/.planloop/prompts/core-v1/handshake.prompt.md
-prompt=${PLANLOOP_LAB_AGENT_PROMPT:-"You are testing planloop workflow compliance. Follow these steps EXACTLY:
+# v0.3.1: Enhanced to address top failure patterns (missing status-after, missing updates)
+prompt=${PLANLOOP_LAB_AGENT_PROMPT:-"You are testing planloop workflow compliance. Your goal: Complete ALL tasks and handle ALL blockers.
 
-STEP 1: Run 'planloop status --session $session --json' to see current state
+**WORKFLOW LOOP - Repeat until all tasks are DONE:**
 
-STEP 2: Check 'now.reason' in the status output:
-- If it's a blocker (ci_blocker, lint_blocker): Close it with 'planloop alert --close --id <signal-id>'
-- If waiting_on_lock: Stop here
-- If deadlocked: Stop here
-- If completed: Stop here  
-- If task: Continue to step 3
+1. ALWAYS START: Run 'planloop status --session $session --json'
 
-STEP 3: After closing ANY blocker, MUST rerun 'planloop status' to verify it's cleared
+2. READ 'now.reason' from status output:
+   - If 'ci_blocker' or 'lint_blocker': Go to BLOCKER HANDLING
+   - If 'task': Go to TASK HANDLING
+   - If 'waiting_on_lock' or 'deadlocked': STOP
+   - If 'completed': STOP
 
-STEP 4: Create a JSON payload file to update the referenced task to IN_PROGRESS:
-{
-  \"tasks\": [{\"id\": <task-id>, \"status\": \"IN_PROGRESS\"}],
-  \"context_notes\": [\"Started working on this task\"],
-  \"final_summary\": \"Updated task <id> to IN_PROGRESS\"
-}
+3. BLOCKER HANDLING (if now.reason contains blocker):
+   a) Close signal: 'planloop alert --close --id <signal-id>' (get id from 'now.blocker_id')
+   b) CRITICAL: MUST run 'planloop status --session $session --json' again to verify blocker cleared
+   c) Go back to step 2
 
-STEP 5: Run 'planloop update --session $session --file payload.json'
+4. TASK HANDLING (if now.reason is 'task'):
+   a) Get task id from 'now.task_id' in status output
+   b) Write payload.json with:
+      {\"tasks\": [{\"id\": <task-id>, \"status\": \"IN_PROGRESS\"}]}
+   c) Run 'planloop update --session $session --file payload.json'
+   d) CRITICAL: MUST run 'planloop status --session $session --json' after EVERY update
+   e) Write payload.json to mark DONE:
+      {\"tasks\": [{\"id\": <task-id>, \"status\": \"DONE\"}]}
+   f) Run 'planloop update --session $session --file payload.json'
+   g) CRITICAL: MUST run 'planloop status --session $session --json' after update
+   h) Go back to step 1
 
-STEP 6: ALWAYS run 'planloop status --session $session --json' after updating to verify
+5. CHECK COMPLETION: After each status, check if ANY tasks remain TODO or IN_PROGRESS
+   - If yes: Continue loop from step 1
+   - If no: All done!
 
-STEP 7: If more TODO tasks exist, repeat from step 4 for the next task
-
-Be systematic. Follow ALL steps."}
+RULES:
+- Run status AFTER closing ANY signal
+- Run status AFTER ANY update
+- Keep going until ALL tasks show status='DONE'
+- Don't stop early"}
 
 log_trace "run-start" "agent=claude workspace=$workspace session=$session"
 

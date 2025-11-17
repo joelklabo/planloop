@@ -1,16 +1,37 @@
 # planloop – Agent Guide
 
-`planloop` is halfway through its v1.5 roadmap. The CLI, registry, prompts, TUI,
-web view, self-test harness, and history helpers exist; logging, safe modes, and
-the automated prompt lab still need implementation. Use this guide plus
-`docs/plan.md` to stay aligned with the workflow humans expect.
+v1.5 is complete! All core features are implemented and tested. Use this guide plus
+`docs/plans/active.md` for current work. Focus is now on agent testing and optimization.
 
-## Source of truth
-- `docs/plans/plan.md` – the canonical backlog. Update task statuses there before and
-  after every commit, including the commit SHA when you mark items `DONE`.
-- `docs/agents.md` (this file) – the distilled rules you should internalize before
-  coding. Re-run `planloop guide --target agents-md --apply` when the prompts or
-  workflow change.
+## Project Organization
+
+### Documentation Structure
+All documentation lives in `docs/`:
+- **`docs/agents.md`** (this file) - Agent workflow contract, symlinked to:
+  - `AGENTS.md` (root)
+  - `CLAUDE.md` (root)  
+  - `.github/copilot-instructions.md` (GitHub Copilot)
+- **`docs/plans/`** - Active implementation plans and backlog
+  - `active.md` - Current work (lab testing, future enhancements)
+- **`docs/reference/`** - Reference docs (completed work, research, guides)
+  - `v1.5-implementation-complete.md` - All v1.5 implementation tasks (DONE)
+  - `lab-testing-guide.md` - Testing infrastructure and metrics
+  - `multi-agent-research.md` - Queue fairness design
+- **`docs/agent-performance.md`** - Auto-generated test metrics
+- **`docs/README.md`** - Documentation index
+
+**Naming Convention**: All markdown files use `lowercase-with-hyphens.md`
+
+### Temporary Files
+**CRITICAL**: Use `tmp/` folder at project root for ALL temporary files, logs, debug output, etc.
+- ✅ **DO**: Write to `tmp/debug.log`, `tmp/analysis.json`, etc.
+- ❌ **DON'T**: Create temp files in project root, use system `/tmp`, or scatter files elsewhere
+- This folder is gitignored and safe for any temporary work
+
+## Source of Truth
+- **`docs/plans/active.md`** - Current backlog and active work
+- **`docs/agents.md`** (this file) - Workflow rules and command reference
+- Re-run `planloop guide --target agents-md --apply` when prompts/workflow change
 
 ## Workflow contract
 1. **Always** call `planloop status --json` to decide the next action. Respect
@@ -18,14 +39,14 @@ the automated prompt lab still need implementation. Use this guide plus
    - `ci_blocker` → fix the signal before touching tasks.
    - `task` → implement the referenced task using TDD.
    - `waiting_on_lock` → sleep and retry `status`.
-2. **Don’t wait for optional direction** — once a task is done (or a signal is cleared), pick the next `Status: TODO` item from `docs/plan.md`, mark it `IN_PROGRESS`, and keep going. Treat the plan as your instruction set; do not ask “what should I do next?” or seek confirmation before acting, even while processing blockers—just handle the signal, rerun status, and move to the next step autonomously unless a human explicitly interrupts you.
+2. **Don’t wait for optional direction** — once a task is done (or a signal is cleared), pick the next `Status: TODO` item from `docs/plans/active.md`, mark it `IN_PROGRESS`, and keep going. Treat the plan as your instruction set; do not ask “what should I do next?” or seek confirmation before acting, even while processing blockers—just handle the signal, rerun status, and move to the next step autonomously unless a human explicitly interrupts you.
 3. **Practice TDD**: write/update tests, watch them fail, implement, rerun
    tests, then refactor.
-4. **Commit often**: each task in `docs/plans/plan.md` should fit in a single commit.
+4. **Commit often**: each task should fit in a single commit.
    If work balloons, split the task in the plan before writing code.
 5. **Never** commit failing tests. Local WIP stays local.
 6. **Update the plan**: mark tasks `IN_PROGRESS` when you start, add context
-   while working, and record the commit SHA + summary when finished.
+   while working, and record completion status when finished.
 
 ## Key commands
 - `planloop status --json` → always the first step; surfaces tasks, signals,

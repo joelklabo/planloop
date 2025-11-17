@@ -23,4 +23,10 @@ htmlcov/
 .DS_Store
 .idea/
 .vscode/
+
+# Temporary files (use tmp/ for any temporary work files, logs, etc)
 .tmp/
+tmp/
+
+# Lab test results
+labs/results/

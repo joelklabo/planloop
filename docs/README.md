@@ -1,26 +1,42 @@
-# Documentation Directory
+# Documentation Index
 
-This directory contains all planloop documentation organized by purpose.
+This folder contains all planloop documentation for both humans and AI agents.
 
-## Structure
+## Core Documents
 
-### `/docs/agents.md`
-The agent workflow contract and command reference. This is the primary guide for AI agents working on planloop. Generated/updated via `planloop guide --target agents-md --apply`.
+### `agents.md`
+The agent workflow contract and command reference. Primary guide for AI agents working on planloop. Generated/updated via `planloop guide --target agents-md --apply`.
 
-### `/docs/plans/`
+**Symlinked to**:
+- `AGENTS.md` (root)
+- `CLAUDE.md` (root)
+- `.github/copilot-instructions.md` (GitHub Copilot)
+
+### `plans/`
 Active implementation plans and task backlogs.
 
-- **`plan.md`** - The canonical v1.5+ implementation backlog. All tasks, milestones, dependencies, and completion status live here. Update this before and after every commit.
+- **`active.md`** - Current work and backlog (v1.6+)
 
-### `/docs/reference/`
-Reference documents for research, design decisions, and historical information.
+### `reference/`
+Completed work, research, and technical guides.
 
-- **`multi-agent-research.md`** - Queue fairness design notes, telemetry details, and multi-agent coordination patterns for v1.6+
-- **`prompt_lab_results.md`** - Baseline compliance results from automated prompt lab runs
-- **`prompt_lab_run_report.md`** - Detailed history of lab runs documenting adapter evolution and compliance improvements
+- **`v1.5-implementation-complete.md`** - All v1.5 implementation tasks (DONE)
+- **`lab-testing-guide.md`** - Agent testing infrastructure and metrics
+- **`multi-agent-research.md`** - Queue fairness design notes
 
-## Navigation
+### `agent-performance.md`
+**Auto-generated** - Latest agent testing metrics (updated by `labs/generate_viz.py`)
 
-- Start with `agents.md` for workflow rules
-- Check `plans/plan.md` for current tasks and implementation status
-- Reference `reference/` documents when working on related features or investigating design decisions
+## Quick Start
+
+**For AI Agents**:
+- Read `agents.md` for workflow rules
+- Check `plans/active.md` for current tasks
+
+**For Testing**:
+- See `reference/lab-testing-guide.md`
+
+## Conventions
+
+- All markdown files use `lowercase-with-hyphens.md`
+- Temporary files go in `tmp/` at project root (gitignored)

@@ -1,13 +1,13 @@
 # 📊 Agent Performance Data
-**Total Test Runs:** 53
+**Total Test Runs:** 158
 
-**Latest Run:** `cli-basics-20251116T211853Z-14f0`
+**Latest Run:** `cli-basics-20251117T004736Z-ceda`
 
 ## Agent Performance by Model
 
-![claude:sonnet](https://img.shields.io/badge/claude_sonnet-26.5%25-orange) **Score:** 23.5/100
+![claude:unknown](https://img.shields.io/badge/claude_unknown-29.3%25-orange) **Score:** 32.2/100
 
-![copilot:gpt-5](https://img.shields.io/badge/copilot_gpt--5-30.8%25-orange) **Score:** 24.5/100
+![copilot:gpt-5](https://img.shields.io/badge/copilot_gpt--5-64.3%25-green) **Score:** 51.5/100
 
 ![openai:unknown](https://img.shields.io/badge/openai_unknown-33.3%25-orange) **Score:** 17.9/100
 
@@ -15,8 +15,8 @@
 
 | Agent+Model | Runs | Passes | Fails | Pass Rate | Avg Score | Top Errors |
 |-------------|------|--------|-------|-----------|-----------|------------|
-| claude:sonnet | 49 | 13 | 36 | 26.5% | 23.5 | missing status-after (21), missing update (18) |
-| copilot:gpt-5 | 52 | 16 | 36 | 30.8% | 24.5 | missing update (19), missing status-after (18) |
+| claude:unknown | 123 | 36 | 87 | 29.3% | 32.2 | missing status-after (72), missing update (69) |
+| copilot:gpt-5 | 157 | 101 | 56 | 64.3% | 51.5 | missing update (39), missing status-after (21) |
 | openai:unknown | 42 | 14 | 28 | 33.3% | 17.9 | trace log missing (15), missing status-after (13) |
 
 ## Notes
