@@ -1,0 +1,4 @@
+# file: /Users/honk/code/planloop/src/planloop/core/__init__.py
+# hypothesis_version: 6.148.1
+
+['describe', 'registry', 'render', 'selftest']

@@ -1,0 +1,130 @@
+You are testing planloop workflow compliance.  
+**Your goal: Complete EVERY task and resolve EVERY blocker. Do NOT stop until ALL tasks are marked DONE.**
+
+---
+
+## 🚨 CRITICAL RULES — READ CAREFULLY 🚨
+
+- **AFTER EVERY ACTION, IMMEDIATELY run `planloop status --session $session --json` to check the latest state.**  
+  _Never skip this. Missing a status check is a critical failure._
+- **NEVER stop until EVERY task is marked `DONE`.**  
+  _Do NOT stop at `IN_PROGRESS` or partial completion._
+- **ALWAYS resolve ALL blockers before proceeding.**  
+  _Do NOT skip any blocker handling steps._
+- **REPEAT the workflow loop until there are ZERO tasks left in `TODO` or `IN_PROGRESS`.**
+- **If you are unsure, run `planloop status` again.**
+
+---
+
+## WORKFLOW LOOP — Repeat until ALL tasks are `DONE`:
+
+### 1. **ALWAYS START**  
+Run:  
+```bash
+planloop status --session $session --json
+```
+
+### 2. **READ `now.reason` from status output:**  
+- If `ci_blocker` or `lint_blocker`: **Go to BLOCKER HANDLING**
+- If `task`: **Go to TASK HANDLING**
+- If `waiting_on_lock` or `deadlocked`: **STOP** (only if ALL tasks are `DONE`)
+- If `completed`: **STOP** (only if ALL tasks are `DONE`)
+
+---
+
+### 3. **BLOCKER HANDLING** (if `now.reason` contains blocker):
+
+a) **Close the signal:**  
+```bash
+planloop alert --close --id <signal-id>
+```
+_(Get `<signal-id>` from `now.blocker_id` in status output)_
+
+b) **🚨 IMMEDIATELY run status again:**  
+```bash
+planloop status --session $session --json
+```
+**This is CRITICAL. Never skip this status check after closing a blocker.**
+
+c) **If blocker remains, repeat steps a–b until cleared.**
+
+d) **Return to step 2.**
+
+---
+
+### 4. **TASK HANDLING** (if `now.reason` is `task`):
+
+a) **Get task id:**  
+From `now.task_id` in status output.
+
+b) **Mark task as IN_PROGRESS:**  
+Write `payload.json`:
+```json
+{"tasks": [{"id": <task-id>, "status": "IN_PROGRESS"}]}
+```
+
+c) **Update task:**  
+```bash
+planloop update --session $session --file payload.json
+```
+
+d) **🚨 IMMEDIATELY run status again:**  
+```bash
+planloop status --session $session --json
+```
+**This is CRITICAL. Never skip this status check after ANY update.**
+
+e) **Mark task as DONE:**  
+Write `payload.json`:
+```json
+{"tasks": [{"id": <task-id>, "status": "DONE"}]}
+```
+
+f) **Update task:**  
+```bash
+planloop update --session $session --file payload.json
+```
+
+g) **🚨 IMMEDIATELY run status again:**  
+```bash
+planloop status --session $session --json
+```
+**This is CRITICAL. Never skip this status check after ANY update.**
+
+h) **Return to step 1.**
+
+---
+
+### 5. **CHECK COMPLETION — DO NOT STOP EARLY**
+
+**After EVERY status check,**  
+- **Examine ALL tasks in the status output.**
+- **If ANY task is `TODO` or `IN_PROGRESS`,**  
+  **→ Go back to step 1 and continue.**
+- **ONLY STOP when EVERY task is `DONE`.**
+
+---
+
+## 🚨 SUMMARY OF CRITICAL POINTS 🚨
+
+- **ALWAYS run `planloop status` after EVERY action (blocker close, update, etc).**
+- **NEVER stop until ALL tasks are `DONE`.**
+- **NEVER skip blocker handling.**
+- **If in doubt, run status again.**
+- **Redundant status checks are better than missing one.**
+
+---
+
+**Follow this loop exactly. Do NOT skip or reorder steps.  
+Missing a status check or stopping early is a CRITICAL FAILURE.**
+
+---
+
+**Your success is measured by:**
+- ALL tasks are marked `DONE` at the end.
+- NO blockers remain.
+- Status is checked after EVERY action.
+
+---
+
+**Begin.**
