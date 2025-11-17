@@ -4,9 +4,15 @@
 
 set -e
 
-BASELINE_PASS_RATE=41.8
-BASELINE_AVG_SCORE=35.3
-REGRESSION_THRESHOLD=5.0  # Alert if pass rate drops more than 5%
+# Read baseline from version-controlled JSON file
+BASELINE=$(python3 -c "
+import json
+with open('labs/baseline.json') as f:
+    data = json.load(f)
+    print(f\"{data['copilot']['pass_rate']} {data['copilot']['avg_score']} {data['config']['regression_threshold']}\")
+")
+
+read BASELINE_PASS_RATE BASELINE_AVG_SCORE REGRESSION_THRESHOLD <<< "$BASELINE"
 
 echo "=== Checking Copilot Baseline ==="
 

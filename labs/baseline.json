@@ -1,0 +1,31 @@
+{
+  "copilot": {
+    "pass_rate": 58.3,
+    "avg_score": 44.8,
+    "version": "v0.3.1",
+    "last_updated": "2025-11-17",
+    "prompt_file": "labs/prompts/copilot-v0.3.1.txt",
+    "notes": "Baseline established after environment setup improvements"
+  },
+  "claude": {
+    "pass_rate": 46.2,
+    "avg_score": 41.7,
+    "version": "v0.3.2",
+    "last_updated": "2025-11-17",
+    "prompt_file": "labs/agents/claude_real.sh",
+    "notes": "Simplified prompt structure, targeting 60%+"
+  },
+  "openai": {
+    "pass_rate": 5.3,
+    "avg_score": 3.5,
+    "version": "v0.1.0",
+    "last_updated": "2025-11-17",
+    "prompt_file": "labs/prompts/openai-v0.1.txt",
+    "notes": "Needs significant work, deprioritized"
+  },
+  "config": {
+    "regression_threshold": 5.0,
+    "description": "Maximum acceptable drop in pass rate before alerting",
+    "update_command": "./labs/update_baseline.sh"
+  }
+}

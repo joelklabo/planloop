@@ -68,8 +68,8 @@
 **Tasks**:
 - [✅] **P1.1**: Optimize Claude prompts (target 60%+ pass rate) - commit 3b60c7b
 - [❌] **P1.2**: Optimize OpenAI prompts (target 60%+ pass rate) - *Deprioritized, focusing on Copilot.*
-- [🔄] **P1.3**: Document successful prompt patterns per agent - *IN PROGRESS by Copilot-CLI*
-- [ ] **P1.4**: Implement regression protection for Copilot baseline
+- [✅] **P1.3**: Document successful prompt patterns per agent - commit 9fdf7a5
+- [🔄] **P1.4**: Implement regression protection for Copilot baseline - *IN PROGRESS by Copilot-CLI*
 - [ ] **P1.5**: Create agent-specific prompt variations if needed
 
 **Tools**: `labs/optimize_safely.sh`, `labs/check_baseline.sh`
