@@ -1,7 +1,7 @@
 # 📊 Agent Performance Data
-**Total Test Runs:** 242
+**Total Test Runs:** 251
 
-**Latest Run:** `cli-basics-20251117T030453Z-9696`
+**Latest Run:** `cli-basics-20251117T030632Z-e41d`
 
 ## Agent Performance by Model
 
@@ -9,7 +9,7 @@
 
 ![copilot:unknown](https://img.shields.io/badge/copilot_unknown-64.3%25-green) **Score:** 51.5/100
 
-![openai:gpt-4](https://img.shields.io/badge/openai_gpt--4-25.0%25-orange) **Score:** 14.5/100
+![openai:gpt-4](https://img.shields.io/badge/openai_gpt--4-21.5%25-orange) **Score:** 13.2/100
 
 ## Detailed Statistics
 
@@ -17,7 +17,7 @@
 |-------------|------|--------|-------|-----------|-----------|------------|
 | claude:unknown | 193 | 73 | 120 | 37.8% | 37.3 | missing status-after (105), missing update (102) |
 | copilot:unknown | 157 | 101 | 56 | 64.3% | 51.5 | missing update (39), missing status-after (21) |
-| openai:gpt-4 | 56 | 14 | 42 | 25.0% | 14.5 | missing status-after (25), missing update (21) |
+| openai:gpt-4 | 65 | 14 | 51 | 21.5% | 13.2 | missing status-after (34), missing update (30) |
 
 ## Notes
 

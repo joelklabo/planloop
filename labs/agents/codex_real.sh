@@ -15,62 +15,54 @@ trace_dir=${PLANLOOP_LAB_RESULTS:?}/$agent_name
 mkdir -p "$trace_dir"
 
 # Prompt for the agent - guide it through the planloop workflow
-# v0.1.0: Conversational + directive mix optimized for Codex/GPT-4
-prompt=${PLANLOOP_LAB_AGENT_PROMPT:-"Hello! You're a workflow compliance tester for planloop. Let's work together to complete all tasks and handle any blockers.
+# v0.2.0: Directive approach (learning: conversational hurt performance)
+prompt=${PLANLOOP_LAB_AGENT_PROMPT:-"You are testing planloop workflow compliance. Your goal: Complete ALL tasks and handle ALL blockers.
 
-**Your Mission**: Complete every task and ensure all blockers are resolved. Success means all tasks marked DONE and no active blockers remaining.
+**CRITICAL: Run 'planloop status' after EVERY action**
+After 'planloop update' → Run status
+After 'planloop alert --close' → Run status
+NO EXCEPTIONS.
 
-Here's how we'll do this:
+**WORKFLOW LOOP - Repeat until all tasks are DONE:**
 
-## Step 1: Always Check Status First
-Run this command to see what needs doing:
-\`\`\`
-planloop status --session $session --json
-\`\`\`
+1. START: Run 'planloop status --session $session --json'
 
-Look at the \`now.reason\` field - it tells you what to do next.
+2. READ 'now.reason' from status output:
+   - If 'ci_blocker' or 'lint_blocker': Go to step 3
+   - If 'task': Go to step 4
+   - If 'waiting_on_lock' or 'deadlocked': STOP
+   - If 'completed': STOP (success!)
 
-## Step 2: Take Action Based on What You See
+3. BLOCKER HANDLING:
+   a) Get blocker ID from 'now.blocker_id'
+   b) Run: planloop alert --close --id <blocker-id>
+   c) **CRITICAL**: Run 'planloop status --session $session --json' immediately
+   d) Verify blocker cleared, go to step 2
 
-**If you see a blocker** (now.reason = 'ci_blocker' or 'lint_blocker'):
-1. Close it: \`planloop alert --close --id <signal-id>\` (get the ID from \`now.blocker_id\`)
-2. **Important**: Run status again immediately to verify it's cleared
-3. Go back to Step 1
+4. TASK HANDLING:
+   a) Get task ID from 'now.task_id'
+   
+   b) Mark IN_PROGRESS:
+      echo '{\"tasks\": [{\"id\": TASK_ID, \"status\": \"IN_PROGRESS\"}]}' > payload.json
+      planloop update --session $session --file payload.json
+   
+   c) **CRITICAL**: Run 'planloop status --session $session --json'
+   
+   d) Mark DONE:
+      echo '{\"tasks\": [{\"id\": TASK_ID, \"status\": \"DONE\"}]}' > payload.json
+      planloop update --session $session --file payload.json
+   
+   e) **CRITICAL**: Run 'planloop status --session $session --json'
+   
+   f) Go to step 1
 
-**If you see a task** (now.reason = 'task'):
-1. Get the task ID from \`now.task_id\`
-2. Mark it IN_PROGRESS:
-   \`\`\`bash
-   echo '{\"tasks\": [{\"id\": TASK_ID, \"status\": \"IN_PROGRESS\"}]}' > payload.json
-   planloop update --session $session --file payload.json
-   \`\`\`
-3. **Important**: Run status after the update to verify
-4. Mark it DONE:
-   \`\`\`bash
-   echo '{\"tasks\": [{\"id\": TASK_ID, \"status\": \"DONE\"}]}' > payload.json
-   planloop update --session $session --file payload.json
-   \`\`\`
-5. **Important**: Run status after the update to verify
-6. Go back to Step 1
+**SUCCESS CRITERIA:**
+- ALL tasks have status='DONE'
+- Status called after EVERY update and alert close
+- NO active blockers
+- Final now.reason='completed'
 
-**If you see 'completed'**: 
-Excellent! You're done. All tasks are complete.
-
-**If you see 'waiting_on_lock' or 'deadlocked'**: 
-Stop and report - something needs manual intervention.
-
-## The Golden Rule
-**After every action (update or alert close), always run status to verify the change worked.** This is the #1 requirement for passing the test.
-
-## Success Checklist
-You'll know you succeeded when:
-- ✓ All tasks show status='DONE' in the final state
-- ✓ You ran status after every single update
-- ✓ You ran status after closing any blocker
-- ✓ No blockers remain active
-- ✓ Final now.reason = 'completed'
-
-Let's get started! Run that first status command and let me know what you see."} 
+**REMEMBER: The #1 failure is forgetting status after actions. Always verify your changes worked.**"} 
 
 log_trace "run-start" "agent=codex workspace=$workspace session=$session"
 

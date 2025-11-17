@@ -1,25 +1,25 @@
 {
-  "total_runs": 242,
-  "latest_run": "cli-basics-20251117T030453Z-9696",
+  "total_runs": 251,
+  "latest_run": "cli-basics-20251117T030632Z-e41d",
   "agents": {
     "openai": {
-      "runs": 56,
+      "runs": 65,
       "passes": 14,
-      "fails": 42,
-      "pass_rate": 0.25,
-      "fail_rate": 0.75,
+      "fails": 51,
+      "pass_rate": 0.2153846153846154,
+      "fail_rate": 0.7846153846153846,
       "top_errors": [
         [
           "missing status-after",
-          25
+          34
         ],
         [
           "missing update",
-          21
+          30
         ],
         [
-          "trace log missing",
-          17
+          "missing status-before",
+          21
         ]
       ]
     },
@@ -68,23 +68,23 @@
   },
   "agents_by_model": {
     "openai:gpt-4": {
-      "runs": 56,
+      "runs": 65,
       "passes": 14,
-      "fails": 42,
-      "pass_rate": 0.25,
-      "avg_score": 14.464285714285714,
+      "fails": 51,
+      "pass_rate": 0.2153846153846154,
+      "avg_score": 13.153846153846153,
       "top_errors": [
         [
           "missing status-after",
-          25
+          34
         ],
         [
           "missing update",
-          21
+          30
         ],
         [
-          "trace log missing",
-          17
+          "missing status-before",
+          21
         ]
       ]
     },
