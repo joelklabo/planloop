@@ -1,4 +1,0 @@
-# file: /Users/honk/code/planloop/src/planloop/core/describe.py
-# hypothesis_version: 6.141.1
-
-['artifact_types', 'describe_payload', 'enum_reference', 'enums', 'error_codes', 'now_reasons', 'signal_levels', 'signal_types', 'state_schema', 'task_statuses', 'task_types', 'update_schema']

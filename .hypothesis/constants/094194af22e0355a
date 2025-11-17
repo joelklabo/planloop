@@ -1,4 +1,0 @@
-# file: /Users/honk/code/planloop/src/planloop/tui/app.py
-# hypothesis_version: 6.148.1
-
-['CLOSED', 'ID', 'OPEN', 'Quit', 'Signal', 'State', 'Status', 'Title', 'q', 'quit', 'signals', 'summary', 'tasks']

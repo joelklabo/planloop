@@ -1,4 +1,0 @@
-# file: /Users/honk/code/planloop/src/planloop/core/state.py
-# hypothesis_version: 6.148.1
-
-['; ', 'BLOCKED', 'CANCELLED', 'DONE', 'FAILED', 'IN_PROGRESS', 'OUT_OF_SCOPE', 'SKIPPED', 'TODO', 'WAITING', 'bench', 'blocker', 'chore', 'ci', 'ci_blocker', 'completed', 'deadlocked', 'design', 'diff', 'doc', 'escalated', 'feature', 'file', 'fix', 'high', 'idle', 'info', 'investigate', 'lint', 'log', 'other', 'refactor', 'system', 'task', 'test', 'url', 'waiting_on_lock']

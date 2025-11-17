@@ -10,12 +10,17 @@ REGRESSION_THRESHOLD=5.0  # Alert if pass rate drops more than 5%
 
 echo "=== Checking Copilot Baseline ==="
 
-# Get current metrics
+# Get current metrics (handle any copilot:* key)
 CURRENT=$(python3 -c "
 import json
 with open('labs/metrics.json') as f:
     data = json.load(f)
-    copilot = data['agents_by_model'].get('copilot:gpt-5', {})
+    # Find any copilot key
+    copilot = {}
+    for key, val in data['agents_by_model'].items():
+        if key.startswith('copilot:'):
+            copilot = val
+            break
     print(f\"{copilot.get('pass_rate', 0) * 100:.1f} {copilot.get('avg_score', 0):.1f}\")
 ")
 

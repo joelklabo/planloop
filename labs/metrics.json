@@ -1,6 +1,6 @@
 {
-  "total_runs": 158,
-  "latest_run": "cli-basics-20251117T004736Z-ceda",
+  "total_runs": 188,
+  "latest_run": "cli-basics-20251117T013119Z-be89",
   "agents": {
     "openai": {
       "runs": 42,
@@ -24,19 +24,19 @@
       ]
     },
     "claude": {
-      "runs": 123,
-      "passes": 36,
-      "fails": 87,
-      "pass_rate": 0.2926829268292683,
-      "fail_rate": 0.7073170731707317,
+      "runs": 153,
+      "passes": 54,
+      "fails": 99,
+      "pass_rate": 0.35294117647058826,
+      "fail_rate": 0.6470588235294118,
       "top_errors": [
         [
           "missing status-after",
-          72
+          84
         ],
         [
           "missing update",
-          69
+          81
         ],
         [
           "trace log missing",
@@ -88,20 +88,20 @@
         ]
       ]
     },
-    "claude:unknown": {
-      "runs": 123,
-      "passes": 36,
-      "fails": 87,
-      "pass_rate": 0.2926829268292683,
-      "avg_score": 32.235772357723576,
+    "claude:sonnet": {
+      "runs": 153,
+      "passes": 54,
+      "fails": 99,
+      "pass_rate": 0.35294117647058826,
+      "avg_score": 36.50326797385621,
       "top_errors": [
         [
           "missing status-after",
-          72
+          84
         ],
         [
           "missing update",
-          69
+          81
         ],
         [
           "trace log missing",
@@ -109,7 +109,7 @@
         ]
       ]
     },
-    "copilot:gpt-5": {
+    "copilot:unknown": {
       "runs": 157,
       "passes": 101,
       "fails": 56,

@@ -1,4 +1,0 @@
-# file: /Users/honk/code/planloop/src/planloop/config.py
-# hypothesis_version: 6.148.1
-
-['INFO', 'dry_run', 'enabled', 'history', 'level', 'logging', 'no_plan_edit', 'safe_modes', 'strict', 'update', 'utf-8']

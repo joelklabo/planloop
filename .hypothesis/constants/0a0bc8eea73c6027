@@ -1,4 +1,0 @@
-# file: /Users/honk/code/planloop/src/planloop/guide.py
-# hypothesis_version: 6.148.1
-
-['\n## Goal Prompt', '\n## Handshake', '\n## Summary Prompt', 'GUIDE_HEADER', 'MARKER', 'core-v1', 'detect_marker', 'goal', 'handshake', 'insert_guide', 'render_guide', 'reuse_template', 'summary', 'utf-8']

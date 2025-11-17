@@ -1,4 +1,0 @@
-# file: /Users/honk/code/planloop/labs/scenarios/__init__.py
-# hypothesis_version: 6.141.1
-
-['SCENARIOS', 'cli-basics', 'get_scenario']

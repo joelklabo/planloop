@@ -1,4 +1,0 @@
-# file: /Users/honk/code/planloop/src/planloop/tui/__init__.py
-# hypothesis_version: 6.141.1
-
-['PlanloopViewApp', 'SessionViewModel', 'TEXTUAL_AVAILABLE']

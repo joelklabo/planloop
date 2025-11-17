@@ -1,4 +1,0 @@
-# file: /Users/honk/code/planloop/labs/agents/__init__.py
-# hypothesis_version: 6.141.1
-
-['ClaudeAdapter', 'CopilotAdapter', 'OpenAIAdapter']
