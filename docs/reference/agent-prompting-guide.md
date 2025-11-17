@@ -69,8 +69,9 @@
 ## GitHub Copilot
 
 ### Current Performance
-- 64.3% pass rate ✅ WORKING WELL
-- Avg score: 51.5/100
+- 46.2% pass rate (v0.0.358 baseline after TTY fix)
+- Avg score: 38.5/100
+- Previously: 64.3% (authentication working, pre-TTY issue)
 
 ### Key Strengths
 - IDE-focused, fast completions
@@ -110,10 +111,15 @@
 ❌ Conversational tone
 
 ### Current Status
-**v0.3.1 - STABLE - DO NOT MODIFY**
-- Pass rate: 64.3%
-- Numbered lists + CRITICAL markers = working perfectly
-- **Any changes risk regression**
+**v0.3.1 - BASELINE ESTABLISHED**
+- Pass rate: 46.2% (post-TTY fix)
+- Numbered lists + CRITICAL markers working
+- **Next goal: Optimize to 60-70%**
+
+### Version History
+- v0.3.1: File-based prompts, TTY fix (46.2% baseline)
+- v0.3.0: Added status-after enforcement
+- Previous peak: 64.3% (before CLI update issues)
 
 ### Research Sources
 - GitHub Copilot Docs: https://docs.github.com/en/copilot
@@ -221,6 +227,41 @@
 
 ---
 
+## Automated Prompt Optimization
+
+### DSPy Framework
+
+**What It Is**: Framework for programmatically optimizing prompts using ML
+- URL: https://github.com/stanfordnlp/dspy
+- Optimizers: MIPRO, BootstrapFewShot, etc.
+- Requires: Training examples with inputs/outputs
+
+**When to Use**:
+- Complex multi-step workflows
+- Large training datasets available (20+ examples)
+- Need data-driven optimization vs manual iteration
+- Have compute budget for optimization runs
+
+**When NOT to Use**:
+- Simple, well-understood tasks
+- Limited training examples (<10)
+- Constrained by cost (optimization uses many API calls)
+- Prompts already working well (>70% success)
+
+**Our Experience**:
+- ❌ DSPy struggled with our workflow (planloop compliance)
+- Issue: Signature was too abstract for optimizer
+- Better: Manual iteration with targeted fixes based on failure analysis
+- Lesson: DSPy works better for knowledge tasks than procedural workflows
+
+**Alternative Approaches**:
+- Manual prompt engineering with A/B testing (what we're doing)
+- Failure pattern analysis → targeted fixes
+- Small iterative improvements (5-10% gains)
+- Regular baseline testing to prevent regression
+
+---
+
 ## Maintenance
 
 **When to Update**:
@@ -230,4 +271,5 @@
 - When research reveals new patterns
 
 **Version History**:
+- v1.1 (2025-11-17): Added DSPy learnings, Copilot TTY fix
 - v1.0 (2025-11-17): Initial guide based on 218 test runs + research

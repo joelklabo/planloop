@@ -160,3 +160,31 @@ If you hit a rate limit:
 - 9 runs hit usage limit starting at 3:11am
 - Reset scheduled for Nov 20, 2025 9:22am
 - Performance appeared to decline but was actually limit errors
+
+## Known Issues
+
+### Copilot CLI v0.0.358 - CRITICAL TTY REQUIREMENT ⚠️
+
+**The `-p` flag does NOT work in non-interactive/scripted contexts!**
+
+When using `copilot -p "prompt"` in automation:
+- Produces **no output** (empty stdout and stderr)
+- Exits with code 1 (failure)
+- No logs created even with `--log-dir`
+- `script` command workaround does NOT help
+
+**Root Cause**: Copilot CLI requires a **true TTY** for `-p` mode. This is a known limitation confirmed by GitHub:
+- Issue: https://github.com/github/copilot-cli/issues/560
+- Discussion: https://github.com/orgs/community/discussions/161238
+
+**Possible Workarounds** (not yet implemented):
+1. Use `expect` or similar TTY emulation tools
+2. Pipe input to interactive mode instead of using `-p`
+3. Wait for GitHub to add `--output` flag (requested but not available)
+
+**Current Status**: Copilot testing is **blocked** until we implement a workaround.
+
+**Other Copilot Issues:**
+- `--no-color` flag causes immediate exit (don't use)
+- Requires `gh auth login` before testing
+- Interactive mode works fine (only `-p` is broken)

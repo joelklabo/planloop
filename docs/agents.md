@@ -15,6 +15,8 @@ All documentation lives in `docs/`:
 - **`docs/architecture.md`** - System design reference
 - **`docs/lab-testing.md`** - Testing infrastructure guide
 - **`docs/agent-performance.md`** - Auto-generated test metrics
+- **`docs/reference/agent-prompting-guide.md`** - Agent-specific prompt optimization
+- **`docs/reference/agent-troubleshooting.md`** - Common issues and solutions
 - **`docs/archive/`** - Historical documentation (v1.5 task list)
 
 **Naming Convention**: All markdown files use `lowercase-with-hyphens.md`

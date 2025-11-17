@@ -16,44 +16,17 @@ mkdir -p "$trace_dir"
 
 # Prompt for the agent - guide it through the planloop workflow
 # v0.3.1: Enhanced to address top failure patterns (missing status-after, missing updates)
-prompt=${PLANLOOP_LAB_AGENT_PROMPT:-"You are testing planloop workflow compliance. Your goal: Complete ALL tasks and handle ALL blockers.
-
-**WORKFLOW LOOP - Repeat until all tasks are DONE:**
-
-1. ALWAYS START: Run 'planloop status --session $session --json'
-
-2. READ 'now.reason' from status output:
-   - If 'ci_blocker' or 'lint_blocker': Go to BLOCKER HANDLING
-   - If 'task': Go to TASK HANDLING
-   - If 'waiting_on_lock' or 'deadlocked': STOP
-   - If 'completed': STOP
-
-3. BLOCKER HANDLING (if now.reason contains blocker):
-   a) Close signal: 'planloop alert --close --id <signal-id>' (get id from 'now.blocker_id')
-   b) CRITICAL: MUST run 'planloop status --session $session --json' again to verify blocker cleared
-   c) Go back to step 2
-
-4. TASK HANDLING (if now.reason is 'task'):
-   a) Get task id from 'now.task_id' in status output
-   b) Write payload.json with:
-      {\"tasks\": [{\"id\": <task-id>, \"status\": \"IN_PROGRESS\"}]}
-   c) Run 'planloop update --session $session --file payload.json'
-   d) CRITICAL: MUST run 'planloop status --session $session --json' after EVERY update
-   e) Write payload.json to mark DONE:
-      {\"tasks\": [{\"id\": <task-id>, \"status\": \"DONE\"}]}
-   f) Run 'planloop update --session $session --file payload.json'
-   g) CRITICAL: MUST run 'planloop status --session $session --json' after update
-   h) Go back to step 1
-
-5. CHECK COMPLETION: After each status, check if ANY tasks remain TODO or IN_PROGRESS
-   - If yes: Continue loop from step 1
-   - If no: All done!
-
-RULES:
-- Run status AFTER closing ANY signal
-- Run status AFTER ANY update
-- Keep going until ALL tasks show status='DONE'
-- Don't stop early"}
+# Load prompt from file to avoid bash escaping issues
+PROMPT_FILE="$SCRIPT_DIR/../prompts/copilot-v0.3.1.txt"
+if [ -n "${PLANLOOP_LAB_AGENT_PROMPT:-}" ]; then
+  prompt="$PLANLOOP_LAB_AGENT_PROMPT"
+elif [ -f "$PROMPT_FILE" ]; then
+  # Read prompt and substitute $SESSION with actual session ID
+  prompt=$(sed "s/\$SESSION/$session/g" "$PROMPT_FILE")
+else
+  echo "Error: Prompt file not found: $PROMPT_FILE"
+  exit 1
+fi
 
 log_trace "run-start" "agent=copilot workspace=$workspace session=$session"
 
@@ -65,35 +38,33 @@ log_trace "agent-config" "model=$model"
 # Create temp output files
 copilot_stdout="$trace_dir/copilot_stdout.txt"
 copilot_stderr="$trace_dir/copilot_stderr.txt"
+copilot_log_dir="$trace_dir/copilot_logs"
+mkdir -p "$copilot_log_dir"
 
 # Run Copilot CLI with appropriate flags
 # --allow-all-tools: Required for non-interactive execution
 # --allow-all-paths: Disable path verification
-# --no-color: Clean output for parsing
 # --model: Specify model if available
+# --log-level debug: Enable debug logging for troubleshooting
+# --log-dir: Save logs to trace directory
+# NOTE: --no-color causes silent exit code 1 failure in v0.0.358
 cd "$workspace"
 
-echo "Running: copilot -p <prompt> --allow-all-tools --allow-all-paths --no-color --model $model"
+echo "Running: copilot -p <prompt> --allow-all-tools --allow-all-paths --model $model --log-level debug --log-dir $copilot_log_dir"
 
+# Copilot v0.0.358 requires TTY-like behavior - direct redirection causes exit 1
+# Use tee to capture output while maintaining terminal-like output
 copilot -p "$prompt" \
   --allow-all-tools \
   --allow-all-paths \
-  --no-color \
   --model "$model" \
-  > "$copilot_stdout" 2> "$copilot_stderr" || {
+  --log-level debug \
+  --log-dir "$copilot_log_dir" \
+  2>&1 | tee "$copilot_stdout" || {
     exit_code=$?
     log_trace "agent-error" "exit_code=$exit_code"
-    
-    # Check for common error patterns
-    if grep -qi "rate limit\|usage limit\|quota exceeded" "$copilot_stderr" "$copilot_stdout" 2>/dev/null; then
-      echo "⚠️  RATE LIMIT ERROR: Copilot usage limit reached" >&2
-      log_trace "agent-error" "rate_limit_exceeded"
-      cat "$copilot_stderr"
-      exit 2  # Distinct exit code for rate limits
-    fi
-    
     echo "Copilot execution failed with exit code $exit_code"
-    cat "$copilot_stderr"
+    cat "$copilot_stdout"
     exit $exit_code
 }
 
