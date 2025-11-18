@@ -15,23 +15,17 @@ trace_dir=${PLANLOOP_LAB_RESULTS:?}/$agent_name
 mkdir -p "$trace_dir"
 
 # Prompt for the agent - guide it through the planloop workflow
-# v0.3.2: MAXIMUM emphasis on status-after for Claude (addresses 85% of failures)
-prompt=${PLANLOOP_LAB_AGENT_PROMPT:-"You are an AI agent designed to interact with the 'planloop' CLI tool. Your primary goal is to complete all assigned tasks and resolve any blockers within a given session.
-
-**CRITICAL RULE: ALWAYS RUN 'planloop status' AFTER EVERY ACTION THAT MODIFIES THE PLAN OR SESSION STATE.**
-This includes after 'planloop update' and 'planloop alert --close'.
-
-**WORKFLOW:**
-1.  **Start/Loop:** Begin by running 'planloop status --session $session --json' to understand the current state.
-2.  **Handle Blockers:** If 'now.reason' indicates a 'ci_blocker' or 'lint_blocker', close the signal using 'planloop alert --close --id <signal-id>' (from 'now.blocker_id'), then immediately run 'planloop status --session $session --json'.
-3.  **Handle Tasks:** If 'now.reason' is 'task', mark the task 'IN_PROGRESS' and then 'DONE' using 'planloop update --session $session --file payload.json'. Remember to run 'planloop status --session $session --json' after each 'planloop update'.
-4.  **Completion:** Continue this loop until 'planloop status' shows all tasks are completed ('now.reason' is 'completed').
-
-**IMPORTANT:**
-- Always prioritize running 'planloop status' to get the latest state.
-- Ensure all tasks are marked 'DONE' before stopping.
-- Do not stop if tasks are still 'TODO' or 'IN_PROGRESS'.
-"}
+# v0.3.2: Simplified prompt structure, file-based for consistency
+PROMPT_FILE="$SCRIPT_DIR/../prompts/claude-v0.3.2.txt"
+if [ -n "${PLANLOOP_LAB_AGENT_PROMPT:-}" ]; then
+  prompt="$PLANLOOP_LAB_AGENT_PROMPT"
+elif [ -f "$PROMPT_FILE" ]; then
+  # Read prompt and substitute $SESSION with actual session ID
+  prompt=$(sed "s/\$SESSION/$session/g" "$PROMPT_FILE")
+else
+  echo "Error: Prompt file not found: $PROMPT_FILE"
+  exit 1
+fi
 
 log_trace "run-start" "agent=claude workspace=$workspace session=$session"
 

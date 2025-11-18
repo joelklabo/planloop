@@ -12,8 +12,8 @@
     "avg_score": 41.7,
     "version": "v0.3.2",
     "last_updated": "2025-11-17",
-    "prompt_file": "labs/agents/claude_real.sh",
-    "notes": "Simplified prompt structure, targeting 60%+"
+    "prompt_file": "labs/prompts/claude-v0.3.2.txt",
+    "notes": "Simplified prompt structure, file-based for consistency"
   },
   "openai": {
     "pass_rate": 5.3,
