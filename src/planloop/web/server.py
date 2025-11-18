@@ -105,6 +105,119 @@ if FASTAPI_AVAILABLE:  # pragma: no cover - exercised in integration tests
         state = load_state(session_id)
         return [signal.model_dump() for signal in state.signals]
 
+    # Task management endpoints
+    @app.get("/api/tasks")
+    async def list_tasks(
+        page: int = 1,
+        pageSize: int = 50,
+        search: str | None = None,
+        session: str | None = None,
+        status: str | None = None,
+        type: str | None = None,
+        sortBy: str = "id",
+        sortDir: str = "desc",
+    ):
+        """List all tasks across all sessions with filtering and pagination."""
+        home = initialize_home()
+        sessions_path = home / SESSIONS_DIR
+        if not sessions_path.exists():
+            return {"tasks": [], "total": 0, "page": page, "pageSize": pageSize}
+
+        all_tasks = []
+        for session_dir in sessions_path.iterdir():
+            if session_dir.is_dir():
+                state_file = session_dir / "state.json"
+                if state_file.exists():
+                    try:
+                        state = SessionState.model_validate_json(state_file.read_text(encoding="utf-8"))
+                        for task in state.tasks:
+                            task_dict = task.model_dump()
+                            task_dict["session"] = session_dir.name
+                            task_dict["session_name"] = state.title or session_dir.name
+                            all_tasks.append(task_dict)
+                    except Exception:
+                        pass
+
+        # Apply filters
+        filtered_tasks = all_tasks
+
+        if search:
+            search_lower = search.lower()
+            filtered_tasks = [
+                t for t in filtered_tasks
+                if search_lower in t["title"].lower()
+                or (t.get("implementation_notes") and search_lower in t["implementation_notes"].lower())
+            ]
+
+        if session:
+            session_ids = session.split(",")
+            filtered_tasks = [t for t in filtered_tasks if t["session"] in session_ids]
+
+        if status:
+            statuses = status.split(",")
+            filtered_tasks = [t for t in filtered_tasks if t["status"] in statuses]
+
+        if type:
+            types = type.split(",")
+            filtered_tasks = [t for t in filtered_tasks if t["type"] in types]
+
+        # Sort
+        reverse = sortDir == "desc"
+        if sortBy == "last_updated_at":
+            filtered_tasks.sort(key=lambda t: t.get("last_updated_at") or "", reverse=reverse)
+        elif sortBy == "created_at":
+            filtered_tasks.sort(key=lambda t: t.get("created_at") or "", reverse=reverse)
+        elif sortBy == "title":
+            filtered_tasks.sort(key=lambda t: t["title"].lower(), reverse=reverse)
+        else:
+            filtered_tasks.sort(key=lambda t: t.get("id", 0), reverse=reverse)
+
+        # Paginate
+        total = len(filtered_tasks)
+        start = (page - 1) * pageSize
+        end = start + pageSize
+        paginated_tasks = filtered_tasks[start:end]
+
+        return {
+            "tasks": paginated_tasks,
+            "total": total,
+            "page": page,
+            "pageSize": pageSize,
+        }
+
+    @app.get("/api/tasks/search")
+    async def search_tasks(q: str):
+        """Search tasks for autocomplete."""
+        home = initialize_home()
+        sessions_path = home / SESSIONS_DIR
+        if not sessions_path.exists():
+            return {"tasks": []}
+
+        all_tasks = []
+        for session_dir in sessions_path.iterdir():
+            if session_dir.is_dir():
+                state_file = session_dir / "state.json"
+                if state_file.exists():
+                    try:
+                        state = SessionState.model_validate_json(state_file.read_text(encoding="utf-8"))
+                        for task in state.tasks:
+                            task_dict = task.model_dump()
+                            task_dict["session"] = session_dir.name
+                            task_dict["session_name"] = state.title or session_dir.name
+                            all_tasks.append(task_dict)
+                    except Exception:
+                        pass
+
+        # Filter by search query
+        q_lower = q.lower()
+        results = [
+            t for t in all_tasks
+            if q_lower in t["title"].lower()
+        ]
+
+        # Return top 10
+        return {"tasks": results[:10]}
+
     # Legacy HTML endpoints (kept for backward compatibility)
     @app.get("/legacy", response_class=HTMLResponse)
     async def legacy_index() -> str:
