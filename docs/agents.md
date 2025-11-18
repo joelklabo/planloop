@@ -217,6 +217,207 @@ planloop suggest
   execute the automated prompt lab for all agents once their adapter commands are
   wired via `PLANLOOP_LAB_*_CMD`.
 
+## Bash Session Health Monitoring
+
+**CRITICAL for CLI AI Agents**: Bash sessions suffer from PTY (pseudo-terminal) resource exhaustion after 30-50 commands, leading to `posix_spawnp failed` errors that brick the session.
+
+### The Problem
+
+Long-running agent sessions accumulate:
+- **PTY file descriptors** → System limits exhausted (typically ~127 on macOS)
+- **Process table entries** → Cannot spawn new commands
+- **Memory leaks** → node-pty doesn't always clean up properly
+
+**Symptoms**:
+- Commands start hanging (20-30 commands in)
+- Occasional "Connection reset" errors
+- `posix_spawnp failed` → **session unusable, must restart**
+
+### The Solution: Proactive Health Monitoring
+
+Use `planloop monitor bash-health` to check session health **before** corruption occurs.
+
+### When to Check Health
+
+**Option 1: Periodic Checks** (Recommended for long sessions)
+```bash
+# Every 10-15 bash commands, check health:
+planloop monitor bash-health --json
+
+# If health_score < 60, consider rotating
+# If health_score < 50, rotate immediately
+```
+
+**Option 2: Before Long-Running Work**
+```bash
+# Before running tests, builds, or complex commands:
+planloop monitor bash-health
+
+# If status is "degraded" or worse, rotate first
+```
+
+**Option 3: On Errors**
+```bash
+# If bash commands start failing mysteriously:
+planloop monitor bash-health
+
+# Check if PTY exhaustion is the cause
+```
+
+### Understanding the Health Score
+
+**Score Range: 0-100**
+
+- **80-100**: 🟢 **Healthy** - No action needed
+  - Low command count (< 20)
+  - Few PTYs (< 4)
+  - Session is young
+  
+- **60-79**: 🟡 **Watch** - Monitor closely
+  - Moderate command count (20-30)
+  - PTY count increasing (4-6)
+  - Consider rotating soon
+  
+- **40-59**: 🟠 **Degraded** - Rotation recommended
+  - High command count (30-40)
+  - Elevated PTYs (6-8)
+  - **Rotate before reaching 50 commands**
+  
+- **20-39**: 🔴 **Critical** - Rotate immediately
+  - Very high command count (> 50)
+  - Many PTYs (> 10)
+  - **Failure imminent**
+  
+- **0-19**: ⚫ **Failed** - Already corrupted
+  - Session unusable
+  - Create fresh bash session with new ID
+
+### Command Usage
+
+**Human-Readable Output:**
+```bash
+planloop monitor bash-health
+
+# Output:
+# 🟠 Bash Session Health: Degraded (Score: 50/100)
+#
+# Metrics:
+#   Commands: 38
+#   PTYs: 7
+#   File Descriptors: 200
+#   Age: 35 minutes
+#
+# ⚠️  Warnings:
+#   • High command count (38, threshold: 30)
+#   • PTY count elevated (7, threshold: 6)
+#
+# 💡 Recommendations:
+#   • Session is degraded - rotation recommended
+#   • Rotate session before reaching 50 commands
+#   • Use explicit Python paths to reduce subprocess spawning
+```
+
+**JSON Output** (for agents):
+```bash
+planloop monitor bash-health --json
+
+# Parse output to check health_score and status
+# Automate rotation decisions based on thresholds
+```
+
+**With Explicit Session/PID:**
+```bash
+planloop monitor bash-health --session-id my-session
+planloop monitor bash-health --pid 12345
+```
+
+### Rotation Strategy (Coming in Phase 3)
+
+When health score drops below 50:
+```bash
+# Manual rotation (current workaround):
+# 1. Note your current work
+# 2. Create fresh bash session with new ID: sessionId=f"work_{int(time.time())}"
+# 3. Continue work in new session
+
+# Automatic rotation (Phase 3 - in development):
+# planloop rotate bash-session
+# Returns new session ID automatically
+```
+
+### Best Practices to Extend Session Life
+
+1. **Use alternative tools when possible:**
+   ```bash
+   # ❌ Avoid: bash("cat file")
+   view("/path/to/file")
+   
+   # ❌ Avoid: bash("echo content > file")  
+   create("/path/to/file", "content")
+   
+   # ❌ Avoid: bash("grep pattern file")
+   grep(pattern="text", path="/path")
+   ```
+
+2. **Use explicit Python paths** (reduces subprocess spawning):
+   ```bash
+   # ❌ Avoid: bash("source .venv && python script.py")
+   # ✅ Better: bash(".venv/bin/python script.py")
+   ```
+
+3. **Chain commands efficiently**:
+   ```bash
+   # ❌ Avoid: Multiple bash calls
+   bash("cd /path")
+   bash("ls -la")
+   
+   # ✅ Better: Single command
+   bash("cd /path && ls -la")
+   ```
+
+4. **Monitor proactively**: Don't wait for failures - check health regularly
+
+### Integration with Planloop Workflow
+
+**Agents should check health:**
+- After every 10-15 bash commands
+- Before long-running operations (tests, builds)
+- When bash commands start behaving strangely
+- If `next_action` suggests health check (future feature)
+
+**Example autonomous workflow:**
+```python
+# Pseudo-code for agent integration
+command_count = 0
+
+for task in tasks:
+    # Check health every 10 commands
+    if command_count % 10 == 0:
+        health = check_bash_health()
+        if health["health_score"] < 50:
+            rotate_session()
+            command_count = 0
+    
+    # Execute task
+    run_task(task)
+    command_count += count_bash_commands_in_task(task)
+```
+
+### Research & Background
+
+Full research document: `/Users/honk/code/planloop/tmp/pty-cli-agent-comprehensive-research.md`
+
+**Key Findings:**
+- Industry-wide problem affecting VS Code, JetBrains, all node-pty users
+- Root cause: File descriptor + PTY resource exhaustion
+- Solution: Proactive monitoring + automatic rotation
+- Based on RED/USE observability metrics from production systems
+
+**References:**
+- GitHub Issue: microsoft/node-pty #670
+- Stack Overflow: "posix_spawnp failed opening many terminals"
+- Production patterns: Session rotation, health scoring, observability
+
 ## History + snapshots quickstart
 1. Run `planloop status` once to create `PLANLOOP_HOME` (defaults to
    `~/.planloop`).
