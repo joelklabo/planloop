@@ -26,10 +26,12 @@ def log_lock_event(
         wait_ms: Wait time in milliseconds (for acquired events)
         hold_ms: Hold time in milliseconds (for released events)
     """
+    from typing import Any
+    
     trace_id = get_current_trace_id()
     timestamp = datetime.now(timezone.utc).isoformat()
     
-    log_entry = {
+    log_entry: dict[str, Any] = {
         "timestamp": timestamp,
         "event": event,
         "trace_id": trace_id,

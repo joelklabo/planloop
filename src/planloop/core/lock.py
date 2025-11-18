@@ -260,8 +260,8 @@ def acquire_lock(session_dir: Path, operation: str, timeout: int = DEFAULT_TIMEO
                 if timeout == 0:
                     raise TimeoutError("Lock already held") from e
                 if time.time() - start > timeout:
-                    info = LockInfo.from_file(info_path)
-                    holder = info.held_by if info else "unknown"
+                    lock_info: LockInfo | None = LockInfo.from_file(info_path)
+                    holder = lock_info.held_by if lock_info else "unknown"
                     log_session_event(
                         session_dir,
                         f"Lock timeout for {operation}; held by {holder}",

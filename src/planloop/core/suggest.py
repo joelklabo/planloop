@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Literal
 
@@ -39,11 +40,17 @@ class SuggestionEngine:
         self.config = config
 
         # Initialize LLM client (lazy initialization to allow mocking in tests)
-        self._llm_client = None
+        self._llm_client: LLMClient | None = None
+        
+        # Get API key from environment if specified
+        api_key = None
+        if config.llm_api_key_env:
+            api_key = os.environ.get(config.llm_api_key_env)
+        
         self._llm_config = LLMConfig(
             provider=config.llm_provider,
             model=config.llm_model,
-            api_key_env=config.llm_api_key_env,
+            api_key=api_key,
             temperature=config.llm_temperature,
             max_tokens=config.llm_max_tokens,
             base_url=config.llm_base_url

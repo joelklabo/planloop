@@ -70,8 +70,8 @@ if TEXTUAL_AVAILABLE:  # pragma: no cover - UI layer
 
             signals: DataTable = DataTable(id="signals")
             signals.add_columns("Signal", "State")
-            for row in self.model.signals:
-                signals.add_row(*cast(tuple[str, str], row))
+            for signal_row in self.model.signals:
+                signals.add_row(*signal_row)
             yield signals
             yield Footer()
 

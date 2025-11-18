@@ -12,6 +12,7 @@ import logging
 import os
 from datetime import datetime
 from pathlib import Path
+from typing import Literal
 
 import typer
 
@@ -256,9 +257,12 @@ def status(session: str | None = typer.Option(None, help="Session ID"), json_out
         }
         
         # Log agent response
+        next_action_dict = payload.get("next_action", {})
+        next_action_value = next_action_dict.get("action") if isinstance(next_action_dict, dict) else None
+        
         log_agent_response(session_dir, "status", True, {
             "reason": state.now.reason.value,
-            "next_action": payload["next_action"]["action"],
+            "next_action": next_action_value,
             "transition_detected": transition_detected,
         })
         
@@ -616,7 +620,7 @@ def web(session: str | None = typer.Option(None, help="Session ID")) -> None:
         typer.echo("fastapi is not installed. Run `pip install fastapi fastapi[standard]`.")
         raise typer.Exit(code=1)
     try:
-        import uvicorn
+        import uvicorn  # type: ignore[import-not-found]
     except ImportError as exc:  # pragma: no cover
         typer.echo("uvicorn not installed. Run `pip install uvicorn` to use planloop web.")
         raise typer.Exit(code=1) from exc
@@ -683,9 +687,13 @@ def suggest(
 
         # Generate suggestions
         project_root = Path(state.project_root) if state.project_root else session_dir.parent
+        depth_literal: Literal["shallow", "medium", "deep"] | None = None
+        if depth in ("shallow", "medium", "deep"):
+            depth_literal = depth  # type: ignore
+        
         suggestions = engine.generate_suggestions(
             project_root=project_root,
-            depth=depth
+            depth=depth_literal
         )
 
         if not suggestions:
@@ -742,7 +750,7 @@ def suggest(
             add_tasks=add_tasks
         )
 
-        with acquire_lock(session_dir):
+        with acquire_lock(session_dir, operation="suggest"):
             state = apply_update(state, payload)
             save_session_state(session_dir, state)
 

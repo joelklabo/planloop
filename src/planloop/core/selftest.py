@@ -230,7 +230,7 @@ def _scenario_signal_and_tasks(home: Path) -> str:
     validate_state(state)
     save_session_state(session_dir, state, message="CI blocker opened")
 
-    if state.now.reason != NowReason.CI_BLOCKER:
+    if state.now.reason != NowReason.CI_BLOCKER:  # type: ignore[comparison-overlap]
         raise AssertionError("Expected now.reason to reflect ci_blocker after signal")
 
     # 4. Resolve the CI blocker

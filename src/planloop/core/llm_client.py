@@ -9,19 +9,19 @@ from pydantic import BaseModel
 
 # Optional imports for LLM providers
 try:
-    from anthropic import Anthropic
+    from anthropic import Anthropic  # type: ignore[import-not-found]
 except ImportError:
-    Anthropic = None  # type: ignore
+    Anthropic = None
 
 try:
-    from openai import OpenAI
+    from openai import OpenAI  # type: ignore[import-not-found]
 except ImportError:
-    OpenAI = None  # type: ignore
+    OpenAI = None
 
 try:
-    import requests
+    import requests  # type: ignore[import-untyped]
 except ImportError:
-    requests = None  # type: ignore
+    requests = None
 
 
 class LLMError(Exception):
@@ -140,7 +140,8 @@ class LLMClient:
         """
         response = self.generate(prompt, schema)
         try:
-            return json.loads(response)
+            parsed: dict[Any, Any] = json.loads(response)
+            return parsed
         except json.JSONDecodeError as e:
             raise LLMError(f"Failed to parse JSON response: {e}") from e
 
@@ -158,7 +159,10 @@ class LLMClient:
             kwargs["response_format"] = {"type": "json_object"}
 
         response = self._client.chat.completions.create(**kwargs)
-        return response.choices[0].message.content
+        content = response.choices[0].message.content
+        if content is None:
+            raise LLMError("OpenAI returned empty content")
+        return str(content)
 
     def _generate_anthropic(self, prompt: str, schema: dict | None = None) -> str:
         """Generate using Anthropic API."""
@@ -175,7 +179,8 @@ class LLMClient:
             kwargs["messages"] = [{"role": "user", "content": prompt_with_schema}]
 
         response = self._client.messages.create(**kwargs)
-        return response.content[0].text
+        text = response.content[0].text
+        return str(text)
 
     def _generate_ollama(self, prompt: str, schema: dict | None = None) -> str:
         """Generate using Ollama local API."""
@@ -200,4 +205,5 @@ class LLMClient:
         if response.status_code != 200:
             raise LLMError(f"Ollama API error: {response.status_code} {response.text}")
 
-        return response.json()["response"]
+        response_data = response.json()
+        return str(response_data["response"])
