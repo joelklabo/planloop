@@ -169,28 +169,17 @@
 
 ---
 
-### Phase 5: Web Interface & Visualization (Priority: **LOW**)
-**Goal**: Improve visual feedback for users and agents
+### Phase 5: Web Interface & Visualization (Priority: **MOVED**)
+**Status**: ✅ Tasks moved to dedicated website plan (`docs/website-plan.md`)
 
-**Tasks**:
-- [ ] **P5.1**: Enhance web dashboard with observability data
-  - **Current**: Basic HTML tables in web/server.py
-  - **Add**: Tabs for Logs (JSONL), LLM Calls, Traces, Errors
-  - **API Endpoints**: 
-    - GET /api/sessions/:id/logs (returns JSONL)
-    - GET /api/sessions/:id/llm-calls (returns JSON)
-    - GET /api/sessions/:id/traces (returns JSON)
-    - GET /api/sessions/:id/errors (returns JSON)
-  - **UI**: Simple tables with search/filter (no fancy charts initially)
-  - **Depends on**: P1.4-P1.7 (need data sources first)
-  - **Type**: feature | **Priority**: LOW
+**Rationale**: Website deserves its own plan with modern tech stack (React + TypeScript + Vite + Tailwind + Framer Motion). Research complete, implementation ready to start.
 
-- [ ] **P5.2**: Add task visualization to web dashboard
-  - **Requirements**: Kanban/timeline view, task colors, dependency graph
-  - **Tech**: FastAPI + HTMX, reuse SessionViewModel
-  - **Features**: Session selector, filters, commit links
-  - **Consider**: Add REVIEW status between IN_PROGRESS and DONE?
-  - **Type**: feature | **Priority**: LOW
+**See**: `docs/website-plan.md` for full plan with:
+- Modern tech stack (2025 best practices)
+- 6-phase implementation (Foundation → Kanban → Real-time → Observability → Polish)
+- Beautiful animations with Framer Motion
+- Real-time updates with WebSocket
+- Full observability dashboard
 
 ---
 
