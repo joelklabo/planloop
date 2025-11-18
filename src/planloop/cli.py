@@ -177,6 +177,24 @@ def _generate_next_action(state: SessionState) -> dict:
     }
 
 
+def _get_tdd_checklist(state: SessionState) -> list[str] | None:
+    """Generate TDD workflow checklist if a task is active."""
+    from .core.state import NowReason
+    
+    # Only show checklist when actively working on tasks
+    if state.now.reason not in (NowReason.TASK, NowReason.CI_BLOCKER):
+        return None
+    
+    return [
+        "Write test first (or update existing test)",
+        "Run tests → watch the new test FAIL (red)",
+        "Implement minimal code to make it pass",
+        "Run tests → verify ALL tests PASS (green)",
+        "Refactor if needed (keeping tests green)",
+        "Commit with descriptive message",
+    ]
+
+
 @app.command()
 def status(session: str | None = typer.Option(None, help="Session ID"), json_output: bool = typer.Option(True, "--json/--no-json", help="JSON output")) -> None:
     """Show the current planloop session status."""
@@ -212,6 +230,7 @@ def status(session: str | None = typer.Option(None, help="Session ID"), json_out
             "now": state.now.model_dump(),
             "agent_instructions": _generate_agent_instructions(state, lock_status, queue_status),
             "next_action": _generate_next_action(state),
+            "tdd_checklist": _get_tdd_checklist(state),
             "transition_detected": transition_detected,
             "completed_task_id": completed_task_id,
             "tasks": [task.model_dump(mode="json") for task in state.tasks],
