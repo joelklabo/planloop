@@ -95,6 +95,10 @@ class SuggestConfig(BaseModel):
     # Batch workflow settings
     batch_mode: Literal["daily", "weekly"] | None = None
     
+    # Plugin system settings
+    enable_plugins: bool = False
+    plugin_paths: list[str] = []
+    
     def get_effective_max_suggestions(self) -> int:
         """Get effective max suggestions based on batch mode."""
         if self.batch_mode == "weekly":
