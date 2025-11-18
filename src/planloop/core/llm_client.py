@@ -9,12 +9,12 @@ from pydantic import BaseModel
 
 # Optional imports for LLM providers
 try:
-    from anthropic import Anthropic  # type: ignore[import-not-found]
+    from anthropic import Anthropic
 except ImportError:
     Anthropic = None
 
 try:
-    from openai import OpenAI  # type: ignore[import-not-found]
+    from openai import OpenAI
 except ImportError:
     OpenAI = None
 

@@ -620,7 +620,7 @@ def web(session: str | None = typer.Option(None, help="Session ID")) -> None:
         typer.echo("fastapi is not installed. Run `pip install fastapi fastapi[standard]`.")
         raise typer.Exit(code=1)
     try:
-        import uvicorn  # type: ignore[import-not-found]
+        import uvicorn
     except ImportError as exc:  # pragma: no cover
         typer.echo("uvicorn not installed. Run `pip install uvicorn` to use planloop web.")
         raise typer.Exit(code=1) from exc

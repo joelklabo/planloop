@@ -12,10 +12,10 @@ from ..home import CURRENT_SESSION_POINTER, SESSIONS_DIR, initialize_home
 from ..tui.app import SessionViewModel
 
 try:  # pragma: no cover - optional dependency guard
-    from fastapi import FastAPI, HTTPException  # type: ignore[import-not-found]
-    from fastapi.responses import HTMLResponse, FileResponse  # type: ignore[import-not-found]
-    from fastapi.staticfiles import StaticFiles  # type: ignore[import-not-found]
-    from fastapi.middleware.cors import CORSMiddleware  # type: ignore[import-not-found]
+    from fastapi import FastAPI, HTTPException
+    from fastapi.responses import HTMLResponse, FileResponse
+    from fastapi.staticfiles import StaticFiles
+    from fastapi.middleware.cors import CORSMiddleware
 
     FASTAPI_AVAILABLE = True
 except ImportError:  # pragma: no cover
