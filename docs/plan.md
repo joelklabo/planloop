@@ -67,17 +67,52 @@
   - **Design**: Detect IN_PROGRESS→DONE transition, include next task details
   - **Type**: feature | **Priority**: CRITICAL
 
-- [ ] **P1.3**: Implement structured agent interaction logging
-  - **Issue**: No audit trail of agent commands/responses, valuable context lost in notes
-  - **Solution**: JSON Lines transcript at `session_dir/logs/agent-transcript.jsonl`
+- [✅] **P1.3**: Implement structured agent interaction logging
+  - **Status**: DONE - agent_transcript.py exists with full functionality
   - **Features**: log_agent_command(), log_agent_response(), `planloop logs` command
   - **Type**: feature | **Priority**: CRITICAL
 
-- [ ] **P1.4**: Enforce TDD workflow in agent instructions
+- [ ] **P1.4**: Add distributed tracing system
+  - **Goal**: Link all operations (errors, LLM calls, state diffs, performance) via trace_id
+  - **Solution**: 
+    - Trace ID generation/propagation (contextvars)
+    - Format: tr_{timestamp}_{random}
+    - Every log entry and output file includes trace_id
+  - **Deliverable**: src/planloop/dev_mode/observability.py (~75 lines)
+  - **Type**: feature | **Priority**: HIGH
+
+- [ ] **P1.5**: Implement error context capture
+  - **Goal**: When errors occur, capture full debugging context automatically
+  - **Solution**: 
+    - Decorator: @capture_error_context(session_dir)
+    - Captures: local variables, stack trace, state snapshot, trace_id
+    - Output: logs/errors/{trace_id}_error.json + {trace_id}_state.json
+  - **Deliverable**: src/planloop/dev_mode/error_context.py (~150 lines)
+  - **Type**: feature | **Priority**: HIGH
+
+- [ ] **P1.6**: Add lock operation instrumentation
+  - **Goal**: Debug multi-agent contention and deadlocks
+  - **Solution**: 
+    - Log all lock operations: request, acquire, release
+    - Track: wait time, hold time, operation name, entry_id
+    - Output: JSONL entries in logs/planloop.jsonl
+  - **Deliverable**: Modify src/planloop/core/lock.py (~50 lines)
+  - **Type**: feature | **Priority**: HIGH
+
+- [ ] **P1.7**: Implement performance span tracing
+  - **Goal**: Break down operation time (LLM vs I/O vs parsing)
+  - **Solution**: 
+    - Context manager: with trace_span(name, **metadata)
+    - Tracks: duration_ms for each named operation
+    - Output: logs/traces/{trace_id}.json with span breakdown
+  - **Deliverable**: src/planloop/dev_mode/spans.py (~150 lines)
+  - **Type**: feature | **Priority**: MEDIUM
+
+- [ ] **P1.8**: Enforce TDD workflow in agent instructions
   - **Issue**: Agents skip TDD despite workflow contract
   - **Impact**: Poor test coverage, quality issues
   - **Solution**: Make TDD prominent in agents.md, add checklist to status, include examples
-  - **Type**: chore | **Priority**: HIGH
+  - **Type**: chore | **Priority**: MEDIUM
 
 ---
 
@@ -138,18 +173,23 @@
 **Goal**: Improve visual feedback for users and agents
 
 **Tasks**:
-- [ ] **P5.1**: Implement web dashboard for task visualization
+- [ ] **P5.1**: Enhance web dashboard with observability data
   - **Current**: Basic HTML tables in web/server.py
-  - **Requirements**: Kanban/timeline view, task colors, dependency graph, real-time updates
-  - **Tech**: FastAPI + HTMX, reuse SessionViewModel
-  - **Features**: Session selector, filters, commit links
+  - **Add**: Tabs for Logs (JSONL), LLM Calls, Traces, Errors
+  - **API Endpoints**: 
+    - GET /api/sessions/:id/logs (returns JSONL)
+    - GET /api/sessions/:id/llm-calls (returns JSON)
+    - GET /api/sessions/:id/traces (returns JSON)
+    - GET /api/sessions/:id/errors (returns JSON)
+  - **UI**: Simple tables with search/filter (no fancy charts initially)
+  - **Depends on**: P1.4-P1.7 (need data sources first)
   - **Type**: feature | **Priority**: LOW
 
-- [ ] **P5.2**: Add pipeline visualization to web dashboard
-  - **Requirements**: Horizontal pipeline (TODO → IN_PROGRESS → DONE)
-  - **Design**: Task cards, commit SHA on completion, time in each stage
+- [ ] **P5.2**: Add task visualization to web dashboard
+  - **Requirements**: Kanban/timeline view, task colors, dependency graph
+  - **Tech**: FastAPI + HTMX, reuse SessionViewModel
+  - **Features**: Session selector, filters, commit links
   - **Consider**: Add REVIEW status between IN_PROGRESS and DONE?
-  - **Depends on**: P5.1
   - **Type**: feature | **Priority**: LOW
 
 ---
