@@ -87,6 +87,10 @@ class SuggestConfig(BaseModel):
     # Coverage analysis settings
     include_coverage_analysis: bool = False
     coverage_threshold: float = 70.0
+    
+    # Security analysis settings
+    include_security_analysis: bool = False
+    security_min_severity: Literal["HIGH", "MEDIUM", "LOW"] = "MEDIUM"
 
 
 @lru_cache(maxsize=1)
