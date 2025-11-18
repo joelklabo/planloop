@@ -1028,6 +1028,35 @@ def bash_health(
         raise typer.Exit(code=1) from exc
 
 
+@monitor_app.command(name="analyze-transcript")
+def analyze_transcript(
+    session_id: str = typer.Argument(..., help="Session ID to analyze"),
+    format: str = typer.Option("text", "--format", help="Output format: text, json, or markdown"),
+) -> None:
+    """Analyze session transcript for PTY issues.
+    
+    Performs post-mortem analysis of agent transcript logs to identify
+    PTY failure patterns, command frequency changes, and contributing factors.
+    """
+    from .diagnostics.transcript_analyzer import TranscriptAnalyzer
+    
+    try:
+        analyzer = TranscriptAnalyzer()
+        analysis = analyzer.analyze_session(session_id)
+        
+        # Generate report in requested format
+        report = analyzer.generate_report(analysis, format=format)
+        
+        typer.echo(report)
+        
+    except FileNotFoundError as exc:
+        typer.echo(f"Error: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+    except Exception as exc:
+        typer.echo(f"Unexpected error: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+
+
 def main() -> None:
     app()
 
