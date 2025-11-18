@@ -83,6 +83,10 @@ class SuggestConfig(BaseModel):
     max_suggestions: int = 5
     min_priority: Literal["low", "medium", "high"] = "low"
     auto_approve: bool = False
+    
+    # Coverage analysis settings
+    include_coverage_analysis: bool = False
+    coverage_threshold: float = 70.0
 
 
 @lru_cache(maxsize=1)
@@ -122,4 +126,8 @@ def get_suggest_config() -> SuggestConfig:
         max_suggestions=suggestions_cfg.get("max_count", 5),
         min_priority=suggestions_cfg.get("min_priority", "low"),
         auto_approve=suggestions_cfg.get("auto_approve", False),
+        
+        # Coverage analysis settings
+        include_coverage_analysis=suggest_cfg.get("coverage", {}).get("enabled", False),
+        coverage_threshold=suggest_cfg.get("coverage", {}).get("threshold", 70.0),
     )
