@@ -577,12 +577,26 @@ def guide(
     apply: bool = typer.Option(False, "--apply", help="Insert into docs/agents.md"),
     target: Path | None = typer.Option(None, "--target", help="Target file"),
 ) -> None:
+    """Generate and optionally install planloop agent guide."""
     content = guide_utils.render_guide(prompt_set)
     if apply:
         path = target or Path("docs/agents.md")
         path.parent.mkdir(parents=True, exist_ok=True)
-        guide_utils.insert_guide(path, content)
-        typer.echo(f"Guide inserted into {path}")
+        
+        # Check if update needed
+        if path.exists():
+            existing = path.read_text(encoding="utf-8")
+            if guide_utils.is_guide_outdated(existing):
+                guide_utils.insert_guide(path, content, force=True)
+                typer.echo(f"✓ Guide updated in {path} (version {guide_utils.GUIDE_VERSION})")
+            elif guide_utils.detect_marker(existing):
+                typer.echo(f"✓ Guide already up-to-date in {path} (version {guide_utils.GUIDE_VERSION})")
+            else:
+                guide_utils.insert_guide(path, content)
+                typer.echo(f"✓ Guide inserted into {path}")
+        else:
+            guide_utils.insert_guide(path, content)
+            typer.echo(f"✓ Guide created at {path}")
     else:
         if output:
             output.write_text(content, encoding="utf-8")
