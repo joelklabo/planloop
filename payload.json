@@ -1,15 +1,1 @@
-{
-  "update_tasks": [
-    {"id": 2, "status": "CANCELLED"},
-    {"id": 3, "status": "CANCELLED"},
-    {"id": 4, "status": "CANCELLED"},
-    {"id": 5, "status": "CANCELLED"},
-    {"id": 6, "status": "CANCELLED"},
-    {"id": 7, "status": "CANCELLED"},
-    {"id": 8, "status": "CANCELLED"},
-    {"id": 9, "status": "CANCELLED"},
-    {"id": 10, "status": "CANCELLED"},
-    {"id": 11, "status": "CANCELLED"},
-    {"id": 12, "status": "CANCELLED"}
-  ]
-}
+{"session": "cli-basics-20251117T222451Z-d85c", "tasks": [{"id": 1, "status": "IN_PROGRESS"}]}

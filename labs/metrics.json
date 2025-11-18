@@ -1,6 +1,6 @@
 {
-  "total_runs": 722,
-  "latest_run": "cli-basics-20251117T222250Z-0320",
+  "total_runs": 703,
+  "latest_run": "cli-basics-20251117T215342Z-b72c",
   "agents": {
     "openai": {
       "runs": 263,
@@ -45,11 +45,11 @@
       ]
     },
     "copilot": {
-      "runs": 400,
-      "passes": 241,
+      "runs": 381,
+      "passes": 222,
       "fails": 159,
-      "pass_rate": 0.6025,
-      "fail_rate": 0.3975,
+      "pass_rate": 0.5826771653543307,
+      "fail_rate": 0.41732283464566927,
       "top_errors": [
         [
           "missing update",
@@ -110,11 +110,11 @@
       ]
     },
     "copilot:default": {
-      "runs": 400,
-      "passes": 241,
+      "runs": 381,
+      "passes": 222,
       "fails": 159,
-      "pass_rate": 0.6025,
-      "avg_score": 46.0125,
+      "pass_rate": 0.5826771653543307,
+      "avg_score": 44.816272965879264,
       "top_errors": [
         [
           "missing update",

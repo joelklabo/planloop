@@ -57,33 +57,7 @@
 
 ## 📋 v1.7 Priorities: Quality & Usability
 
-### Phase 1: Automated Plan Decomposition (Priority: High)
-**Goal**: Enable `planloop` to autonomously generate a high-quality, validated task plan from a user's goal using an internal, configurable LLM client. This simplifies the agent workflow by removing the "plan decomposition" meta-task.
-
-**Tasks**:
-- [ ] **P1.1**: Extend `config.yml` to securely manage LLM settings (provider, API key, model).
-- [ ] **P1.2**: Implement an internal LLM client, starting with OpenAI.
-- [ ] **P1.3**: Integrate the client into `planloop start` to generate a task plan from a user's `--goal`.
-- [ ] **P1.4**: Implement "Plan Quality Gates" to automatically validate the LLM-generated plan upon creation.
-- [ ] **P1.5**: Design the "Plan Decomposition Prompt" (internal to `planloop`).
-- [ ] **P1.6**: Design the "LLM-as-a-Judge" Prompt (internal to `planloop`).
-- [ ] **P1.7**: Implement the dynamic `agent_instructions` field in the `planloop status` response.
-- [ ] **P1.8**: Update documentation (`agent-workflow-visualization.md`, `api-contract.md`, `planning-guide.md`) to reflect the new, simpler onboarding flow and prompt strategy.
-
----
-
-### Phase 2: Prompt Engineering & Evaluation (Priority: High)
-**Goal**: Build a systematic, data-driven process for evaluating and improving the quality of all internal LLM prompts.
-
-**Tasks**:
-- [ ] **P2.1**: Build a "Golden Dataset" of evaluation cases (`spec.md` -> `expected_plan.json`).
-- [ ] **P2.2**: Define objective metrics for scoring plan quality (e.g., Task Recall, Hint Accuracy).
-- [ ] **P2.3**: Create an "Automated Evaluation Harness" script to run prompts against the dataset and generate performance reports.
-- [ ] **P2.4**: Document the "Hypothesize -> Edit -> Evaluate -> Analyze" loop for prompt improvement.
-
----
-
-### Phase 3: Agent Performance (Priority: Critical)
+### Phase 1: Agent Performance (Priority: Critical)
 **Goal**: Reach 60%+ baseline compliance for all agents
 
 **Current Status**:
@@ -92,64 +66,64 @@
 - ⏳ OpenAI: 5.7% pass rate - Needs +54.3% improvement
 
 **Tasks**:
-- [✅] **P3.1**: Optimize Claude prompts (target 60%+ pass rate) - commit 3b60c7b
-- [❌] **P3.2**: Optimize OpenAI prompts (target 60%+ pass rate) - *Deprioritized, focusing on Copilot.*
-- [✅] **P3.3**: Document successful prompt patterns per agent - commit 9fdf7a5
-- [✅] **P3.4**: Implement regression protection for Copilot baseline - commit e24e2a5
-- [✅] **P3.5**: Create agent-specific prompt variations if needed - commit 9a56d6c
+- [✅] **P1.1**: Optimize Claude prompts (target 60%+ pass rate) - commit 3b60c7b
+- [❌] **P1.2**: Optimize OpenAI prompts (target 60%+ pass rate) - *Deprioritized, focusing on Copilot.*
+- [✅] **P1.3**: Document successful prompt patterns per agent - commit 9fdf7a5
+- [✅] **P1.4**: Implement regression protection for Copilot baseline - commit e24e2a5
+- [✅] **P1.5**: Create agent-specific prompt variations if needed - commit 9a56d6c
 
 **Tools**: `labs/optimize_safely.sh`, `labs/check_baseline.sh`
 
 ---
 
-### Phase 4: Advanced Testing Scenarios (Priority: High)
+### Phase 2: Advanced Testing Scenarios (Priority: High)
 **Blocked Until**: All agents reach 60%+ baseline
 
 **Tasks**:
-- [ ] **P4.1**: Implement multi-signal-cascade scenario (5 tasks, 3 signals)
-- [ ] **P4.2**: Implement dependency-chain scenario (complex dependencies)
-- [ ] **P4.3**: Implement full-plan-completion scenario (12-task feature)
-- [ ] **P4.4**: A/B test prompt variations across agents
-- [ ] **P4.5**: Document cross-agent prompt patterns
+- [ ] **P2.1**: Implement multi-signal-cascade scenario (5 tasks, 3 signals)
+- [ ] **P2.2**: Implement dependency-chain scenario (complex dependencies)
+- [ ] **P2.3**: Implement full-plan-completion scenario (12-task feature)
+- [ ] **P2.4**: A/B test prompt variations across agents
+- [ ] **P2.5**: Document cross-agent prompt patterns
 
 ---
 
-### Phase 5: Analytics & Monitoring (Priority: Medium)
+### Phase 3: Analytics & Monitoring (Priority: Medium)
 **Goal**: Improve visibility into agent performance and system health
 
 **Tasks**:
-- [ ] **P5.1**: Session analytics dashboard
+- [ ] **P3.1**: Session analytics dashboard
   - Task completion times
   - Agent performance by task type
   - Success/failure patterns
-- [ ] **P5.2**: Lock queue metrics and tuning
+- [ ] **P3.2**: Lock queue metrics and tuning
   - Wait time analytics
   - Queue fairness verification
   - Performance under contention
-- [ ] **P5.3**: Performance profiling for large plans
+- [ ] **P3.3**: Performance profiling for large plans
   - Benchmark plans with 50+ tasks
   - Identify bottlenecks
   - Optimize compute_now() for scale
 
 ---
 
-### Phase 6: Advanced Features (Priority: Low)
+### Phase 4: Advanced Features (Priority: Low)
 **Goal**: Enhance agent capabilities and developer experience
 
 **Tasks**:
-- [ ] **P6.1**: Task dependency visualization
+- [ ] **P4.1**: Task dependency visualization
   - Generate dependency graphs
   - Identify critical paths
   - Visual plan representation
-- [ ] **P6.2**: `planloop inject` interactive decomposition
+- [ ] **P4.2**: `planloop inject` interactive decomposition
   - Break down complex tasks
   - Generate subtasks interactively
   - Validate dependencies
-- [ ] **P6.3**: Embeddings-based semantic code search
+- [ ] **P4.3**: Embeddings-based semantic code search
   - Vector search for similar code patterns
   - Enhance suggest with semantic understanding
   - Find related implementations
-- [ ] **P6.4**: Learning from suggestion feedback
+- [ ] **P4.4**: Learning from suggestion feedback
   - Track accepted/rejected suggestions
   - Improve suggestion quality over time
   - Personalize to team preferences
@@ -157,11 +131,7 @@
 ---
 
 ### Future Research (v1.8+)
-- **Adapting to In-Flight Goal Changes**: A `planloop revise` command to update a plan when the original spec changes mid-project.
-- **Human-in-the-Loop (HITL) Collaboration**: A `human_intervention_required` state to allow the agent to ask for help when conceptually stuck.
-- **Shell Command Execution Policy**: A formal policy and safety mechanism for agents running shell commands.
-- **Formal Artifact Tracking**: A system for agents to report and track non-code artifacts (e.g., diagrams, reports) they produce.
-- **Self-Bootstrapping Agent Instructions**: Ensure agents always have the latest workflow contract by making the synchronization of `agents.md` the implicit first task of any new session.
+- **Self-Bootstrapping Agent Instructions**: Ensure agents always have the latest workflow contract by making the synchronization of `agents.md` the implicit first task of any new session. The `planloop status` command would detect an out-of-sync `agents.md` and return a `sync_instructions` reason, prompting the agent to update its own rulebook before proceeding.
 - **Embeddings-based search**: Use vector DB for semantic code search
 - **Learning from feedback**: Track accepted/rejected suggestions to improve quality
 - **Batch workflows**: `planloop suggest --weekly` for regular audits
@@ -189,9 +159,6 @@
 - **`lab-testing.md` - Testing infrastructure, scenarios, evaluation metrics
 - **`architecture.md`** - System design, queue fairness, state management
 - **`agent-workflow-visualization.md`** - Diagram of the core agent-CLI interaction loop
-- **`api-contract.md`** - Defines the precise JSON structures for messages exchanged between `planloop` and AI agents.
-- **`planning-guide.md`** - Principles and best practices for creating high-quality, actionable task lists.
-- **`prompt-and-instruction-catalog.md`** - A comprehensive catalog of all internal prompts and agent-facing instructions.
 - **`agent-performance.md`** - Auto-generated test metrics (latest results)
 
 ### Archive
