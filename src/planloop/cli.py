@@ -195,6 +195,20 @@ def _get_tdd_checklist(state: SessionState) -> list[str] | None:
     ]
 
 
+def _get_feedback_request(state: SessionState) -> dict | None:
+    """Generate feedback request if all tasks are complete."""
+    from .core.state import NowReason
+    
+    # Only prompt for feedback when all tasks are done
+    if state.now.reason != NowReason.COMPLETED:
+        return None
+    
+    return {
+        "prompt": "Before completing, reflect on this session in 1 paragraph: What was most difficult? What went wrong? What could be improved?",
+        "command": "planloop feedback --message \"...\"",
+    }
+
+
 @app.command()
 def status(session: str | None = typer.Option(None, help="Session ID"), json_output: bool = typer.Option(True, "--json/--no-json", help="JSON output")) -> None:
     """Show the current planloop session status."""
@@ -231,6 +245,7 @@ def status(session: str | None = typer.Option(None, help="Session ID"), json_out
             "agent_instructions": _generate_agent_instructions(state, lock_status, queue_status),
             "next_action": _generate_next_action(state),
             "tdd_checklist": _get_tdd_checklist(state),
+            "feedback_request": _get_feedback_request(state),
             "transition_detected": transition_detected,
             "completed_task_id": completed_task_id,
             "tasks": [task.model_dump(mode="json") for task in state.tasks],
@@ -811,6 +826,45 @@ def logs(
                 
                 typer.echo()
     
+    except PlanloopError as exc:
+        typer.echo(f"Error: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+
+
+@app.command()
+def feedback(
+    session: str | None = typer.Option(None, help="Session ID"),
+    message: str = typer.Option(..., "--message", "-m", help="Feedback message"),
+    rating: int | None = typer.Option(None, "--rating", "-r", help="Optional rating (1-5)", min=1, max=5),
+) -> None:
+    """Submit feedback about the session experience."""
+    agent_name = os.environ.get("PLANLOOP_AGENT_NAME")
+    try:
+        state, session_dir = _load_session(session)
+        
+        # Count completed tasks
+        from .core.state import TaskStatus
+        completed_tasks = sum(1 for t in state.tasks if t.status == TaskStatus.DONE)
+        
+        # Create feedback data
+        feedback_data = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "agent": agent_name,
+            "session_id": state.session,
+            "message": message,
+            "rating": rating,
+            "tasks_completed": completed_tasks,
+        }
+        
+        # Store feedback
+        feedback_path = session_dir / "feedback.json"
+        feedback_path.write_text(json.dumps(feedback_data, indent=2), encoding="utf-8")
+        
+        # Log event
+        log_session_event(session_dir, f"Feedback submitted: {message[:50]}...")
+        
+        typer.echo("✓ Feedback recorded. Thank you for helping improve planloop!")
+        
     except PlanloopError as exc:
         typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
