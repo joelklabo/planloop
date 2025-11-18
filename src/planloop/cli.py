@@ -191,15 +191,21 @@ def status(session: str | None = typer.Option(None, help="Session ID"), json_out
         lock_status = get_lock_status(session_dir)
         queue_status = get_lock_queue_status(session_dir, agent=agent_name)
         
-        # Detect transition: if now.task_id points to a DONE task, it just completed
+        # Detect transition: find recently completed tasks
         transition_detected = False
         completed_task_id = None
         from .core.state import NowReason, TaskStatus
-        if state.now.reason == NowReason.TASK and state.now.task_id:
-            task = next((t for t in state.tasks if t.id == state.now.task_id), None)
-            if task and task.status == TaskStatus.DONE:
-                transition_detected = True
-                completed_task_id = task.id
+        from datetime import timedelta
+        
+        # Check if any DONE task was updated in the last 5 seconds
+        now = datetime.utcnow()
+        for task in state.tasks:
+            if task.status == TaskStatus.DONE and task.last_updated_at:
+                time_since_update = now - task.last_updated_at
+                if time_since_update < timedelta(seconds=5):
+                    transition_detected = True
+                    completed_task_id = task.id
+                    break
         
         payload = {
             "session": state.session,
