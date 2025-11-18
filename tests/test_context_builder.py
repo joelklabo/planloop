@@ -8,7 +8,6 @@ from unittest.mock import Mock, patch
 import pytest
 
 from planloop.core.context_builder import CodebaseContext, ContextBuilder, TodoComment
-from planloop.core.state import Task, TaskStatus, TaskType
 
 
 @pytest.fixture
@@ -19,35 +18,35 @@ def temp_project(tmp_path):
     src.mkdir()
     tests = tmp_path / "tests"
     tests.mkdir()
-    
+
     # Create some Python files with TODO comments
     (src / "main.py").write_text("""
 # Main module
 def hello():
     # TODO: Add error handling
     print("Hello")
-    
+
 def world():
     # FIXME: This is broken
     pass
 """)
-    
+
     (src / "utils.py").write_text("""
 # Utilities
 # NOTE: Consider refactoring
 def helper():
     return 42
 """)
-    
+
     (tests / "test_main.py").write_text("""
 # Tests
 def test_hello():
     assert True
 """)
-    
+
     # Create a README
     (tmp_path / "README.md").write_text("# Test Project")
-    
+
     return tmp_path
 
 
@@ -87,7 +86,7 @@ def test_context_builder_parses_file_structure(temp_project):
     """ContextBuilder should parse file structure."""
     builder = ContextBuilder(temp_project)
     context = builder.build(depth="shallow")
-    
+
     # Should find the directories and files
     assert context.structure is not None
     # Check if key directories are found
@@ -99,10 +98,10 @@ def test_context_builder_extracts_todo_comments(temp_project):
     """ContextBuilder should find TODO/FIXME/NOTE comments."""
     builder = ContextBuilder(temp_project)
     context = builder.build(depth="medium")
-    
+
     # Should find the TODO, FIXME, and NOTE comments
     assert len(context.todos) >= 3
-    
+
     types = [t.type for t in context.todos]
     assert "TODO" in types
     assert "FIXME" in types
@@ -113,7 +112,7 @@ def test_context_builder_counts_language_stats(temp_project):
     """ContextBuilder should count files by extension."""
     builder = ContextBuilder(temp_project)
     context = builder.build(depth="shallow")
-    
+
     # Should count Python and Markdown files
     assert "py" in context.language_stats
     assert context.language_stats["py"] >= 3  # At least 3 .py files
@@ -127,11 +126,11 @@ def test_context_builder_gets_git_history(temp_project, monkeypatch):
     mock_result = Mock()
     mock_result.stdout = "src/main.py\nsrc/utils.py\n"
     mock_result.returncode = 0
-    
+
     with patch("subprocess.run", return_value=mock_result):
         builder = ContextBuilder(temp_project)
         context = builder.build(depth="medium")
-        
+
         # Should have recent changes
         assert len(context.recent_changes) >= 2
         assert "src/main.py" in context.recent_changes or "main.py" in context.recent_changes
@@ -143,7 +142,7 @@ def test_context_builder_includes_current_tasks(temp_project):
     # This test validates the structure exists
     builder = ContextBuilder(temp_project)
     context = builder.build(depth="shallow")
-    
+
     # Should have a tasks list (even if empty)
     assert isinstance(context.current_tasks, list)
 
@@ -151,10 +150,10 @@ def test_context_builder_includes_current_tasks(temp_project):
 def test_context_builder_shallow_depth_is_fast(temp_project):
     """Shallow depth should scan less than deep depth."""
     builder = ContextBuilder(temp_project)
-    
+
     shallow = builder.build(depth="shallow")
     deep = builder.build(depth="deep")
-    
+
     # Shallow should have less detail (fewer TODOs or simpler structure)
     # This is a basic check - in practice, shallow might skip subdirectories
     assert shallow.language_stats is not None
@@ -167,7 +166,7 @@ def test_context_builder_handles_no_git_gracefully(temp_project):
     with patch("subprocess.run", side_effect=subprocess.CalledProcessError(1, "git")):
         builder = ContextBuilder(temp_project)
         context = builder.build(depth="medium")
-        
+
         # Should still work, just with empty git history
         assert context.recent_changes == []
 
@@ -179,10 +178,10 @@ def test_context_builder_filters_ignored_patterns(temp_project):
     (temp_project / "__pycache__" / "main.pyc").write_text("compiled")
     (temp_project / "node_modules").mkdir()
     (temp_project / "node_modules" / "lib.js").write_text("dependency")
-    
+
     builder = ContextBuilder(temp_project, ignore_patterns=["__pycache__", "node_modules", "*.pyc"])
     context = builder.build(depth="medium")
-    
+
     # Should not count files in ignored directories
     structure_str = str(context.structure)
     assert "main.pyc" not in structure_str

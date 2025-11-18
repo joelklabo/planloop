@@ -18,13 +18,13 @@ def test_status_suggests_discover_when_no_tasks(monkeypatch, tmp_path):
     home = tmp_path / "home"
     monkeypatch.setenv("PLANLOOP_HOME", str(home))
     state = create_session("Test", "title", project_root=Path("/repo"))
-    
+
     # State has no tasks
     assert len(state.tasks) == 0
-    
+
     result = runner.invoke(cli.app, ["status", "--session", state.session])
     assert result.exit_code == 0
-    
+
     data = json.loads(result.stdout)
     assert "agent_instructions" in data
     assert "planloop suggest" in data["agent_instructions"]
@@ -36,7 +36,7 @@ def test_status_suggests_discover_when_all_tasks_done(monkeypatch, tmp_path):
     home = tmp_path / "home"
     monkeypatch.setenv("PLANLOOP_HOME", str(home))
     state = create_session("Test", "title", project_root=Path("/repo"))
-    
+
     # Add a completed task
     task = Task(
         id=1,
@@ -45,19 +45,19 @@ def test_status_suggests_discover_when_all_tasks_done(monkeypatch, tmp_path):
         status=TaskStatus.DONE
     )
     state.tasks.append(task)
-    
+
     # Recompute now field
     state.now = state.compute_now()
-    
+
     # Save state
     from planloop.core.session import save_session_state
     from planloop.home import SESSIONS_DIR
     session_dir = home / SESSIONS_DIR / state.session
     save_session_state(session_dir, state)
-    
+
     result = runner.invoke(cli.app, ["status", "--session", state.session])
     assert result.exit_code == 0
-    
+
     data = json.loads(result.stdout)
     assert "agent_instructions" in data
     assert "planloop suggest" in data["agent_instructions"]
@@ -69,7 +69,7 @@ def test_status_does_not_suggest_when_tasks_in_progress(monkeypatch, tmp_path):
     home = tmp_path / "home"
     monkeypatch.setenv("PLANLOOP_HOME", str(home))
     state = create_session("Test", "title", project_root=Path("/repo"))
-    
+
     # Add a task in progress
     task = Task(
         id=1,
@@ -78,19 +78,19 @@ def test_status_does_not_suggest_when_tasks_in_progress(monkeypatch, tmp_path):
         status=TaskStatus.IN_PROGRESS
     )
     state.tasks.append(task)
-    
+
     # Recompute now field
     state.now = state.compute_now()
-    
+
     # Save state
     from planloop.core.session import save_session_state
     from planloop.home import SESSIONS_DIR
     session_dir = home / SESSIONS_DIR / state.session
     save_session_state(session_dir, state)
-    
+
     result = runner.invoke(cli.app, ["status", "--session", state.session])
     assert result.exit_code == 0
-    
+
     data = json.loads(result.stdout)
     assert "agent_instructions" in data
     # Should not mention suggest when there's work to do

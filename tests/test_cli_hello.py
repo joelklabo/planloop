@@ -1,4 +1,5 @@
 from typer.testing import CliRunner
+
 from planloop import cli
 
 runner = CliRunner()

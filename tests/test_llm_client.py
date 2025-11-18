@@ -15,9 +15,10 @@ def test_llm_config_validates_provider():
     LLMConfig(provider="openai", model="gpt-4")
     LLMConfig(provider="anthropic", model="claude-3-sonnet")
     LLMConfig(provider="ollama", model="llama2")
-    
+
     # Invalid provider should raise validation error
-    with pytest.raises(Exception):  # Pydantic validation error
+    from pydantic import ValidationError
+    with pytest.raises(ValidationError):
         LLMConfig(provider="invalid", model="test")
 
 
@@ -37,13 +38,13 @@ def test_llm_client_openai_generate(monkeypatch):
     mock_response = Mock()
     mock_response.choices = [Mock(message=Mock(content="Generated text"))]
     mock_client.chat.completions.create.return_value = mock_response
-    
+
     with patch("planloop.core.llm_client.OpenAI", return_value=mock_client):
         config = LLMConfig(provider="openai", model="gpt-4", api_key="test-key")
         client = LLMClient(config)
-        
+
         result = client.generate("Test prompt")
-        
+
         assert result == "Generated text"
         mock_client.chat.completions.create.assert_called_once()
 
@@ -55,13 +56,13 @@ def test_llm_client_anthropic_generate(monkeypatch):
     mock_response = Mock()
     mock_response.content = [Mock(text="Generated text")]
     mock_client.messages.create.return_value = mock_response
-    
+
     with patch("planloop.core.llm_client.Anthropic", return_value=mock_client):
         config = LLMConfig(provider="anthropic", model="claude-3-sonnet", api_key="test-key")
         client = LLMClient(config)
-        
+
         result = client.generate("Test prompt")
-        
+
         assert result == "Generated text"
         mock_client.messages.create.assert_called_once()
 
@@ -73,13 +74,13 @@ def test_llm_client_generate_json():
     json_output = {"key": "value", "count": 42}
     mock_response.choices = [Mock(message=Mock(content=json.dumps(json_output)))]
     mock_client.chat.completions.create.return_value = mock_response
-    
+
     with patch("planloop.core.llm_client.OpenAI", return_value=mock_client):
         config = LLMConfig(provider="openai", model="gpt-4", api_key="test-key")
         client = LLMClient(config)
-        
+
         result = client.generate_json("Test prompt", schema={"type": "object"})
-        
+
         assert result == json_output
         assert isinstance(result, dict)
 
@@ -88,26 +89,33 @@ def test_llm_client_raises_on_api_error():
     """LLMClient should raise LLMError on API failures."""
     mock_client = Mock()
     mock_client.chat.completions.create.side_effect = Exception("API Error")
-    
+
     with patch("planloop.core.llm_client.OpenAI", return_value=mock_client):
         config = LLMConfig(provider="openai", model="gpt-4", api_key="test-key")
         client = LLMClient(config)
-        
+
         with pytest.raises(LLMError):
             client.generate("Test prompt")
 
 
-def test_llm_client_requires_api_key_for_cloud_providers():
+def test_llm_client_requires_api_key_for_cloud_providers(monkeypatch):
     """LLMClient should require API key for OpenAI and Anthropic."""
-    # OpenAI without key should raise error
-    config = LLMConfig(provider="openai", model="gpt-4")
-    with pytest.raises(LLMError, match="API key required"):
-        LLMClient(config)
-    
-    # Anthropic without key should raise error
-    config = LLMConfig(provider="anthropic", model="claude-3-sonnet")
-    with pytest.raises(LLMError, match="API key required"):
-        LLMClient(config)
+    # Clear any API keys from environment
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+
+    # Mock the OpenAI and Anthropic classes to simulate they're installed
+    with patch("planloop.core.llm_client.OpenAI", Mock()):
+        # OpenAI without key should raise error
+        config = LLMConfig(provider="openai", model="gpt-4")
+        with pytest.raises(LLMError, match="API key required"):
+            LLMClient(config)
+
+    with patch("planloop.core.llm_client.Anthropic", Mock()):
+        # Anthropic without key should raise error
+        config = LLMConfig(provider="anthropic", model="claude-3-sonnet")
+        with pytest.raises(LLMError, match="API key required"):
+            LLMClient(config)
 
 
 def test_llm_client_ollama_doesnt_require_api_key():
@@ -118,11 +126,11 @@ def test_llm_client_ollama_doesnt_require_api_key():
     mock_post_response.json.return_value = {"response": "Generated text"}
     mock_post_response.status_code = 200
     mock_requests.post.return_value = mock_post_response
-    
+
     with patch("planloop.core.llm_client.requests", mock_requests):
         config = LLMConfig(provider="ollama", model="llama2")
         client = LLMClient(config)
-        
+
         result = client.generate("Test prompt")
         assert result == "Generated text"
         mock_requests.post.assert_called_once()
@@ -131,22 +139,22 @@ def test_llm_client_ollama_doesnt_require_api_key():
 def test_llm_client_loads_api_key_from_env(monkeypatch):
     """LLMClient should load API key from environment variable."""
     monkeypatch.setenv("OPENAI_API_KEY", "env-test-key")
-    
+
     mock_client = Mock()
     mock_response = Mock()
     mock_response.choices = [Mock(message=Mock(content="Test"))]
     mock_client.chat.completions.create.return_value = mock_response
-    
+
     with patch("planloop.core.llm_client.OpenAI") as mock_openai:
         mock_openai.return_value = mock_client
-        
+
         config = LLMConfig(provider="openai", model="gpt-4")
         client = LLMClient(config)
-        
+
         # Should succeed because env var is set
         result = client.generate("Test")
         assert result == "Test"
-        
+
         # Verify OpenAI was initialized with the env key
         mock_openai.assert_called_once()
         call_kwargs = mock_openai.call_args[1]

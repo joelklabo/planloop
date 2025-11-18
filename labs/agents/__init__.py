@@ -1,5 +1,5 @@
 """Agent adapters for prompt lab."""
 
-from .command import CopilotAdapter, OpenAIAdapter, ClaudeAdapter
+from .command import ClaudeAdapter, CopilotAdapter, OpenAIAdapter
 
 __all__ = ["CopilotAdapter", "OpenAIAdapter", "ClaudeAdapter"]

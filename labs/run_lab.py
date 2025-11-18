@@ -8,11 +8,10 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 
-
-from planloop.home import initialize_home
-
 from labs.agents import ClaudeAdapter, CopilotAdapter, OpenAIAdapter
 from labs.scenarios import get_scenario
+from planloop.home import initialize_home
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run planloop prompt lab")
@@ -67,17 +66,17 @@ def evaluate_trace(trace_path: Path) -> tuple[float, list[str]]:
     steps = load_trace(trace_path)
     reasons: list[str] = []
     score = 0.0
-    
+
     # Check for various forms of status calls (mock or real agents)
     status_steps = [entry for entry in steps if "status" in entry["step"]]
     # Separate status-before from other status calls
-    status_before = any(entry["step"] in ("status-before", "status") and entry == steps[min(i+1, len(steps)-1) if i == 0 else i] 
+    any(entry["step"] in ("status-before", "status") and entry == steps[min(i+1, len(steps)-1) if i == 0 else i]
                        for i, entry in enumerate(steps) if "status" in entry["step"])
     status_after_present = len(status_steps) >= 2
-    
+
     # Check for update calls (various forms)
     update_indices = [i for i, entry in enumerate(steps) if "update" in entry["step"]]
-    
+
     # Check for signal handling
     signal_open_indices = [i for i, entry in enumerate(steps) if "signal-open" in entry["step"] and "none" not in entry["detail"]]
     signal_close_indices = [i for i, entry in enumerate(steps) if "signal-close" in entry["step"]]
@@ -87,12 +86,12 @@ def evaluate_trace(trace_path: Path) -> tuple[float, list[str]]:
         score += 25
     else:
         reasons.append("missing status-before")
-    
+
     if update_indices:
         score += 25
     else:
         reasons.append("missing update")
-    
+
     if status_after_present:
         score += 15
     else:

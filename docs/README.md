@@ -28,6 +28,12 @@ Updated via: `planloop guide --target agents-md --apply`
 ### `agent-performance.md`
 **Test metrics** (auto-generated) - Latest agent compliance scores. Updated by `labs/generate_viz.py`.
 
+### `honk-workflow-analysis.md`
+**Real-world workflow analysis** - Deep analysis of using planloop to manage honk development. Simulates actual workflow experience with concrete examples.
+
+### `honk-implementation-fixes.md`
+**Fixes needed for honk** - Prioritized list of planloop improvements needed to support honk development workflow effectively.
+
 ---
 
 ## Reference

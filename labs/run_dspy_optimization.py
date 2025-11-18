@@ -7,28 +7,32 @@ from pathlib import Path
 # Add parent to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from labs.dspy_optimizer import optimize_agent_prompt, load_training_data
 import os
+
 from dotenv import load_dotenv
+
+from labs.dspy_optimizer import load_training_data, optimize_agent_prompt
+
 load_dotenv()
 
 import dspy
+
 
 def main():
     print("=" * 70)
     print("DSPy Prompt Optimization - v2 (Fixed Signature)")
     print("=" * 70)
-    
+
     # Configure OpenAI
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         print("❌ Error: OPENAI_API_KEY not found")
         sys.exit(1)
-    
+
     print("\n✅ Configuring DSPy with OpenAI gpt-4.1...")
     lm = dspy.LM('openai/gpt-4.1', api_key=api_key)
     dspy.configure(lm=lm)
-    
+
     # Load baseline prompt from copilot_real.sh
     baseline_prompt = """You are testing planloop workflow compliance. Your goal: Complete ALL tasks and handle ALL blockers.
 
@@ -68,21 +72,21 @@ RULES:
 - Run status AFTER ANY update
 - Keep going until ALL tasks show status='DONE'
 - Don't stop early"""
-    
+
     # Load data
     print("\n📊 Loading training data...")
     examples = load_training_data(agent="copilot")
-    
+
     if not examples:
         print("❌ No training data found!")
         sys.exit(1)
-    
+
     print(f"\nLoaded {len(examples)} examples")
     pass_count = sum(1 for ex in examples if ex.score >= 1.0)
     avg_score = sum(ex.score for ex in examples) / len(examples)
     print(f"Baseline: {pass_count}/{len(examples)} perfect ({pass_count/len(examples):.1%})")
     print(f"Avg score: {avg_score:.1%}")
-    
+
     # Run optimization
     print("\n" + "=" * 70)
     print("🚀 Starting Optimization v2 (with proper context)...")
@@ -92,7 +96,7 @@ RULES:
     print("Goal: Generate v0.4.0 that addresses failure patterns")
     print("Estimated cost: $3-5")
     print("\nProgress will be shown below...\n")
-    
+
     try:
         optimized_agent, best_prompt = optimize_agent_prompt(
             agent="copilot",
@@ -100,37 +104,37 @@ RULES:
             max_bootstrapped_demos=4,
             max_labeled_demos=8,
         )
-        
+
         print("\n" + "=" * 70)
         print("✅ OPTIMIZATION COMPLETE!")
         print("=" * 70)
         print("\nGenerated optimized prompt")
-        
+
         # Save the optimized prompt
         output_path = Path("labs/agents/prompts/copilot_v0.4.0_dspy.txt")
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         with open(output_path, 'w') as f:
             f.write(best_prompt)
-        
+
         print(f"\n💾 Saved optimized prompt to: {output_path}")
         print("\n" + "=" * 70)
         print("OPTIMIZED PROMPT:")
         print("=" * 70)
         print(best_prompt)
         print("=" * 70)
-        
+
         # Save the DSPy module state
         module_path = Path("labs/optimized_prompts/copilot_v0.4.0_module.json")
         module_path.parent.mkdir(exist_ok=True)
         optimized_agent.save(str(module_path))
         print(f"\n💾 Saved DSPy module to: {module_path}")
-        
+
         print("\nNext steps:")
         print("1. Review the optimized prompt above")
         print("2. Test it with: PLANLOOP_LAB_AGENT_PROMPT='$(cat labs/agents/prompts/copilot_v0.4.0_dspy.txt)' ./labs/run_iterations.sh 10 cli-basics copilot")
         print("3. If better than 64%, deploy as v0.4.0")
-        
+
     except Exception as e:
         print(f"\n❌ Optimization failed: {e}")
         import traceback

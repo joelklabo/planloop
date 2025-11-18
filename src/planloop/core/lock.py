@@ -46,12 +46,12 @@ class LockInfo:
             return None
 
 
-from typing import Optional
+
 
 @dataclass
 class LockStatus:
     locked: bool
-    info: Optional[LockInfo]
+    info: LockInfo | None
 
 
 @dataclass
@@ -239,9 +239,9 @@ def acquire_lock(session_dir: Path, operation: str, timeout: int = DEFAULT_TIMEO
                 info_path.write_text(json.dumps(info.to_dict()), encoding="utf-8")
                 log_session_event(session_dir, f"Lock acquired for {operation}")
                 break
-            except FileExistsError:
+            except FileExistsError as e:
                 if timeout == 0:
-                    raise TimeoutError("Lock already held")
+                    raise TimeoutError("Lock already held") from e
                 if time.time() - start > timeout:
                     info = LockInfo.from_file(info_path)
                     holder = info.held_by if info else "unknown"
@@ -250,7 +250,7 @@ def acquire_lock(session_dir: Path, operation: str, timeout: int = DEFAULT_TIMEO
                         f"Lock timeout for {operation}; held by {holder}",
                         level=logging.WARNING,
                     )
-                    raise TimeoutError(f"Lock held by {holder} longer than {timeout}s")
+                    raise TimeoutError(f"Lock held by {holder} longer than {timeout}s") from e
                 time.sleep(SLEEP_INTERVAL)
         if queue_stall_detected:
             _emit_queue_stall_signal(session_dir, queue_stall_head, QUEUE_STALL_THRESHOLD)

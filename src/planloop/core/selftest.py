@@ -3,10 +3,9 @@ from __future__ import annotations
 
 import os
 import tempfile
-from collections.abc import Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
 
 from ..home import PLANLOOP_HOME_ENV, SESSIONS_DIR, initialize_home
 from .session import create_session, load_session_state_from_disk, save_session_state

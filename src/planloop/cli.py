@@ -17,7 +17,7 @@ import typer
 
 from . import guide as guide_utils
 from .cli_utils import format_log_tail
-from .config import safe_mode_defaults
+from .config import get_suggest_config, safe_mode_defaults
 from .core import describe, registry
 from .core import selftest as selftest_module
 from .core.diff import state_diff
@@ -26,14 +26,13 @@ from .core.session import refresh_registry, save_session_state
 from .core.session_pointer import get_current_session, set_current_session
 from .core.signals import close_signal, open_signal
 from .core.state import SessionState, Signal, SignalLevel, SignalType, validate_state
+from .core.suggest import SuggestionEngine, TaskSuggestion
 from .core.update import UpdateError, apply_update, validate_update_payload
 from .core.update_payload import UpdatePayload
 from .history import create_snapshot, restore_snapshot
 from .home import SESSIONS_DIR, initialize_home
 from .logging_utils import log_event, log_session_event
 from .tui import TEXTUAL_AVAILABLE, PlanloopViewApp, SessionViewModel
-from .config import get_suggest_config
-from .core.suggest import SuggestionEngine, TaskSuggestion
 
 app = typer.Typer(help="planloop CLI")
 sessions_app = typer.Typer(help="Manage sessions")
@@ -537,39 +536,39 @@ def suggest(
     try:
         state, session_dir = _load_session(session)
         validate_state(state)
-        
+
         # Get suggest config
         config = get_suggest_config()
-        
+
         # Override limit if specified
         if limit is not None:
             config.max_suggestions = limit
-        
+
         # Initialize suggestion engine
         engine = SuggestionEngine(state, config)
-        
+
         # Generate suggestions
         project_root = Path(state.project_root) if state.project_root else session_dir.parent
         suggestions = engine.generate_suggestions(
             project_root=project_root,
             depth=depth
         )
-        
+
         if not suggestions:
             typer.echo("No suggestions generated.")
             return
-        
+
         # Display suggestions
         typer.echo(f"\n🔍 Found {len(suggestions)} suggestion(s)\n")
-        
+
         approved_suggestions = []
-        
+
         if dry_run:
             # Just display suggestions in dry-run mode
             for i, suggestion in enumerate(suggestions, 1):
                 _display_suggestion(i, len(suggestions), suggestion)
             return
-        
+
         if auto_approve:
             # Auto-approve all suggestions
             approved_suggestions = suggestions
@@ -577,24 +576,24 @@ def suggest(
             # Interactive approval
             for i, suggestion in enumerate(suggestions, 1):
                 _display_suggestion(i, len(suggestions), suggestion)
-                
+
                 if typer.confirm("Add this task?"):
                     approved_suggestions.append(suggestion)
-        
+
         if not approved_suggestions:
             typer.echo("\nNo tasks added.")
             return
-        
+
         # Generate update payload with AddTaskInput objects
         from .core.update_payload import AddTaskInput
-        
+
         add_tasks = []
         for suggestion in approved_suggestions:
             # Combine rationale and implementation notes into implementation_notes
             full_notes = f"{suggestion.rationale}\n\nImplementation notes:\n{suggestion.implementation_notes}"
             if suggestion.affected_files:
-                full_notes += f"\n\nAffected files:\n" + "\n".join(f"- {f}" for f in suggestion.affected_files)
-            
+                full_notes += "\n\nAffected files:\n" + "\n".join(f"- {f}" for f in suggestion.affected_files)
+
             add_task = AddTaskInput(
                 title=suggestion.title,
                 type=suggestion.type,
@@ -602,20 +601,20 @@ def suggest(
                 implementation_notes=full_notes
             )
             add_tasks.append(add_task)
-        
+
         # Apply update
         payload = UpdatePayload(
             session=state.session,
             add_tasks=add_tasks
         )
-        
+
         with acquire_lock(session_dir):
             state = apply_update(state, payload)
             save_session_state(session_dir, state)
-        
+
         typer.echo(f"\n✓ Added {len(approved_suggestions)} task(s) to plan")
         log_session_event(session_dir, f"Suggest command: added {len(approved_suggestions)} tasks")
-        
+
     except PlanloopError as exc:
         typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(code=1) from exc

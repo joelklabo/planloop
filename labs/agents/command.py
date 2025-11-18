@@ -6,7 +6,6 @@ import shlex
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict
 
 
 @dataclass
@@ -30,7 +29,7 @@ class CommandAdapter:
     def command(self) -> str | None:
         return os.environ.get(self.env_var)
 
-    def run(self, env: Dict[str, str], workspace: Path, output_dir: Path) -> AgentResult:
+    def run(self, env: dict[str, str], workspace: Path, output_dir: Path) -> AgentResult:
         cmd = self.command()
         if not cmd:
             return AgentResult(self.name, False, None, None, None, f"Set {self.env_var} to enable {self.name} adapter")
@@ -39,7 +38,7 @@ class CommandAdapter:
         stdout_path = adapter_dir / "stdout.txt"
         stderr_path = adapter_dir / "stderr.txt"
         transcript_path = adapter_dir / "transcript.txt"
-        
+
         with stdout_path.open("w", encoding="utf-8") as stdout_file, \
              stderr_path.open("w", encoding="utf-8") as stderr_file:
             result = subprocess.run(
@@ -49,7 +48,7 @@ class CommandAdapter:
                 stdout=stdout_file,
                 stderr=stderr_file,
             )
-        
+
         # Create transcript by combining stdout and stderr
         with transcript_path.open("w", encoding="utf-8") as transcript_file:
             if stdout_path.exists():
@@ -59,7 +58,7 @@ class CommandAdapter:
             if stderr_path.exists():
                 transcript_file.write("=== STDERR ===\n")
                 transcript_file.write(stderr_path.read_text(encoding="utf-8"))
-        
+
         message = "success" if result.returncode == 0 else f"exit code {result.returncode}"
         return AgentResult(self.name, True, result.returncode, stdout_path, stderr_path, message)
 
