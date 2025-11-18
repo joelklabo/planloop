@@ -86,6 +86,22 @@ All documentation lives in `docs/`:
 7. **Update the plan**: mark tasks `IN_PROGRESS` when you start, add context
    while working, and record completion status when finished.
 
+8. **Provide feedback on issues** — When you encounter problems, confusion, bugs,
+   or UX friction, immediately report it using `planloop feedback`:
+   ```bash
+   planloop feedback --message "Issue description" --rating 3
+   ```
+   This helps improve planloop for all agents. Report feedback whenever:
+   - Commands behave unexpectedly or produce confusing output
+   - Documentation is unclear or incorrect
+   - Workflow requires unnecessary manual steps
+   - Tests fail in surprising ways
+   - You discover bugs or edge cases
+   - The TDD cycle is interrupted by tooling issues
+   
+   When all tasks complete, `planloop status` will prompt you to reflect on the
+   session with a feedback request. Always complete this reflection.
+
 ## Autonomous Loop Example
 **This is how agents should work continuously without stopping:**
 
@@ -181,6 +197,10 @@ planloop suggest
   - `--json` → output as JSON for parsing
   - Logs all commands, responses, and notes in `session_dir/logs/agent-transcript.jsonl`
   - Useful for debugging agent behavior and understanding decision flow
+- `planloop feedback --message "..." [--rating 1-5]` → submit feedback about
+  issues, bugs, or UX friction encountered during the session. **USE THIS
+  PROACTIVELY** whenever you hit problems. Feedback is stored in
+  `session_dir/feedback.json` and helps improve planloop for all agents.
 - `planloop sessions list/info`, `planloop search`, `planloop templates`,
   `planloop reuse` → discover prior work or bootstrap new sessions from
   templates.

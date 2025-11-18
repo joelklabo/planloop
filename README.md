@@ -105,6 +105,7 @@ Most commands accept `--json` for agent consumption.
 | `planloop guide --target agents-md --apply` | Inject the agent contract into `docs/agents.md`. |
 | `planloop update --dry-run/--no-plan-edit/--strict` | Safe modes for previewing or constraining updates. |
 | `planloop snapshot` / `planloop restore <sha>` | Manage session history snapshots (see below). |
+| `planloop feedback --message "..." [--rating 1-5]` | Submit feedback about bugs, UX issues, or suggestions. |
 
 `planloop selftest` runs the built-in fake agent harness. It spins up a
 temporary PLANLOOP_HOME, executes several scripted scenarios (clean run, CI
@@ -175,6 +176,24 @@ When agents run `planloop status` and see no tasks, they'll be prompted to use `
 ```
 
 This enables fully autonomous task discovery when agents run out of work.
+
+## Agent Feedback Collection
+
+Planloop includes a built-in feedback system to capture agent experiences and improve the tool:
+
+```bash
+# Submit feedback about an issue or experience
+planloop feedback --message "The update command was confusing when..." --rating 3
+
+# Feedback is stored in session_dir/feedback.json with metadata
+```
+
+When all tasks in a session are complete, `planloop status` automatically prompts agents to reflect on the session:
+- What was most difficult?
+- What went wrong?
+- What could be improved?
+
+This continuous feedback loop helps identify UX issues, documentation gaps, and workflow friction points.
 
 ## Session history, snapshots, and restore
 `planloop` can keep a per-session git repo so you can checkpoint plan state
