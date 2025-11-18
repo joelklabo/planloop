@@ -41,6 +41,17 @@ else
     exit 1
 fi
 
+# Check for Rust (optional but recommended)
+if command -v cargo &> /dev/null; then
+    RUST_VERSION=$(cargo --version | awk '{print $2}')
+    echo "✓ Rust installed: $RUST_VERSION"
+else
+    echo "ℹ️  Rust not installed (optional)"
+    echo "   Some packages may need Rust to build from source"
+    echo "   If you encounter build errors, install Rust:"
+    echo "   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
+fi
+
 # Check if planloop is installed
 if python -c "import planloop" 2>/dev/null; then
     echo "✓ planloop package installed"

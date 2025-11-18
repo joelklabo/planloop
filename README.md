@@ -19,6 +19,24 @@ See [Agent Performance Data](docs/agent-performance.md) for detailed metrics and
 ## Requirements
 - Python 3.11+
 - macOS or Linux shell (Windows support later)
+- **Optional**: Rust toolchain (for building packages from source if pre-built wheels unavailable)
+
+### Rust Installation (Optional)
+
+Some Python packages (like `pydantic-core`) require Rust to build from source. Our setup uses pre-built wheels when available, but if you encounter build errors:
+
+```bash
+# Install Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# Restart shell or run
+source $HOME/.cargo/env
+
+# Verify installation
+cargo --version
+```
+
+After installing Rust, rerun `./setup-dev.sh`.
 
 ## Quick Setup
 
