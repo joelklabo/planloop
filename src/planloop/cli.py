@@ -670,6 +670,7 @@ def suggest(
     auto_approve: bool = typer.Option(False, help="Skip interactive approval"),
     dry_run: bool = typer.Option(False, help="Preview without adding"),
     limit: int | None = typer.Option(None, help="Max suggestions"),
+    weekly: bool = typer.Option(False, "--weekly", help="Run weekly comprehensive audit"),
 ) -> None:
     """Analyze codebase and suggest tasks."""
     try:
@@ -678,6 +679,15 @@ def suggest(
 
         # Get suggest config
         config = get_suggest_config()
+        
+        # Apply weekly mode settings
+        if weekly:
+            config.batch_mode = "weekly"
+            config.context_depth = "deep"
+            config.include_coverage_analysis = True
+            config.include_security_analysis = True
+            if not limit:
+                limit = config.get_effective_max_suggestions()
 
         # Override limit if specified
         if limit is not None:

@@ -91,6 +91,17 @@ class SuggestConfig(BaseModel):
     # Security analysis settings
     include_security_analysis: bool = False
     security_min_severity: Literal["HIGH", "MEDIUM", "LOW"] = "MEDIUM"
+    
+    # Batch workflow settings
+    batch_mode: Literal["daily", "weekly"] | None = None
+    
+    def get_effective_max_suggestions(self) -> int:
+        """Get effective max suggestions based on batch mode."""
+        if self.batch_mode == "weekly":
+            return max(self.max_suggestions, 15)
+        elif self.batch_mode == "daily":
+            return max(self.max_suggestions, 10)
+        return self.max_suggestions
 
 
 @lru_cache(maxsize=1)

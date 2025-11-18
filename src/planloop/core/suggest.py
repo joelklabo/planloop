@@ -280,3 +280,27 @@ Example:
                     return True
 
         return False
+
+
+def store_audit_report(report_data: dict, reports_dir: Path) -> Path:
+    """Store audit report for tracking batch runs.
+    
+    Args:
+        report_data: Report data to store
+        reports_dir: Directory to store reports
+        
+    Returns:
+        Path to stored report
+    """
+    from datetime import datetime
+    import json
+    
+    reports_dir.mkdir(parents=True, exist_ok=True)
+    
+    timestamp = datetime.utcnow().strftime("%Y%m%d-%H%M%S")
+    mode = report_data.get("mode", "audit")
+    report_path = reports_dir / f"{mode}-{timestamp}.json"
+    
+    report_path.write_text(json.dumps(report_data, indent=2), encoding="utf-8")
+    
+    return report_path
