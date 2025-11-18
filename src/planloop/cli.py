@@ -957,8 +957,83 @@ def hello(name: str | None = typer.Option(None, "--name", help="Name to greet"))
     else:
         typer.echo("Hello, world!")
 
+
+# Monitor subcommand group for diagnostics
+monitor_app = typer.Typer(help="Monitoring and diagnostics commands")
+app.add_typer(monitor_app, name="monitor")
+
+
+@monitor_app.command(name="bash-health")
+def bash_health(
+    session_id: str | None = typer.Option(None, "--session-id", help="Optional session ID"),
+    pid: int | None = typer.Option(None, "--pid", help="Optional process ID"),
+    json_output: bool = typer.Option(False, "--json", help="Output as JSON"),
+) -> None:
+    """Check health of current bash session.
+    
+    Monitors PTY resource usage and provides health score (0-100) with
+    recommendations for session rotation to prevent posix_spawnp failures.
+    """
+    from .diagnostics.bash_health import BashHealthMonitor
+    
+    try:
+        monitor = BashHealthMonitor()
+        health_report = monitor.check_health(session_id=session_id, pid=pid)
+        
+        if json_output:
+            # Output as JSON
+            typer.echo(json.dumps(health_report, indent=2))
+        else:
+            # Human-readable output
+            status = health_report["status"]
+            score = health_report["health_score"]
+            
+            # Status emoji
+            status_emoji = {
+                "healthy": "🟢",
+                "watch": "🟡",
+                "degraded": "🟠",
+                "critical": "🔴",
+                "failed": "⚫"
+            }.get(status, "⚪")
+            
+            typer.echo(f"\n{status_emoji} Bash Session Health: {status.title()} (Score: {score}/100)\n")
+            
+            # Metrics
+            metrics = health_report["metrics"]
+            typer.echo("Metrics:")
+            typer.echo(f"  Commands: {metrics['command_count']}")
+            typer.echo(f"  PTYs: {metrics['pty_count']}")
+            typer.echo(f"  File Descriptors: {metrics['fd_count']}")
+            typer.echo(f"  Age: {metrics['age_minutes']} minutes")
+            
+            # Warnings
+            if health_report["warnings"]:
+                typer.echo("\n⚠️  Warnings:")
+                for warning in health_report["warnings"]:
+                    typer.echo(f"  • {warning}")
+            
+            # Recommendations
+            typer.echo("\n💡 Recommendations:")
+            for rec in health_report["recommendations"]:
+                typer.echo(f"  • {rec}")
+            
+            typer.echo()
+            
+    except ValueError as exc:
+        typer.echo(f"Error: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+    except Exception as exc:
+        typer.echo(f"Unexpected error: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+
+
 def main() -> None:
     app()
+
+
+# Export for tests
+cli = app
 
 
 if __name__ == "__main__":  # pragma: no cover
