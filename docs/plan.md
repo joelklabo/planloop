@@ -70,7 +70,7 @@
 - [❌] **P1.2**: Optimize OpenAI prompts (target 60%+ pass rate) - *Deprioritized, focusing on Copilot.*
 - [✅] **P1.3**: Document successful prompt patterns per agent - commit 9fdf7a5
 - [✅] **P1.4**: Implement regression protection for Copilot baseline - commit e24e2a5
-- [🔄] **P1.5**: Create agent-specific prompt variations if needed - *IN PROGRESS by Copilot-CLI*
+- [✅] **P1.5**: Create agent-specific prompt variations if needed - commit 9a56d6c
 
 **Tools**: `labs/optimize_safely.sh`, `labs/check_baseline.sh`
 
