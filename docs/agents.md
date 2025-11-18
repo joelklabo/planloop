@@ -135,9 +135,75 @@ All documentation lives in `docs/`:
    session repo, refreshes the registry, and revalidates the plan. Rerun tests
    immediately after restoring.
 
+## Development Environment Setup
+
+**CRITICAL**: This project requires Python 3.11+ and uses `uv` for fast, reproducible environment management.
+
+### First-Time Setup
+```bash
+# Automated setup (installs uv if needed, creates venv, installs all deps)
+./setup-dev.sh
+
+# Activate environment
+source .venv/bin/activate
+
+# Verify everything works
+./verify-env.sh
+```
+
+### Every Time You Work
+**ALWAYS activate the virtual environment before running any Python commands:**
+```bash
+source .venv/bin/activate
+```
+
+Then you can run:
+```bash
+python --version      # Should be 3.11.x
+pytest tests/ -v      # Run tests
+planloop status       # Use planloop commands
+make test             # Run tests via Make
+```
+
+### If Environment Is Broken
+```bash
+# Reset everything
+./setup-dev.sh
+
+# Or verify what's wrong
+./verify-env.sh
+```
+
+### Common Issues
+
+**Problem**: `python: command not found` or wrong Python version  
+**Solution**: Activate the venv first: `source .venv/bin/activate`
+
+**Problem**: Import errors or `ModuleNotFoundError`  
+**Solution**: Reinstall dependencies: `uv pip install -e ".[dev]"`
+
+**Problem**: Tests fail with `TypeError: unsupported operand type(s) for |: 'type' and 'NoneType'`  
+**Solution**: You're using Python 3.9. This project requires 3.11+. Run `./setup-dev.sh`
+
+### Available Make Commands
+```bash
+make help      # Show all available commands
+make setup     # Run ./setup-dev.sh
+make test      # Run all tests
+make lint      # Run ruff + mypy
+make format    # Auto-format code
+make clean     # Remove build artifacts
+```
+
+### Quick Reference
+- **Setup script**: `./setup-dev.sh` - One command to set up everything
+- **Verification**: `./verify-env.sh` - Check if environment is healthy
+- **Documentation**: `docs/development-setup.md` - Detailed setup guide
+- **Python version**: `.python-version` - Specifies Python 3.11 requirement
+
 ## Getting started checklist
-1. Create/activate a Python 3.11+ virtualenv and `pip install -e .[dev]`.
-2. Run `planloop guide --apply` if the workflow changed.
-3. Pick the next `Status: TODO` task from `docs/plans/plan.md`, mark it
+1. **Set up environment**: Run `./setup-dev.sh` and activate with `source .venv/bin/activate`
+2. **Verify setup**: Run `./verify-env.sh` to ensure everything works
+3. **Start working**: Pick the next `Status: TODO` task from `docs/plan.md`, mark it
    `IN_PROGRESS`, follow the workflow contract, and keep looping until the plan
    is empty.

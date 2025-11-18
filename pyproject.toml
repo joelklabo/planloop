@@ -9,7 +9,7 @@ description = "Agent-first planning loop CLI"
 readme = "README.md"
 authors = [{name = "Joel Klabo"}]
 license = {text = "MIT"}
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 dependencies = [
     "typer>=0.12",
     "textual>=0.60",
@@ -42,7 +42,7 @@ include-package-data = true
 "planloop.templates" = ["**/*.md"]
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false
@@ -59,7 +59,7 @@ module = "tests.*"
 disallow_untyped_defs = false
 
 [tool.ruff]
-target-version = "py39"
+target-version = "py311"
 line-length = 100
 
 [tool.ruff.lint]

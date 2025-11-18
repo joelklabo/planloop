@@ -18,14 +18,47 @@ See [Agent Performance Data](docs/agent-performance.md) for detailed metrics and
 
 ## Requirements
 - Python 3.11+
-- `pip` 25+
 - macOS or Linux shell (Windows support later)
 
-## Setup
+## Quick Setup
+
+We use [uv](https://github.com/astral-sh/uv) for fast, reproducible Python environment management.
+
 ```bash
-python3.11 -m venv .venv
+# Automated setup (installs uv if needed, creates venv, installs deps)
+./setup-dev.sh
+
+# Activate environment
 source .venv/bin/activate
-pip install -e .[dev]
+
+# Run tests
+make test
+```
+
+### Manual setup (if you prefer)
+```bash
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Create venv with exact Python version
+uv venv --python 3.11
+
+# Install dependencies
+uv pip install -e ".[dev]"
+
+# Activate and verify
+source .venv/bin/activate
+python --version  # Should be 3.11.x
+```
+
+### Available Make targets
+```bash
+make help     # Show all available commands
+make setup    # Run setup-dev.sh
+make test     # Run all tests
+make lint     # Run ruff + mypy
+make format   # Auto-format code
+make clean    # Remove build artifacts
 ```
 
 ## Workflow expectations
