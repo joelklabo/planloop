@@ -166,7 +166,7 @@ export default function SessionDetailPage() {
               <span className="font-medium">Lock Holder:</span>{' '}
               {session.lock_holder || 'None'}
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
     </motion.div>

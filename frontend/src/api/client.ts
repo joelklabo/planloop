@@ -3,13 +3,18 @@ import type { SessionSummary, SessionState, Task, Signal } from '../types/api'
 const API_BASE = import.meta.env.DEV ? '/api' : '/api'
 
 class APIError extends Error {
+  status: number;
+  response?: any;
+  
   constructor(
     message: string,
-    public status: number,
-    public response?: any
+    status: number,
+    response?: any
   ) {
     super(message)
     this.name = 'APIError'
+    this.status = status
+    this.response = response
   }
 }
 

@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage'
 import SessionsPage from './pages/SessionsPage'
 import KanbanPage from './pages/KanbanPage'
 import ObservabilityPage from './pages/ObservabilityPage'
+import TasksPage from './pages/TasksPage'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="sessions" element={<SessionsPage />} />
+          <Route path="tasks" element={<TasksPage />} />
           <Route path="kanban" element={<KanbanPage />} />
           <Route path="observability" element={<ObservabilityPage />} />
         </Route>
