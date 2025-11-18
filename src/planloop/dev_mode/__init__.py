@@ -9,7 +9,12 @@ and audit trails:
 """
 
 from .error_context import capture_error_context
-from .observability import generate_trace_id, get_current_trace_id, set_trace_id, start_operation_trace
+from .observability import (
+    generate_trace_id,
+    get_current_trace_id,
+    set_trace_id,
+    start_operation_trace,
+)
 
 __all__ = [
     "capture_error_context",

@@ -49,14 +49,14 @@ def is_guide_outdated(text: str) -> bool:
     if not match:
         # No version marker = very old, needs update
         return True
-    
+
     installed_version = match.group(1)
     return installed_version != GUIDE_VERSION
 
 
 def insert_guide(path: Path, content: str, force: bool = False) -> None:
     """Insert or update guide content.
-    
+
     Args:
         path: Target file path
         content: Guide content to insert
@@ -64,23 +64,23 @@ def insert_guide(path: Path, content: str, force: bool = False) -> None:
     """
     if path.exists():
         original = path.read_text(encoding="utf-8")
-        
+
         if detect_marker(original):
             if not force and not is_guide_outdated(original):
                 # Up-to-date, no action needed
                 return
-            
+
             # Replace old guide content, preserve custom additions
             # Find start of guide (marker) and end (next ## or EOF)
             marker_pattern = r"<!--\s*PLANLOOP-INSTALLED[^>]*-->"
             match = re.search(marker_pattern, original)
-            
+
             if match:
                 # Find where guide content ends (before custom sections)
                 start_pos = match.start()
                 # Look for user's custom content after guide
                 custom_section = re.search(r"\n## (?!Goal|Handshake|Summary|Reuse)", original[start_pos:])
-                
+
                 if custom_section:
                     end_pos = start_pos + custom_section.start()
                     custom_content = original[end_pos:]
@@ -96,7 +96,7 @@ def insert_guide(path: Path, content: str, force: bool = False) -> None:
             new_text = original.rstrip() + "\n\n" + content + "\n"
     else:
         new_text = content + "\n"
-    
+
     path.write_text(new_text, encoding="utf-8")
 
 

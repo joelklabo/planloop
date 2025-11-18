@@ -5,9 +5,6 @@ enabling continuous improvement through learning from experiences.
 """
 import json
 from datetime import datetime
-from pathlib import Path
-
-import pytest
 
 from planloop.core.session import save_session_state
 from planloop.core.state import (

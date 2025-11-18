@@ -4,9 +4,6 @@ Verifies that agents receive proper guidance to continue working
 after completing a task without waiting for user direction.
 """
 import json
-from pathlib import Path
-
-import pytest
 
 from planloop.core.session import save_session_state
 from planloop.core.state import SessionState, Task, TaskStatus
@@ -17,6 +14,7 @@ def test_status_suggests_next_task_after_completion(tmp_path, monkeypatch):
     monkeypatch.setenv("PLANLOOP_HOME", str(tmp_path))
 
     from datetime import datetime
+
     from planloop.core.state import Environment, Now, NowReason, PromptMetadata, TaskType
 
     # Create session with multiple tasks - T1 is done, should suggest T2
@@ -37,26 +35,26 @@ def test_status_suggests_next_task_after_completion(tmp_path, monkeypatch):
             Task(id=3, title="Third task", type=TaskType.FEATURE, status=TaskStatus.TODO),
         ],
     )
-    
+
     session_dir = tmp_path / "sessions" / "test-continuation"
     session_dir.mkdir(parents=True)
     save_session_state(session_dir, state)
-    
+
     # Run status command
-    from planloop.cli import status
     from typer.testing import CliRunner
+
     from planloop.cli import app
-    
+
     runner = CliRunner()
     result = runner.invoke(app, ["status", "--session", "test-continuation", "--json"])
-    
+
     assert result.exit_code == 0
     output = json.loads(result.stdout)
-    
+
     # Should include next_action field
     assert "next_action" in output
     next_action = output["next_action"]
-    
+
     # Should suggest working on T2
     assert next_action["action"] == "continue"
     assert next_action["task_id"] == 2
@@ -69,6 +67,7 @@ def test_status_suggests_planloop_suggest_when_all_done(tmp_path, monkeypatch):
     monkeypatch.setenv("PLANLOOP_HOME", str(tmp_path))
 
     from datetime import datetime
+
     from planloop.core.state import Environment, Now, NowReason, PromptMetadata, TaskType
 
     state = SessionState(
@@ -87,23 +86,24 @@ def test_status_suggests_planloop_suggest_when_all_done(tmp_path, monkeypatch):
             Task(id=2, title="Second task", type=TaskType.FEATURE, status=TaskStatus.DONE),
         ],
     )
-    
+
     session_dir = tmp_path / "sessions" / "test-all-done"
     session_dir.mkdir(parents=True)
     save_session_state(session_dir, state)
-    
+
     from typer.testing import CliRunner
+
     from planloop.cli import app
-    
+
     runner = CliRunner()
     result = runner.invoke(app, ["status", "--session", "test-all-done", "--json"])
-    
+
     assert result.exit_code == 0
     output = json.loads(result.stdout)
-    
+
     assert "next_action" in output
     next_action = output["next_action"]
-    
+
     assert next_action["action"] == "discover"
     assert "suggest" in next_action["message"].lower()
 
@@ -113,6 +113,7 @@ def test_status_no_next_action_when_signal_blocking(tmp_path, monkeypatch):
     monkeypatch.setenv("PLANLOOP_HOME", str(tmp_path))
 
     from datetime import datetime
+
     from planloop.core.state import (
         Environment,
         Now,
@@ -149,23 +150,24 @@ def test_status_no_next_action_when_signal_blocking(tmp_path, monkeypatch):
             )
         ],
     )
-    
+
     session_dir = tmp_path / "sessions" / "test-blocked"
     session_dir.mkdir(parents=True)
     save_session_state(session_dir, state)
-    
+
     from typer.testing import CliRunner
+
     from planloop.cli import app
-    
+
     runner = CliRunner()
     result = runner.invoke(app, ["status", "--session", "test-blocked", "--json"])
-    
+
     assert result.exit_code == 0
     output = json.loads(result.stdout)
-    
+
     assert "next_action" in output
     next_action = output["next_action"]
-    
+
     assert next_action["action"] == "fix_blocker"
     assert "S1" in next_action.get("signal_id", "")
 
@@ -175,6 +177,7 @@ def test_status_includes_next_action_always(tmp_path, monkeypatch):
     monkeypatch.setenv("PLANLOOP_HOME", str(tmp_path))
 
     from datetime import datetime
+
     from planloop.core.state import Environment, Now, NowReason, PromptMetadata, TaskType
 
     # Test with task in progress - should suggest continuing
@@ -194,12 +197,13 @@ def test_status_includes_next_action_always(tmp_path, monkeypatch):
             Task(id=2, title="Next task", type=TaskType.FEATURE, status=TaskStatus.TODO),
         ],
     )
-    
+
     session_dir = tmp_path / "sessions" / "test-next-action"
     session_dir.mkdir(parents=True)
     save_session_state(session_dir, state)
 
     from typer.testing import CliRunner
+
     from planloop.cli import app
 
     runner = CliRunner()
@@ -207,7 +211,7 @@ def test_status_includes_next_action_always(tmp_path, monkeypatch):
 
     assert result.exit_code == 0
     output = json.loads(result.stdout)
-    
+
     # Should always include next_action
     assert "next_action" in output
     next_action = output["next_action"]

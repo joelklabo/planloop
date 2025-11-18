@@ -131,7 +131,7 @@ def _generate_agent_instructions(state: SessionState, lock_status, queue_status)
 def _generate_next_action(state: SessionState) -> dict:
     """Generate next_action guidance for autonomous agent continuation."""
     from .core.state import NowReason, TaskStatus
-    
+
     # If there's a blocking signal, agent must fix it first
     if state.now.reason == NowReason.CI_BLOCKER:
         signal = next((s for s in state.signals if s.id == state.now.signal_id), None)
@@ -140,37 +140,37 @@ def _generate_next_action(state: SessionState) -> dict:
             "signal_id": state.now.signal_id,
             "message": f"Fix blocker signal '{signal.title if signal else 'unknown'}' before continuing with tasks.",
         }
-    
+
     # If waiting on lock, no action available
     if state.now.reason == NowReason.WAITING_ON_LOCK:
         return {
             "action": "wait",
             "message": "Session locked. Wait for lock release.",
         }
-    
+
     # Find next TODO task
     next_task = next((t for t in state.tasks if t.status == TaskStatus.TODO), None)
-    
+
     if next_task:
         return {
             "action": "continue",
             "task_id": next_task.id,
             "message": f"Continue with next task {next_task.id}: {next_task.title}",
         }
-    
+
     # All tasks done or no tasks defined
     if state.now.reason == NowReason.COMPLETED:
         return {
             "action": "discover",
             "message": "All tasks complete. Run 'planloop suggest' to discover new work.",
         }
-    
+
     if state.now.reason == NowReason.IDLE:
         return {
             "action": "discover",
             "message": "No tasks defined. Run 'planloop suggest' to discover work.",
         }
-    
+
     # Default fallback
     return {
         "action": "check_status",
@@ -181,11 +181,11 @@ def _generate_next_action(state: SessionState) -> dict:
 def _get_tdd_checklist(state: SessionState) -> list[str] | None:
     """Generate TDD workflow checklist if a task is active."""
     from .core.state import NowReason
-    
+
     # Only show checklist when actively working on tasks
     if state.now.reason not in (NowReason.TASK, NowReason.CI_BLOCKER):
         return None
-    
+
     return [
         "Write test first (or update existing test)",
         "Run tests → watch the new test FAIL (red)",
@@ -199,11 +199,11 @@ def _get_tdd_checklist(state: SessionState) -> list[str] | None:
 def _get_feedback_request(state: SessionState) -> dict | None:
     """Generate feedback request if all tasks are complete."""
     from .core.state import NowReason
-    
+
     # Only prompt for feedback when all tasks are done
     if state.now.reason != NowReason.COMPLETED:
         return None
-    
+
     return {
         "prompt": "Before completing, reflect on this session in 1 paragraph: What was most difficult? What went wrong? What could be improved?",
         "command": "planloop feedback --message \"...\"",
@@ -216,20 +216,21 @@ def status(session: str | None = typer.Option(None, help="Session ID"), json_out
     agent_name = os.environ.get("PLANLOOP_AGENT_NAME")
     try:
         state, session_dir = _load_session(session)
-        
+
         # Log agent command
         log_agent_command(session_dir, "status", {"session": session}, agent_name)
-        
+
         validate_state(state)
         lock_status = get_lock_status(session_dir)
         queue_status = get_lock_queue_status(session_dir, agent=agent_name)
-        
+
         # Detect transition: find recently completed tasks
         transition_detected = False
         completed_task_id = None
-        from .core.state import NowReason, TaskStatus
         from datetime import timedelta
-        
+
+        from .core.state import TaskStatus
+
         # Check if any DONE task was updated in the last 5 seconds
         now = datetime.utcnow()
         for task in state.tasks:
@@ -239,7 +240,7 @@ def status(session: str | None = typer.Option(None, help="Session ID"), json_out
                     transition_detected = True
                     completed_task_id = task.id
                     break
-        
+
         payload = {
             "session": state.session,
             "now": state.now.model_dump(),
@@ -255,17 +256,17 @@ def status(session: str | None = typer.Option(None, help="Session ID"), json_out
             "lock_queue": queue_status.to_dict(),
             "safe_mode_defaults": safe_mode_defaults(),
         }
-        
+
         # Log agent response
         next_action_dict = payload.get("next_action", {})
         next_action_value = next_action_dict.get("action") if isinstance(next_action_dict, dict) else None
-        
+
         log_agent_response(session_dir, "status", True, {
             "reason": state.now.reason.value,
             "next_action": next_action_value,
             "transition_detected": transition_detected,
         })
-        
+
         log_session_event(session_dir, "Status command executed")
         _log_trace_event("status", f"reason={state.now.reason.value}")
         typer.echo(json.dumps(payload, indent=2))
@@ -586,7 +587,7 @@ def guide(
     if apply:
         path = target or Path("docs/agents.md")
         path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         # Check if update needed
         if path.exists():
             existing = path.read_text(encoding="utf-8")
@@ -690,7 +691,7 @@ def suggest(
         depth_literal: Literal["shallow", "medium", "deep"] | None = None
         if depth in ("shallow", "medium", "deep"):
             depth_literal = depth  # type: ignore
-        
+
         suggestions = engine.generate_suggestions(
             project_root=project_root,
             depth=depth_literal
@@ -809,29 +810,29 @@ def logs(
     """View agent interaction transcript logs."""
     try:
         from .agent_transcript import read_transcript
-        
+
         state, session_dir = _load_session(session)
         entries = read_transcript(session_dir, limit=limit)
-        
+
         if json_output:
             typer.echo(json.dumps({"entries": entries}, indent=2))
         else:
             if not entries:
                 typer.echo("No agent transcript entries found.")
                 return
-            
+
             typer.echo(f"\n=== Agent Transcript ({len(entries)} entries) ===\n")
             for entry in entries:
                 timestamp = entry.get("timestamp", "unknown")
                 entry_type = entry.get("type", "unknown")
-                
+
                 if entry_type == "command":
                     cmd = entry.get("command", "?")
                     agent = entry.get("agent") or "unknown"
                     typer.echo(f"[{timestamp}] {agent} → {cmd}")
                     if entry.get("args"):
                         typer.echo(f"  Args: {entry['args']}")
-                
+
                 elif entry_type == "response":
                     cmd = entry.get("command", "?")
                     success = "✓" if entry.get("success") else "✗"
@@ -840,14 +841,14 @@ def logs(
                         typer.echo(f"  Data: {entry['data']}")
                     if entry.get("error"):
                         typer.echo(f"  Error: {entry['error']}")
-                
+
                 elif entry_type == "note":
                     agent = entry.get("agent") or "unknown"
                     message = entry.get("message", "")
                     typer.echo(f"[{timestamp}] {agent}: {message}")
-                
+
                 typer.echo()
-    
+
     except PlanloopError as exc:
         typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
@@ -863,11 +864,11 @@ def feedback(
     agent_name = os.environ.get("PLANLOOP_AGENT_NAME")
     try:
         state, session_dir = _load_session(session)
-        
+
         # Count completed tasks
         from .core.state import TaskStatus
         completed_tasks = sum(1 for t in state.tasks if t.status == TaskStatus.DONE)
-        
+
         # Create feedback data
         feedback_data = {
             "timestamp": datetime.utcnow().isoformat(),
@@ -877,16 +878,16 @@ def feedback(
             "rating": rating,
             "tasks_completed": completed_tasks,
         }
-        
+
         # Store feedback
         feedback_path = session_dir / "feedback.json"
         feedback_path.write_text(json.dumps(feedback_data, indent=2), encoding="utf-8")
-        
+
         # Log event
         log_session_event(session_dir, f"Feedback submitted: {message[:50]}...")
-        
+
         typer.echo("✓ Feedback recorded. Thank you for helping improve planloop!")
-        
+
     except PlanloopError as exc:
         typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(code=1) from exc

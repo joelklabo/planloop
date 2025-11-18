@@ -7,10 +7,11 @@ from __future__ import annotations
 
 import json
 import time
+from collections.abc import Generator
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Generator
+from typing import Any
 
 from .observability import get_current_trace_id
 
@@ -22,36 +23,36 @@ def trace_span(
     **metadata: Any,
 ) -> Generator[None, None, None]:
     """Context manager to track performance span.
-    
+
     Records the duration of an operation along with any metadata.
     Multiple spans for the same trace_id are appended to the same file.
-    
+
     Usage:
         with trace_span("llm_call", session_dir=session_dir, model="gpt-4"):
             result = call_llm()
-        
+
         with trace_span("parse_response", session_dir=session_dir):
             data = parse(result)
-    
+
     Args:
         name: Operation name (e.g., "llm_call", "parse_response")
         session_dir: Path to session directory (None = no file output)
         **metadata: Additional metadata to attach to the span
-    
+
     Yields:
         None
     """
     trace_id = get_current_trace_id()
     start_time = time.time()
-    start_iso = datetime.now(timezone.utc).isoformat()
-    
+    start_iso = datetime.now(UTC).isoformat()
+
     try:
         yield
     finally:
         end_time = time.time()
-        end_iso = datetime.now(timezone.utc).isoformat()
+        end_iso = datetime.now(UTC).isoformat()
         duration_ms = (end_time - start_time) * 1000
-        
+
         span_data = {
             "name": name,
             "start_time": start_iso,
@@ -59,7 +60,7 @@ def trace_span(
             "duration_ms": duration_ms,
             "metadata": metadata,
         }
-        
+
         if session_dir:
             _write_span_to_trace_file(session_dir, trace_id, span_data)
 
@@ -70,7 +71,7 @@ def _write_span_to_trace_file(
     span_data: dict[str, Any],
 ) -> None:
     """Write span data to trace file, appending if file exists.
-    
+
     Args:
         session_dir: Path to session directory
         trace_id: Trace ID for this operation
@@ -79,7 +80,7 @@ def _write_span_to_trace_file(
     trace_dir = session_dir / "logs" / "traces"
     trace_dir.mkdir(parents=True, exist_ok=True)
     trace_file = trace_dir / f"{trace_id}.json"
-    
+
     # Load existing trace data or create new
     if trace_file.exists():
         trace_data = json.loads(trace_file.read_text())
@@ -88,10 +89,10 @@ def _write_span_to_trace_file(
             "trace_id": trace_id,
             "spans": [],
         }
-    
+
     # Append new span
     trace_data["spans"].append(span_data)
-    
+
     # Write back to file
     trace_file.write_text(json.dumps(trace_data, indent=2))
 

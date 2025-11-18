@@ -41,12 +41,12 @@ class SuggestionEngine:
 
         # Initialize LLM client (lazy initialization to allow mocking in tests)
         self._llm_client: LLMClient | None = None
-        
+
         # Get API key from environment if specified
         api_key = None
         if config.llm_api_key_env:
             api_key = os.environ.get(config.llm_api_key_env)
-        
+
         self._llm_config = LLMConfig(
             provider=config.llm_provider,
             model=config.llm_model,

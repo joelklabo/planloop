@@ -6,12 +6,8 @@ from pathlib import Path
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from planloop.core.state import (
-    TaskType, TaskStatus, Task,
-    SignalLevel, SignalType, Signal,
-    NowReason, Now,
-    SessionState
-)
+from planloop.core.state import NowReason, SignalLevel, SignalType, TaskStatus, TaskType
+
 
 def enum_to_ts(enum_class) -> str:
     """Convert Python Enum to TypeScript union type."""
@@ -77,9 +73,9 @@ export interface SessionState {{
 if __name__ == "__main__":
     output_path = Path(__file__).parent.parent / "frontend/src/types/api.ts"
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     types_content = generate_types()
     output_path.write_text(types_content)
-    
+
     print(f"✅ Generated TypeScript types: {output_path}")
     print(f"   {len(types_content.splitlines())} lines")

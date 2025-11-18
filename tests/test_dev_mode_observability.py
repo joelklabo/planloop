@@ -4,8 +4,6 @@ from __future__ import annotations
 import re
 from concurrent.futures import ThreadPoolExecutor
 
-import pytest
-
 from planloop.dev_mode.observability import (
     generate_trace_id,
     get_current_trace_id,
@@ -20,7 +18,7 @@ class TestTraceIDGeneration:
     def test_generate_trace_id_format(self):
         """Trace IDs should have format tr_{timestamp}_{random}."""
         trace_id = generate_trace_id()
-        
+
         # Format: tr_YYYYMMDDHHMMSS_XXXXXX (6 hex chars)
         pattern = r"^tr_\d{14}_[0-9a-f]{6}$"
         assert re.match(pattern, trace_id), f"Invalid format: {trace_id}"

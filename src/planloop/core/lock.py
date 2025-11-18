@@ -202,7 +202,7 @@ def acquire_lock(session_dir: Path, operation: str, timeout: int = DEFAULT_TIMEO
         requested_at=start,
     )
     _write_queue_entry(session_dir, queue_entry)
-    
+
     # Log lock requested
     try:
         from ..dev_mode.lock_logger import log_lock_event
@@ -248,7 +248,7 @@ def acquire_lock(session_dir: Path, operation: str, timeout: int = DEFAULT_TIMEO
                 info = LockInfo(held_by=held_by, since=acquired_time, operation=operation)
                 info_path.write_text(json.dumps(info.to_dict()), encoding="utf-8")
                 log_session_event(session_dir, f"Lock acquired for {operation}")
-                
+
                 # Log lock acquired with wait time
                 try:
                     from ..dev_mode.lock_logger import log_lock_event
@@ -271,30 +271,30 @@ def acquire_lock(session_dir: Path, operation: str, timeout: int = DEFAULT_TIMEO
                 time.sleep(SLEEP_INTERVAL)
         if queue_stall_detected:
             _emit_queue_stall_signal(session_dir, queue_stall_head, QUEUE_STALL_THRESHOLD)
-        
+
         # Track when lock was acquired for hold time calculation
         lock_acquired_time = time.time()
         yield
     finally:
         release_time = time.time()
         hold_ms = (release_time - lock_acquired_time) * 1000 if lock_acquired_time is not None else None
-        
+
         if lock_path.exists():
             lock_path.unlink()
         if info_path.exists():
             info_path.unlink()
-        
+
         # Only log release if lock was actually acquired
         if lock_acquired_time is not None:
             log_session_event(session_dir, f"Lock released for {operation}")
-            
+
             # Log lock released with hold time
             try:
                 from ..dev_mode.lock_logger import log_lock_event
                 log_lock_event(session_dir, "lock_released", operation, entry_id, hold_ms=hold_ms)
             except ImportError:
                 pass
-        
+
         _remove_queue_entry(session_dir, entry_id)
 
 

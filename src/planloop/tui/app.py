@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import cast
 
 try:  # pragma: no cover - optional dependency guard
     from textual.app import App, ComposeResult

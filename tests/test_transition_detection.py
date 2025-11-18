@@ -5,9 +5,6 @@ from IN_PROGRESS to DONE, enabling autonomous agent continuation.
 """
 import json
 from datetime import datetime
-from pathlib import Path
-
-import pytest
 
 from planloop.core.session import save_session_state
 from planloop.core.state import (
@@ -139,9 +136,9 @@ def test_transition_requires_state_tracking(tmp_path, monkeypatch):
 
     # Implementation uses task.last_updated_at to detect recent completions
     # Tasks completed within last 5 seconds are considered "just completed"
-    
+
     from datetime import datetime as dt
-    
+
     state = SessionState(
         session="test-state-tracking",
         project_root=str(tmp_path),

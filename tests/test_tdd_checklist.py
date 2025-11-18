@@ -6,8 +6,6 @@ to enforce the test-driven development practice.
 import json
 from datetime import datetime
 
-import pytest
-
 from planloop.core.session import save_session_state
 from planloop.core.state import (
     Environment,
