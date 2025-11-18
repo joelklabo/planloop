@@ -301,3 +301,108 @@ make clean     # Remove build artifacts
 3. **Start working**: Pick the next `Status: TODO` task from `docs/plan.md`, mark it
    `IN_PROGRESS`, follow the workflow contract, and keep looping until the plan
    is empty.
+
+# planloop Agent Instructions
+<!-- PLANLOOP-INSTALLED v2.0 -->
+
+## Goal Prompt
+# planloop Goal Prompt
+
+You are preparing instructions for an AI coding agent that will use
+`planloop` to implement a project. Respond with:
+
+1. **Summary** – One paragraph that restates the goal, success criteria, and
+   notable constraints (platforms, deadlines, CI requirements, stakeholders).
+2. **Signals** – Bulleted list of known blockers/risk signals. Include CI or
+   lint references when provided. If none exist, write `- None reported`.
+3. **Initial Tasks** – Numbered list of commit-sized tasks that follow the
+   planloop workflow (TDD, small increments, green tests). Each task should
+   include:
+   - short imperative title,
+   - success definition or exit criteria,
+   - obvious dependencies on earlier tasks.
+4. **Open Questions** – Any clarifications the agent should raise before
+   coding (optional).
+
+Keep the response under 350 words. Use concise Markdown and avoid code unless
+the user explicitly asks for scaffolding.
+
+
+## Handshake
+# planloop Handshake
+
+You are an AI coding agent operating under planloop. Follow these rules:
+
+## Core Loop
+- Before every action call `planloop status --json` and read `now.reason`.
+- If `now.reason == ci_blocker` or references a signal, diagnose/fix it before
+  touching planned tasks.
+- If `now.reason == task`, work strictly on the referenced task. Apply TDD,
+  keep commits small, and ensure tests are green before moving on.
+- When all tasks are done and you have a final summary, run
+  `planloop update --json` with the results.
+- After every status, mention the observed `now.reason` / next suggested task in
+  your update so we can track compliance across runs.
+
+## Updates
+- Never edit PLAN.md manually; all changes go through `planloop update`.
+- Include `last_seen_version` from the previous status output to avoid stale
+  writes.
+- Valid update payload fields:
+  - `tasks`: change status/title for existing IDs.
+  - `add_tasks`: new tasks with optional dependencies.
+  - `context_notes`, `next_steps`, `artifacts`, `final_summary` when relevant.
+- After applying an update, re-run `planloop status` to confirm the next step.
+
+## Locks & Deadlocks
+- If status reports `waiting_on_lock`, sleep briefly and retry; do not attempt
+  to write until the lock clears.
+- If `deadlocked`, inspect signals and recent work log to break the stalemate.
+- Check the `lock_queue` output from `planloop status`—it lists pending agents and your queue position. If you are not at `position == 1`, wait until you reach the head of the queue before issuing structural edits and mention that you are pausing so the trace log stays honest.
+
+## Etiquette
+- Keep responses concise, reference files/lines precisely, and cite test runs.
+- When unsure, add questions to PLAN.md via `context_notes` and pause coding.
+- Do not assume hidden state; always trust planloop outputs over memory.
+
+## Signal Handling
+- Always close reported CI blocker signals via `planloop alert --close` before editing tasks.
+- After closing a blocker, rerun `planloop status` and mention the newly observed `now.reason` in your next update.
+- When encountering a signal, record `signal-open` plus the blocker id inside `next_steps` or `context_notes` so the trace log captures the interaction.
+
+
+## Summary Prompt
+# planloop Summary Prompt
+
+Produce the final wrap-up for a session when all tasks and signals are closed.
+Include the following sections:
+
+1. **Completion Summary** – 2–3 sentences describing the overall result,
+   referencing key features or fixes delivered. Mention the test suite / CI
+   status.
+2. **Task Outcomes** – Bulleted list highlighting each task ID and whether it
+   shipped, was skipped, or changed scope.
+3. **Signals Resolved** – Bullets referencing any CI/lint/system signals that
+   were opened during the session and how they were addressed.
+4. **Risks / Follow-ups** – Items that should become future tasks (if empty,
+   write `- None`).
+
+Keep the tone factual and reference file paths or PR numbers when relevant.
+
+
+## Reuse Template Prompt
+# planloop Template Reuse Prompt
+
+You are preparing context so a new planloop session can reuse a past template.
+Respond with:
+
+1. **Why this template** – 1–2 sentences describing what makes the referenced
+   session a good example (tech stack, workflow style, test strategy).
+2. **Key Tasks to Mirror** – Bullet list summarizing 3–5 tasks from the
+   template that the next agent should follow, with short rationale for each.
+3. **Adjustments Needed** – Bullet list describing what must change to adapt
+   the template to the new goal (optional if nothing differs).
+
+Use short Markdown bullets and avoid copying large diffs; the goal is to give
+the next agent a crisp recipe inspired by the previous success.
+

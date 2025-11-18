@@ -448,20 +448,66 @@ def sessions_create(
     name: str = typer.Option(..., "--name", help="Session name (used for ID generation)"),
     title: str | None = typer.Option(None, "--title", help="Human-readable title (defaults to name)"),
     project_root: Path | None = typer.Option(None, "--project-root", help="Project root path (defaults to current directory)"),
+    plan_file: Path | None = typer.Option(None, "--plan-file", help="Import tasks from existing PLAN.md"),
 ) -> None:
     """Create a new session."""
     from .core.session import create_session
+    from .core.plan_parser import parse_plan_file
+    from .core.update import apply_update
+    from .core.update_payload import AddTaskInput, UpdatePayload
+    
     try:
+        # Validate plan file exists if specified
+        if plan_file and not plan_file.exists():
+            raise PlanloopError(f"Plan file not found: {plan_file}")
+        
         title_value = title or name
         root = project_root or Path.cwd()
         state = create_session(name=name, title=title_value, project_root=root)
+        
+        parsed_tasks = []
+        
+        # Import tasks from plan file if provided
+        if plan_file:
+            content = plan_file.read_text(encoding="utf-8")
+            parsed_tasks = parse_plan_file(content)
+            
+            if parsed_tasks:
+                # Convert to AddTaskInput
+                add_tasks = [
+                    AddTaskInput(
+                        title=task.title,
+                        type=task.type,
+                        status=task.status,
+                        depends_on=[],
+                        implementation_notes=""
+                    )
+                    for task in parsed_tasks
+                ]
+                
+                # Apply update to add tasks
+                payload = UpdatePayload(
+                    session=state.session,
+                    version=state.version,
+                    add_tasks=add_tasks
+                )
+                state = apply_update(state, payload)
+                
+                # Save the updated state
+                session_dir = initialize_home() / SESSIONS_DIR / state.session
+                save_session_state(session_dir, state, "Import tasks from PLAN.md")
+        
         typer.echo(json.dumps({
             "session": state.session,
             "name": state.name,
             "title": state.title,
             "project_root": state.project_root,
-            "status": "created"
+            "status": "created",
+            "tasks_imported": len(parsed_tasks)
         }, indent=2))
+    except PlanloopError as exc:
+        typer.echo(f"Error: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
     except Exception as exc:
         typer.echo(f"Error: Failed to create session: {exc}", err=True)
         raise typer.Exit(code=1) from exc
