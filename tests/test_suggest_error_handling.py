@@ -17,11 +17,14 @@ from planloop.core.suggest import SuggestionEngine
 runner = CliRunner()
 
 
-def test_llm_client_missing_api_key_error():
+def test_llm_client_missing_api_key_error(monkeypatch):
     """Missing API key should raise clear error."""
     from unittest.mock import Mock, patch
 
     from planloop.core.llm_client import LLMError
+
+    # Ensure no API key in environment
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
 
     config = LLMConfig(
         provider="openai",

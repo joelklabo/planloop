@@ -34,23 +34,92 @@ All documentation lives in `docs/`:
 
 ## Workflow contract
 ## Workflow contract
-1. **Always** call `planloop status --json` to decide the next action. Respect
-   `now.reason`:
+1. **Always** call `planloop status --json` to decide the next action. The response
+   includes:
+   - **`next_action`**: Explicit guidance on what to do next
+     - `action: "continue"` + `task_id` → Start the next task immediately.
+     - `action: "fix_blocker"` + `signal_id` → Fix the signal before tasks.
+     - `action: "discover"` → Run `planloop suggest` to find new work.
+     - `action: "wait"` → Session locked, retry status after a delay.
+   
+   - **`transition_detected`**: Boolean indicating a task just completed
+   - **`completed_task_id`**: ID of the just-completed task (when transition detected)
+   
+   Also respect `now.reason` for context:
    - `ci_blocker` → fix the signal before touching tasks.
    - `task` → implement the referenced task using TDD.
    - `waiting_on_lock` → sleep and retry `status`.
-   - `completed` + empty plan → run `planloop suggest` to discover new work.
-2. **Don't wait for optional direction** — once a task is done (or a signal is cleared), pick the next `Status: TODO` item from `docs/plan.md`, mark it `IN_PROGRESS`, and keep going. Treat the plan as your instruction set; do not ask "what should I do next?" or seek confirmation before acting, even while processing blockers—just handle the signal, rerun status, and move to the next step autonomously unless a human explicitly interrupts you.
-3. **Discover work proactively** — when the plan is empty or you're asked "what's
-   next?", run `planloop suggest` to analyze the codebase for gaps, technical
-   debt, and improvements. It generates context-rich tasks ready for implementation.
-4. **Practice TDD**: write/update tests, watch them fail, implement, rerun
-   tests, then refactor.
+   - `completed` → all tasks done, suggest or add final_summary.
+   
+2. **Autonomous continuation is required** — After completing any task or fixing a
+   signal, immediately call `planloop status --json` again and follow the
+   `next_action`. **Never** stop to ask "what should I do next?" or wait for
+   confirmation. The workflow is:
+   - Complete task → mark DONE → `planloop status` → read `next_action` → continue
+   - Fix signal → close alert → `planloop status` → read `next_action` → continue
+   - This loop continues until `action: "discover"` or human interruption.
+   
+3. **Discover work proactively** — when `next_action.action == "discover"`, run
+   `planloop suggest` to analyze the codebase for gaps, technical debt, and
+   improvements. It generates context-rich tasks ready for implementation.
+   
+4. **Practice TDD religiously** — This is NON-NEGOTIABLE:
+   
+   **The TDD Cycle (for every task):**
+   ```
+   [ ] 1. Write test first (or update existing test)
+   [ ] 2. Run tests → watch the new test FAIL
+   [ ] 3. Implement minimal code to make it pass
+   [ ] 4. Run tests → verify ALL tests PASS
+   [ ] 5. Refactor if needed (keeping tests green)
+   [ ] 6. Commit with descriptive message
+   ```
+   
+   **Never skip this cycle**. Tests are the contract. If you're tempted to skip
+   tests, split the task into smaller pieces in the plan first. No test = no commit.
+   
 5. **Commit often**: each task should fit in a single commit.
    If work balloons, split the task in the plan before writing code.
+   
 6. **Never** commit failing tests. Local WIP stays local.
+
 7. **Update the plan**: mark tasks `IN_PROGRESS` when you start, add context
    while working, and record completion status when finished.
+
+## Autonomous Loop Example
+**This is how agents should work continuously without stopping:**
+
+```bash
+# 1. Check what to do
+planloop status --json
+# Response: "next_action": {"action": "continue", "task_id": "P1.1", ...}
+
+# 2. Work on P1.1 using TDD (THE CHECKLIST!)
+# [ ] Write test in tests/test_feature.py
+# [ ] Run pytest tests/test_feature.py → FAIL (red)
+# [ ] Implement in src/feature.py
+# [ ] Run pytest tests/test_feature.py → PASS (green)
+# [ ] Refactor if needed (keep green)
+# [ ] Commit: "feat: Add feature (P1.1)"
+
+# 3. Mark complete and get next action
+planloop update --file <payload-marking-P1.1-done>
+planloop status --json
+# Response: "next_action": {"action": "continue", "task_id": "P1.2", ...}
+
+# 4. Immediately start P1.2 (NO stopping to ask!)
+# Repeat TDD cycle for P1.2...
+
+# 5. After P1.2 done, check again
+planloop status --json
+# Response: "next_action": {"action": "discover", ...}
+
+# 6. Discover new work
+planloop suggest
+
+# 7. Continue with suggested tasks...
+# The loop never stops until human intervenes or action is "wait"
+```
 
 ## Key commands
 - `planloop status --json` → always the first step; surfaces tasks, signals,
@@ -107,6 +176,11 @@ All documentation lives in `docs/`:
     (e.g., enforce `no_plan_edit: true` for all agents).
 - `planloop alert ...` → open/close CI, lint, bench, or system signals that
   gate the loop.
+- `planloop logs` → view agent interaction transcript (JSON Lines format)
+  - `--limit N` → show last N entries (default: 50)
+  - `--json` → output as JSON for parsing
+  - Logs all commands, responses, and notes in `session_dir/logs/agent-transcript.jsonl`
+  - Useful for debugging agent behavior and understanding decision flow
 - `planloop sessions list/info`, `planloop search`, `planloop templates`,
   `planloop reuse` → discover prior work or bootstrap new sessions from
   templates.

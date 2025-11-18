@@ -16,6 +16,7 @@ from pathlib import Path
 import typer
 
 from . import guide as guide_utils
+from .agent_transcript import log_agent_command, log_agent_response
 from .cli_utils import format_log_tail
 from .config import get_suggest_config, safe_mode_defaults
 from .core import describe, registry
@@ -126,28 +127,107 @@ def _generate_agent_instructions(state: SessionState, lock_status, queue_status)
     return "Check 'planloop status' for current state and next steps."
 
 
+def _generate_next_action(state: SessionState) -> dict:
+    """Generate next_action guidance for autonomous agent continuation."""
+    from .core.state import NowReason, TaskStatus
+    
+    # If there's a blocking signal, agent must fix it first
+    if state.now.reason == NowReason.CI_BLOCKER:
+        signal = next((s for s in state.signals if s.id == state.now.signal_id), None)
+        return {
+            "action": "fix_blocker",
+            "signal_id": state.now.signal_id,
+            "message": f"Fix blocker signal '{signal.title if signal else 'unknown'}' before continuing with tasks.",
+        }
+    
+    # If waiting on lock, no action available
+    if state.now.reason == NowReason.WAITING_ON_LOCK:
+        return {
+            "action": "wait",
+            "message": "Session locked. Wait for lock release.",
+        }
+    
+    # Find next TODO task
+    next_task = next((t for t in state.tasks if t.status == TaskStatus.TODO), None)
+    
+    if next_task:
+        return {
+            "action": "continue",
+            "task_id": next_task.id,
+            "message": f"Continue with next task {next_task.id}: {next_task.title}",
+        }
+    
+    # All tasks done or no tasks defined
+    if state.now.reason == NowReason.COMPLETED:
+        return {
+            "action": "discover",
+            "message": "All tasks complete. Run 'planloop suggest' to discover new work.",
+        }
+    
+    if state.now.reason == NowReason.IDLE:
+        return {
+            "action": "discover",
+            "message": "No tasks defined. Run 'planloop suggest' to discover work.",
+        }
+    
+    # Default fallback
+    return {
+        "action": "check_status",
+        "message": "Review current state and determine next steps.",
+    }
+
+
 @app.command()
 def status(session: str | None = typer.Option(None, help="Session ID"), json_output: bool = typer.Option(True, "--json/--no-json", help="JSON output")) -> None:
     """Show the current planloop session status."""
+    agent_name = os.environ.get("PLANLOOP_AGENT_NAME")
     try:
         state, session_dir = _load_session(session)
+        
+        # Log agent command
+        log_agent_command(session_dir, "status", {"session": session}, agent_name)
+        
         validate_state(state)
         lock_status = get_lock_status(session_dir)
-        queue_status = get_lock_queue_status(session_dir, agent=os.environ.get("PLANLOOP_AGENT_NAME"))
+        queue_status = get_lock_queue_status(session_dir, agent=agent_name)
+        
+        # Detect transition: if now.task_id points to a DONE task, it just completed
+        transition_detected = False
+        completed_task_id = None
+        from .core.state import NowReason, TaskStatus
+        if state.now.reason == NowReason.TASK and state.now.task_id:
+            task = next((t for t in state.tasks if t.id == state.now.task_id), None)
+            if task and task.status == TaskStatus.DONE:
+                transition_detected = True
+                completed_task_id = task.id
+        
         payload = {
             "session": state.session,
             "now": state.now.model_dump(),
             "agent_instructions": _generate_agent_instructions(state, lock_status, queue_status),
+            "next_action": _generate_next_action(state),
+            "transition_detected": transition_detected,
+            "completed_task_id": completed_task_id,
             "tasks": [task.model_dump(mode="json") for task in state.tasks],
             "signals": [signal.model_dump(mode="json") for signal in state.signals],
             "lock_info": lock_status.info.to_dict() if lock_status.info else None,
             "lock_queue": queue_status.to_dict(),
             "safe_mode_defaults": safe_mode_defaults(),
         }
+        
+        # Log agent response
+        log_agent_response(session_dir, "status", True, {
+            "reason": state.now.reason.value,
+            "next_action": payload["next_action"]["action"],
+            "transition_detected": transition_detected,
+        })
+        
         log_session_event(session_dir, "Status command executed")
         _log_trace_event("status", f"reason={state.now.reason.value}")
         typer.echo(json.dumps(payload, indent=2))
     except PlanloopError as exc:
+        if 'session_dir' in locals():
+            log_agent_response(session_dir, "status", False, error=str(exc))
         typer.echo(f"Error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
 
@@ -656,6 +736,59 @@ def selftest(json_output: bool = typer.Option(True, "--json/--no-json", help="JS
     }
     log_event("Self-test completed successfully")
     _emit_selftest_result(payload, json_output)
+
+
+@app.command()
+def logs(
+    session: str | None = typer.Option(None, help="Session ID"),
+    limit: int = typer.Option(50, "--limit", "-n", help="Number of recent entries"),
+    json_output: bool = typer.Option(False, "--json/--no-json", help="JSON output"),
+) -> None:
+    """View agent interaction transcript logs."""
+    try:
+        from .agent_transcript import read_transcript
+        
+        state, session_dir = _load_session(session)
+        entries = read_transcript(session_dir, limit=limit)
+        
+        if json_output:
+            typer.echo(json.dumps({"entries": entries}, indent=2))
+        else:
+            if not entries:
+                typer.echo("No agent transcript entries found.")
+                return
+            
+            typer.echo(f"\n=== Agent Transcript ({len(entries)} entries) ===\n")
+            for entry in entries:
+                timestamp = entry.get("timestamp", "unknown")
+                entry_type = entry.get("type", "unknown")
+                
+                if entry_type == "command":
+                    cmd = entry.get("command", "?")
+                    agent = entry.get("agent") or "unknown"
+                    typer.echo(f"[{timestamp}] {agent} → {cmd}")
+                    if entry.get("args"):
+                        typer.echo(f"  Args: {entry['args']}")
+                
+                elif entry_type == "response":
+                    cmd = entry.get("command", "?")
+                    success = "✓" if entry.get("success") else "✗"
+                    typer.echo(f"[{timestamp}] {success} ← {cmd}")
+                    if entry.get("data"):
+                        typer.echo(f"  Data: {entry['data']}")
+                    if entry.get("error"):
+                        typer.echo(f"  Error: {entry['error']}")
+                
+                elif entry_type == "note":
+                    agent = entry.get("agent") or "unknown"
+                    message = entry.get("message", "")
+                    typer.echo(f"[{timestamp}] {agent}: {message}")
+                
+                typer.echo()
+    
+    except PlanloopError as exc:
+        typer.echo(f"Error: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
 
 
 @app.command()

@@ -1,6 +1,6 @@
 # planloop Development Plan
 
-**Last Updated**: 2025-11-17
+**Last Updated**: 2025-11-18
 **Version**: 1.7 (Active Development)
 
 ---
@@ -35,118 +35,191 @@
 
 ## 🎯 Active Work
 
-### Lab Testing & Agent Optimization
-**Goal**: Achieve 60%+ baseline compliance across all major AI agents
+### Current Focus: Real-World Agent Issues
+**Priority**: Address critical issues discovered during live agent runs before continuing lab optimization.
 
-**Status** (158 runs as of 2025-11-17):
-- ⏳ **Copilot (gpt-5)**: 58.3% pass rate - Needs +1.7% improvement
-- ⏳ **Claude (sonnet)**: 46.2% pass rate - Needs +13.8% improvement
-- ⏳ **OpenAI**: 33.3% pass rate - Needs +27% improvement
+**Critical Blockers**:
+1. **Agent stops after first task** - Need continuation mechanism (P5.1, P5.2)
+2. **No agent activity logs** - Can't debug what agents are doing (P5.4)
+3. **TDD not being followed** - Code quality impact (P5.3)
 
-**Next Steps**:
-1. Optimize Claude/OpenAI prompts to reach 60%+ baseline
-2. Once solid, implement harder test scenarios:
-   - `multi-signal-cascade` - 5 tasks, 3 signals at different stages
-   - `dependency-chain` - Complex task dependencies
-   - `full-plan-completion` - 12-task realistic feature implementation
-3. Document successful prompt patterns across all agents
-
-**See**: `lab-testing.md` for testing infrastructure details
+**Next**: Once critical fixes are in, return to lab optimization and advanced testing scenarios.
 
 ---
 
 ## 📋 v1.7 Priorities: Quality & Usability
 
-### Phase 1: Agent Performance (Priority: Critical)
-**Goal**: Reach 60%+ baseline compliance for all agents
+### Phase 1: Critical Workflow Fixes (Priority: **CRITICAL**)
+**Goal**: Fix blocking issues discovered in real agent runs
 
-**Current Status**:
-- ✅ Copilot (gpt-5): 64.3% - Target achieved
-- ⏳ Claude (sonnet): 46.2% pass rate - Needs +13.8% improvement
-- ⏳ OpenAI: 5.7% pass rate - Needs +54.3% improvement
+**Status**: 🚨 **ACTIVE** - These are showstoppers for production use
 
 **Tasks**:
-- [✅] **P1.1**: Optimize Claude prompts (target 60%+ pass rate) - commit 3b60c7b
-- [❌] **P1.2**: Optimize OpenAI prompts (target 60%+ pass rate) - *Deprioritized, focusing on Copilot.*
-- [✅] **P1.3**: Document successful prompt patterns per agent - commit 9fdf7a5
-- [✅] **P1.4**: Implement regression protection for Copilot baseline - commit e24e2a5
-- [✅] **P1.5**: Create agent-specific prompt variations if needed - commit 9a56d6c
+- [ ] **P1.1**: Fix agent stopping after first task completion
+  - **Issue**: Agents complete one task then wait for guidance instead of continuing
+  - **Impact**: Breaks autonomous multi-task workflow
+  - **Solution**: Enhance agents.md instructions, add explicit "next_action" in status JSON
+  - **Type**: fix | **Priority**: CRITICAL
+  
+- [ ] **P1.2**: Add agent continuation mechanism
+  - **Issue**: planloop knows task completed but can't proactively signal agent
+  - **Solution**: Add "transition_detected" + "suggested_action" to status response
+  - **Design**: Detect IN_PROGRESS→DONE transition, include next task details
+  - **Type**: feature | **Priority**: CRITICAL
+
+- [ ] **P1.3**: Implement structured agent interaction logging
+  - **Issue**: No audit trail of agent commands/responses, valuable context lost in notes
+  - **Solution**: JSON Lines transcript at `session_dir/logs/agent-transcript.jsonl`
+  - **Features**: log_agent_command(), log_agent_response(), `planloop logs` command
+  - **Type**: feature | **Priority**: CRITICAL
+
+- [ ] **P1.4**: Enforce TDD workflow in agent instructions
+  - **Issue**: Agents skip TDD despite workflow contract
+  - **Impact**: Poor test coverage, quality issues
+  - **Solution**: Make TDD prominent in agents.md, add checklist to status, include examples
+  - **Type**: chore | **Priority**: HIGH
+
+---
+
+### Phase 2: Essential Bug Fixes (Priority: **HIGH**)
+**Goal**: Fix issues that cause workflow failures
+
+**Tasks**:
+- [ ] **P2.1**: Fix agents.md synchronization in workflow
+  - **Issue**: `planloop guide --apply` doesn't update after marker exists (guide.py:40-41)
+  - **Impact**: Agents work with stale instructions
+  - **Solution**: Add version to marker, enable updates when prompts change
+  - **Type**: fix | **Priority**: HIGH
+
+- [ ] **P2.2**: Fix uv dependency sync after Rust/pyproject.toml changes
+  - **Issue**: uv fails when pydantic-core (requires Rust) is updated
+  - **Impact**: Breaks dev environment, blocks agents
+  - **Solution**: Document Rust requirements, add checks to verify-env.sh, retry logic
+  - **Type**: fix | **Priority**: HIGH
+
+---
+
+### Phase 3: Lab Testing & Optimization (Priority: **MEDIUM**)
+**Goal**: Achieve 60%+ baseline compliance across all major AI agents
+
+**Status**: ⏸️ **PAUSED** - Resuming after P1-P2 complete
+
+**Current Results** (158 runs as of 2025-11-17):
+- ✅ **Copilot (gpt-5)**: 64.3% - Target achieved
+- ⏳ **Claude (sonnet)**: 46.2% pass rate - Needs +13.8% improvement
+- ⏳ **OpenAI**: 5.7% pass rate - Needs +54.3% improvement
+
+**Tasks**:
+- [✅] **P3.1**: Optimize Claude prompts (target 60%+ pass rate) - commit 3b60c7b
+- [❌] **P3.2**: Optimize OpenAI prompts (target 60%+ pass rate) - *Deprioritized*
+- [✅] **P3.3**: Document successful prompt patterns per agent - commit 9fdf7a5
+- [✅] **P3.4**: Implement regression protection for Copilot baseline - commit e24e2a5
+- [✅] **P3.5**: Create agent-specific prompt variations if needed - commit 9a56d6c
 
 **Tools**: `labs/optimize_safely.sh`, `labs/check_baseline.sh`
 
 ---
 
-### Phase 2: Advanced Testing Scenarios (Priority: High)
-**Blocked Until**: All agents reach 60%+ baseline
+### Phase 4: Advanced Testing Scenarios (Priority: **MEDIUM**)
+**Goal**: Test agents with complex, realistic workflows
+
+**Blocked Until**: Phase 1-2 complete, Phase 3 at 60%+ baseline
 
 **Tasks**:
-- [ ] **P2.1**: Implement multi-signal-cascade scenario (5 tasks, 3 signals)
-- [ ] **P2.2**: Implement dependency-chain scenario (complex dependencies)
-- [ ] **P2.3**: Implement full-plan-completion scenario (12-task feature)
-- [ ] **P2.4**: A/B test prompt variations across agents
-- [ ] **P2.5**: Document cross-agent prompt patterns
+- [ ] **P4.1**: Implement multi-signal-cascade scenario (5 tasks, 3 signals at stages)
+- [ ] **P4.2**: Implement dependency-chain scenario (complex task dependencies)
+- [ ] **P4.3**: Implement full-plan-completion scenario (12-task feature)
+- [ ] **P4.4**: A/B test prompt variations across agents
+- [ ] **P4.5**: Document cross-agent prompt patterns
 
 ---
 
-### Phase 3: Analytics & Monitoring (Priority: Medium)
+### Phase 5: Web Interface & Visualization (Priority: **LOW**)
+**Goal**: Improve visual feedback for users and agents
+
+**Tasks**:
+- [ ] **P5.1**: Implement web dashboard for task visualization
+  - **Current**: Basic HTML tables in web/server.py
+  - **Requirements**: Kanban/timeline view, task colors, dependency graph, real-time updates
+  - **Tech**: FastAPI + HTMX, reuse SessionViewModel
+  - **Features**: Session selector, filters, commit links
+  - **Type**: feature | **Priority**: LOW
+
+- [ ] **P5.2**: Add pipeline visualization to web dashboard
+  - **Requirements**: Horizontal pipeline (TODO → IN_PROGRESS → DONE)
+  - **Design**: Task cards, commit SHA on completion, time in each stage
+  - **Consider**: Add REVIEW status between IN_PROGRESS and DONE?
+  - **Depends on**: P5.1
+  - **Type**: feature | **Priority**: LOW
+
+---
+
+### Phase 6: Analytics & Monitoring (Priority: **LOW**)
 **Goal**: Improve visibility into agent performance and system health
 
 **Tasks**:
-- [ ] **P3.1**: Session analytics dashboard
-  - Task completion times
-  - Agent performance by task type
-  - Success/failure patterns
-- [ ] **P3.2**: Lock queue metrics and tuning
-  - Wait time analytics
-  - Queue fairness verification
-  - Performance under contention
-- [ ] **P3.3**: Performance profiling for large plans
-  - Benchmark plans with 50+ tasks
-  - Identify bottlenecks
-  - Optimize compute_now() for scale
+- [ ] **P6.1**: Session analytics dashboard
+  - Task completion times, agent performance by type, success/failure patterns
+  - Integrate with P5.1 web dashboard
+  
+- [ ] **P6.2**: Lock queue metrics and tuning
+  - Wait time analytics, queue fairness verification, performance under contention
+  
+- [ ] **P6.3**: Performance profiling for large plans
+  - Benchmark plans with 50+ tasks, identify bottlenecks, optimize compute_now()
 
 ---
 
-### Phase 4: Advanced Features (Priority: Low)
+### Phase 7: Configuration & Environment (Priority: **LOW**)
+**Goal**: Improve setup and configuration flexibility
+
+**Tasks**:
+- [ ] **P7.1**: Make suggest task limit configurable
+  - **Investigation**: Verify default (config says 5, but reports show 10?)
+  - **Actions**: Add `--limit` flag if missing, document setting, add validation (min=1, max=50)
+  - **Type**: chore | **Priority**: LOW
+
+- [ ] **P7.2**: Auto-initialize venv for project sessions
+  - **Phase 1**: Detect and warn if venv missing (pyproject.toml, requirements.txt, etc.)
+  - **Phase 2**: Offer to create venv with user confirmation
+  - **Phase 3**: Auto-create for known project types (Python/Node/Ruby)
+  - **Challenge**: Can't activate venv for agent, must prefix commands with venv path
+  - **Type**: feature | **Priority**: LOW
+
+---
+
+### Phase 8: Advanced Features (Priority: **BACKLOG**)
 **Goal**: Enhance agent capabilities and developer experience
 
 **Tasks**:
-- [ ] **P4.1**: Task dependency visualization
-  - Generate dependency graphs
-  - Identify critical paths
-  - Visual plan representation
-- [ ] **P4.2**: `planloop inject` interactive decomposition
-  - Break down complex tasks
-  - Generate subtasks interactively
-  - Validate dependencies
-- [ ] **P4.3**: Embeddings-based semantic code search
-  - Vector search for similar code patterns
-  - Enhance suggest with semantic understanding
-  - Find related implementations
-- [ ] **P4.4**: Learning from suggestion feedback
-  - Track accepted/rejected suggestions
-  - Improve suggestion quality over time
-  - Personalize to team preferences
+- [ ] **P8.1**: Task dependency visualization
+  - Generate dependency graphs, identify critical paths
+  
+- [ ] **P8.2**: `planloop inject` interactive decomposition
+  - Break down complex tasks, generate subtasks, validate dependencies
+  
+- [ ] **P8.3**: Embeddings-based semantic code search
+  - Vector search for patterns, enhance suggest with semantic understanding
+  
+- [ ] **P8.4**: Learning from suggestion feedback
+  - Track accepted/rejected suggestions, improve quality over time
 
 ---
 
 ### Future Research (v1.8+)
-- **Self-Bootstrapping Agent Instructions**: Ensure agents always have the latest workflow contract by making the synchronization of `agents.md` the implicit first task of any new session. The `planloop status` command would detect an out-of-sync `agents.md` and return a `sync_instructions` reason, prompting the agent to update its own rulebook before proceeding.
-- **Embeddings-based search**: Use vector DB for semantic code search
-- **Learning from feedback**: Track accepted/rejected suggestions to improve quality
+**Ideas for future exploration once v1.7 stabilizes**
+
+- **Self-Bootstrapping Agent Instructions**: Auto-sync agents.md at session start
+- **Test coverage gap analysis**: Integrate pytest-cov to suggest missing tests
+- **Security pattern detection**: Integrate bandit/semgrep for security tasks
 - **Batch workflows**: `planloop suggest --weekly` for regular audits
 - **Custom analyzers**: Plugin system for domain-specific patterns
 - **Diff suggestions**: "This PR introduces X, suggest follow-up tasks"
-- **Advanced Analysis**:
-  - Test coverage gap analysis (e.g., via `pytest-cov`)
-  - Security pattern detection (e.g., via `bandit`, `semgrep`)
-  - Performance profiling to suggest optimization tasks
-  - Automated dependency update suggestions
-- **Multi-agent collaboration patterns**
-- **Natural language plan editing**
-- **Integration with GitHub Issues/PRs**
-- **Plan templates and best practices library**
-- **Real-time agent coordination dashboard
+- **Multi-agent collaboration**: Patterns for multiple agents in same session
+- **Natural language plan editing**: Update plan via conversational interface
+- **GitHub integration**: Sync with Issues/PRs
+- **Plan templates library**: Best practices and starter templates
+- **Performance profiling**: Suggest optimization tasks automatically
 
 ---
 

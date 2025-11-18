@@ -1,77 +1,83 @@
 # Documentation
 
-All planloop documentation for humans and AI agents.
-
----
-
 ## Core Documents
 
 ### `agents.md`
-**Agent workflow contract** - Primary guide for AI agents. Command reference, workflow rules, and project organization.
-
-**Symlinked to**:
-- `AGENTS.md` (root)
-- `CLAUDE.md` (root)
-- `.github/copilot-instructions.md` (GitHub Copilot)
-
-Updated via: `planloop guide --target agents-md --apply`
+Agent workflow contract and command reference. This is the primary instruction set for AI agents (Claude, Copilot, etc.). Symlinked to root as `AGENTS.md`, `CLAUDE.md`, and `.github/copilot-instructions.md`.
 
 ### `plan.md`
-**Development plan** - Current work, active goals, backlog. What's built (v1.5 complete), what's in progress (agent testing), what's next (v1.6+).
+Current development plan and backlog. Living document tracking what's built, active work, and future tasks.
 
 ### `architecture.md`
-**System design reference** - State management, locking, queue fairness, session lifecycle, command system, testing infrastructure.
+System design reference. High-level overview of core philosophy, state management, locking, and LLM integration.
+
+### `development-setup.md`
+Quick reference for setting up the development environment (Python 3.11+, uv, venv).
+
+---
+
+## Dev Mode & Observability
+
+### `dev-mode-observability-plan.md`
+Comprehensive specification for development mode with maximum observability. Includes:
+- Phase 1A: 4 critical debugging features (error context, lock logging, performance spans, trace linking)
+- Complete implementation code examples
+- API and web UI plans
+
+### `dev-mode-quick-reference.md`
+Implementation checklist, debugging workflows, and success criteria for dev mode. Includes executive summary of expected impact.
+
+---
+
+## Case Studies
+
+### `honk-case-study.md`
+Real-world experience using planloop to build the Honk iOS project. Documents what worked, blockers encountered, and feature requests with timeline estimates.
+
+---
+
+## Testing
 
 ### `lab-testing.md`
-**Testing guide** - Agent testing infrastructure, scenarios, evaluation metrics, running tests, optimization strategy.
+Testing infrastructure guide. Explains test scenarios, how to run labs, and interpret results.
 
 ### `agent-performance.md`
-**Test metrics** (auto-generated) - Latest agent compliance scores. Updated by `labs/generate_viz.py`.
-
-### `honk-workflow-analysis.md`
-**Real-world workflow analysis** - Deep analysis of using planloop to manage honk development. Simulates actual workflow experience with concrete examples.
-
-### `honk-implementation-fixes.md`
-**Fixes needed for honk** - Prioritized list of planloop improvements needed to support honk development workflow effectively.
+Auto-generated performance metrics by model/agent. Updated by test runs.
 
 ---
 
 ## Reference
 
-### `reference/agent-testing-reference.md`
-Quick reference for testing agents - output capture, authentication, debugging, common issues.
+### `reference/prompting-guide.md`
+Comprehensive prompting guide including:
+- Best practices by model (Claude, GPT, etc.)
+- Successful patterns library
+- Agent-specific variations
+- Baseline regression protection strategies
 
-### `reference/prompt-optimization.md`
-Best practices for prompting different AI agents (Claude, Copilot, OpenAI).
+### `reference/agent-testing-reference.md`
+Technical testing methodology: output capture methods, comparison techniques.
 
 ---
 
 ## Archive
 
-### `archive/v1.5-implementation-tasks.md`
-Historical record of all 46 v1.5 implementation tasks with commit SHAs. Complete but kept for reference.
+Historical documents preserved for reference:
+- `archive/v1.5-implementation-tasks.md` - v1.5 task tracking
+- `archive/v1.6-suggest-implementation-plan.md` - Suggest feature implementation plan
 
 ---
 
-## Quick Start
+## Document Count
 
-**For AI Agents**:
-1. Read `agents.md` for workflow rules
-2. Check `plan.md` for current work
-3. Reference `architecture.md` when needed
+**Before consolidation:** 19 files (~177KB)  
+**After consolidation:** 14 files (~155KB)  
+**Savings:** 5 files, ~22KB
 
-**For Testing**:
-- See `lab-testing.md` for testing workflow
+### Changes Made (2025-11-18)
 
-**For Development**:
-- Check `plan.md` active work section
-- Run tests: `pytest tests/`
-- Update metrics: `./labs/run_iterations.sh`
+1. ✅ **Consolidated Honk docs** - Merged `honk-workflow-analysis.md` + `honk-implementation-fixes.md` → `honk-case-study.md`
+2. ✅ **Consolidated prompt docs** - Merged 4 reference docs → `reference/prompting-guide.md`
+3. ✅ **Merged dev mode docs** - Combined `dev-mode-summary.md` into `dev-mode-quick-reference.md`
 
----
-
-## Conventions
-
-- **Naming**: All markdown files use `lowercase-with-hyphens.md` (except AGENTS.md, CLAUDE.md symlinks)
-- **Temp files**: Use `tmp/` folder at project root (gitignored)
-- **Structure**: Flat in `docs/`, archive in `docs/archive/`
+**Result:** Cleaner structure, eliminated duplication, maintained all content.
