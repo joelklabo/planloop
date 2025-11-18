@@ -188,3 +188,5 @@ When using `copilot -p "prompt"` in automation:
 - `--no-color` flag causes immediate exit (don't use)
 - Requires `gh auth login` before testing
 - Interactive mode works fine (only `-p` is broken)
+
+**Related**: See `docs/bash-pty-errors.md` for information about bash tool PTY corruption in long-running sessions (different issue, but related to terminal handling).

@@ -5,6 +5,7 @@ import secrets
 from datetime import datetime
 from pathlib import Path
 
+from .. import guide
 from ..history import commit_state
 from ..home import (
     CURRENT_SESSION_POINTER,
@@ -51,6 +52,24 @@ def _initial_state(session_id: str, name: str, title: str, project_root: Path) -
     )
 
 
+def _auto_sync_guide(project_root: Path) -> None:
+    """Auto-sync agents.md guide to ensure agents have latest instructions."""
+    try:
+        agents_md = project_root / "docs" / "agents.md"
+        content = guide.render_guide()
+        
+        if agents_md.exists():
+            existing = agents_md.read_text(encoding="utf-8")
+            if guide.is_guide_outdated(existing):
+                guide.insert_guide(agents_md, content, force=True)
+        else:
+            agents_md.parent.mkdir(parents=True, exist_ok=True)
+            guide.insert_guide(agents_md, content)
+    except (OSError, PermissionError):
+        # Silently skip if filesystem is read-only or inaccessible
+        pass
+
+
 def create_session(name: str, title: str, project_root: Path) -> SessionState:
     home = initialize_home()
     session_id = new_session_id(name)
@@ -63,6 +82,9 @@ def create_session(name: str, title: str, project_root: Path) -> SessionState:
     (home / CURRENT_SESSION_POINTER).write_text(session_id, encoding="utf-8")
     DeadlockTracker().persist(session_dir / "deadlock.json")
     log_session_event(session_dir, f"Session created: {session_id}")
+
+    # Auto-sync agents.md guide to ensure agents have latest instructions
+    _auto_sync_guide(project_root)
 
     return state
 
